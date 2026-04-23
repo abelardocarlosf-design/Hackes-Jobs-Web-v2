@@ -1,17 +1,21 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface CardProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 }
 
-export function Card({ children, className }: CardProps) {
+export function Card({ children, className, style }: CardProps) {
   return (
-    <div className={cn(
-      "rounded-[2.5rem] border border-slate-100 bg-white text-brand-black shadow-premium transition-all duration-500 hover:shadow-premium-hover hover:-translate-y-1",
-      className
-    )}>
+    <div
+      className={cn(
+        "rounded-[2.5rem] border border-slate-100 bg-white text-brand-black shadow-premium transition-all duration-500 hover:shadow-premium-hover hover:-translate-y-1",
+        className
+      )}
+      style={style}
+    >
       {children}
     </div>
   );
