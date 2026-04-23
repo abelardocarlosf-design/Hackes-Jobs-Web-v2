@@ -1,0 +1,9 @@
+[
+  {
+    "id": "1",
+    "username": "admin",
+    "passwordHash": "hackesjobs2025",
+    "name": "Administrador Principal",
+    "role": "ADMIN"
+  }
+]

@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-black: 10, 10, 10;
+    --brand-blue: 30, 64, 175;
+    --brand-orange: 249, 115, 22;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-brand-black overflow-x-hidden;
+  }
+
+  ::selection {
+    @apply bg-brand-orange/20 text-brand-orange;
+  }
+
+  /* Custom Typography */
+  h1, h2, h3, h4 {
+    @apply font-black tracking-tighter;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-2xl border border-white/20 shadow-premium;
+  }
+
+  .text-gradient-blue {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400;
+  }
+
+  .text-gradient-orange {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-orange-400;
+  }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-brand-blue/20 transition-colors;
+}
+
+/* Custom Utilities for Premium Look */
+.shadow-3xl {
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.1);
+}
+
+.mask-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}

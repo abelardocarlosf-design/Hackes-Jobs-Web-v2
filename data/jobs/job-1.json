@@ -1,0 +1,13 @@
+{
+  "id": "job-1",
+  "title": "Senior React Developer",
+  "company": "Hacke's Jobs",
+  "location": "Remoto (México)",
+  "salary": "$60,000 - $80,000 MXN",
+  "type": "Remoto",
+  "description": "Buscamos un desarrollador Senior experto en React para liderar proyectos disruptivos.",
+  "requirements": ["5+ años de experiencia", "Next.js", "Tailwind CSS"],
+  "date": "2026-04-23T00:00:00.000Z",
+  "active": true,
+  "category": "Tecnología"
+}
