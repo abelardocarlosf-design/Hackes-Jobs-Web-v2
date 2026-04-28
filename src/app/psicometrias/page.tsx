@@ -10,10 +10,14 @@ import { Lock, Unlock, ArrowRight, Brain, Briefcase, Activity, ShieldCheck } fro
 import { UnlockButton } from '@/components/UnlockButton';
 import { TypewriterHeading } from '@/components/TypewriterHeading';
 
+import { fallbackTests } from '@/lib/fallback-tests';
+
 export const metadata: Metadata = {
   title: 'Catálogo de Evaluaciones Psicométricas | Hacke\'s Jobs',
   description: 'Descubre el potencial de tu talento con nuestras pruebas psicométricas validadas.',
 };
+
+export const dynamic = 'force-dynamic';
 
 const levelConfig: Record<string, { color: string; label: string; icon: any; border: string }> = {
   basico: { color: 'text-emerald-500', label: 'Nivel Básico (Gratuito)', icon: Activity, border: 'border-emerald-200 bg-emerald-50' },
@@ -23,30 +27,39 @@ const levelConfig: Record<string, { color: string; label: string; icon: any; bor
 };
 
 export default async function PsicometriasPage() {
-  const token = cookies().get('hj_token')?.value;
-  let candidateId = null;
+  let tests: any[] = [];
+  let unlockedTestIds: string[] = [];
 
-  if (token) {
-    const decoded = await verifyAuth(token);
-    if (decoded && decoded.role === 'candidate') {
-      const candidate = await prisma.candidate.findUnique({
-        where: { userId: decoded.userId as string },
-      });
-      if (candidate) candidateId = candidate.id;
+  try {
+    const token = cookies().get('hj_token')?.value;
+    let candidateId = null;
+
+    if (token) {
+      const decoded = await verifyAuth(token);
+      if (decoded && decoded.role === 'candidate') {
+        const candidate = await prisma.candidate.findUnique({
+          where: { userId: decoded.userId as string },
+        });
+        if (candidate) candidateId = candidate.id;
+      }
     }
-  }
 
-  const tests = await prisma.psychometricTest.findMany({
-    where: { active: true },
-  });
-
-  let purchases: any[] = [];
-  if (candidateId) {
-    purchases = await prisma.testPurchase.findMany({
-      where: { candidateId, status: 'completed' }
+    tests = await prisma.psychometricTest.findMany({
+      where: { active: true },
     });
+
+    let purchases: any[] = [];
+    if (candidateId) {
+      purchases = await prisma.testPurchase.findMany({
+        where: { candidateId, status: 'completed' }
+      });
+    }
+    unlockedTestIds = purchases.map(p => p.testId);
+  } catch (error) {
+    console.error('[Psicometrias] Database unavailable, using fallback data:', error);
+    tests = fallbackTests;
+    unlockedTestIds = [];
   }
-  const unlockedTestIds = purchases.map(p => p.testId);
 
   // Agrupar por nivel
   const levels = ['basico', 'intermedio', 'avanzado', 'premium'];

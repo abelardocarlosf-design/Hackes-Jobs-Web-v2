@@ -115,7 +115,7 @@ export default function CandidatosPage() {
           </div>
           
           <div className="mt-20 text-center space-y-4">
-             <p className="text-[#1A1A1A] font-black uppercase tracking-[0.5em] text-[10px]">Actualizado hoy por el equipo de Hacke's Jobs</p>
+             <p className="text-[#1A1A1A] font-black uppercase tracking-[0.5em] text-[10px]">Actualizado hoy por el equipo de Hacke&apos;s Jobs</p>
           </div>
         </div>
       </section>
