@@ -218,7 +218,7 @@ export function RequisitionWizard() {
 
   // Centralized sending function for future proxy or endpoint changes
   const sendRequisitionData = async (data: FormData) => {
-    const endpoint = 'https://api.hackesjobs.com.mx/webhook/perfilador';
+    const endpoint = '/api/webhooks/perfilador';
     const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
     const isHttpEndpoint = endpoint.startsWith('http:');
 

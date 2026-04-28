@@ -1,0 +1,45 @@
+{
+  "name": "Hackes Jobs - Payment Completed Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "payment-completed",
+        "options": {}
+      },
+      "name": "Webhook: Pago Completado",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "hackesjobs-payment-completed"
+    },
+    {
+      "parameters": {
+        "fromEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "toEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=💰 Nuevo Pago Recibido en Hacke's Jobs",
+        "html": "=<h2>Un usuario ha comprado un test psicométrico</h2><br><ul><li><b>Email Cliente:</b> {{ $json.body.data.customerEmail }}</li><li><b>Candidate ID:</b> {{ $json.body.data.candidateId }}</li><li><b>Test Comprado ID:</b> {{ $json.body.data.testId }}</li><li><b>Monto:</b> {{ $json.body.data.amountTotal / 100 }} {{ $json.body.data.currency }}</li></ul>",
+        "options": {}
+      },
+      "name": "Email de Notificacion Interna",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [500, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Pago Completado": {
+      "main": [
+        [
+          {
+            "node": "Email de Notificacion Interna",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

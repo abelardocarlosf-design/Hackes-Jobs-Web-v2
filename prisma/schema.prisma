@@ -1,0 +1,190 @@
+// Prisma Schema — Hacke's Jobs SaaS
+// Local: SQLite | Producción: Supabase PostgreSQL
+// Para migrar a Supabase: cambiar provider a "postgresql" y actualizar DATABASE_URL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── USERS ────────────────────────────────────────────
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("candidate") // admin | recruiter | company | candidate
+  avatar       String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  company   Company?
+  candidate Candidate?
+
+  @@map("users")
+}
+
+// ─── COMPANIES ────────────────────────────────────────
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  industry  String?
+  size      String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // FK
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  jobs         Job[]
+  subscription Subscription?
+
+  @@map("companies")
+}
+
+// ─── JOBS (VACANTES) ──────────────────────────────────
+model Job {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  salaryRange  String?
+  location     String?
+  modality     String?  // Presencial | Híbrido | Remoto
+  status       String   @default("pending") // pending | approved | rejected | closed
+  requirements String?  // JSON string: skills, experience, education
+  schedule     String?  // JSON string: jornada laboral
+  benefits     String?
+  positions    Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // FK
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Relations
+  applications Application[]
+
+  @@map("jobs")
+}
+
+// ─── CANDIDATES ───────────────────────────────────────
+model Candidate {
+  id              String   @id @default(cuid())
+  cvUrl           String?
+  experienceYears Int      @default(0)
+  skills          String?  // JSON string array
+  education       String?
+  phone           String?
+  bio             String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // FK
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  applications Application[]
+  testResults  TestResult[]
+  testPurchases TestPurchase[]
+
+  @@map("candidates")
+}
+
+// ─── APPLICATIONS ─────────────────────────────────────
+model Application {
+  id        String   @id @default(cuid())
+  status    String   @default("pending") // pending | reviewing | shortlisted | rejected | hired
+  score     Int?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // FK
+  jobId       String
+  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, candidateId]) // Un candidato solo puede aplicar una vez por vacante
+  @@map("applications")
+}
+
+// ─── PSYCHOMETRIC TESTS ───────────────────────────────
+model PsychometricTest {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // DISC | cognitive | personality | custom
+  level     String   @default("basico") // basico | intermedio | avanzado | premium
+  price     Float    @default(0.0) // 0 si es gratuito
+  isPremium Boolean  @default(false)
+  structure String   // JSON: preguntas, opciones, scoring rules
+  duration  Int?     // minutos
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  // Relations
+  results   TestResult[]
+  purchases TestPurchase[]
+
+  @@map("psychometric_tests")
+}
+
+// ─── TEST RESULTS ─────────────────────────────────────
+model TestResult {
+  id        String   @id @default(cuid())
+  results   String   // JSON: respuestas del candidato
+  score     Int?
+  summary   String?  // Resumen generado
+  createdAt DateTime @default(now())
+
+  // FK
+  candidateId String
+  candidate   Candidate        @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  testId      String
+  test        PsychometricTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@map("test_results")
+}
+
+// ─── TEST PURCHASES (STRIPE) ──────────────────────────
+model TestPurchase {
+  id              String   @id @default(cuid())
+  stripeSessionId String?  @unique
+  amount          Float
+  status          String   @default("pending") // pending | completed
+  createdAt       DateTime @default(now())
+
+  // FK
+  candidateId String
+  candidate   Candidate        @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  testId      String
+  test        PsychometricTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateId, testId]) // Un candidato solo compra un test una vez
+  @@map("test_purchases")
+}
+
+// ─── SUBSCRIPTIONS ────────────────────────────────────
+model Subscription {
+  id        String   @id @default(cuid())
+  plan      String   @default("basic") // basic | pro | enterprise
+  status    String   @default("active") // active | cancelled | expired
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+
+  // FK
+  companyId String  @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}

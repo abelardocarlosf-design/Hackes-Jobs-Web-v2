@@ -1,0 +1,82 @@
+{
+  "name": "Hackes Jobs - Company Lead Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "company-lead",
+        "options": {}
+      },
+      "name": "Webhook: Nuevo Lead B2B",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "hackesjobs-company-lead"
+    },
+    {
+      "parameters": {
+        "fromEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "toEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=🚨 Nuevo Lead B2B: {{ $json.body.data.companyName }}",
+        "html": "=<h2>Se ha registrado una nueva empresa en Hacke's Jobs!</h2><br><ul><li><b>Empresa:</b> {{ $json.body.data.companyName }}</li><li><b>Email de Contacto:</b> {{ $json.body.data.email }}</li><li><b>Industria:</b> {{ $json.body.data.companyIndustry || 'N/A' }}</li><li><b>Tamaño:</b> {{ $json.body.data.companySize || 'N/A' }}</li></ul><br><p>Por favor contactar al usuario a la brevedad posible para agendar una demo o validar su cuenta.</p>",
+        "options": {}
+      },
+      "name": "Notificar por Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/v1/messages", 
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "525650405218"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": "={ \"body\": \"🚨 *Nuevo Lead B2B Registrado*\\n\\nEmpresa: {{ $json.body.data.companyName }}\\nEmail: {{ $json.body.data.email }}\" }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Notificar por WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 400]
+    }
+  ],
+  "connections": {
+    "Webhook: Nuevo Lead B2B": {
+      "main": [
+        [
+          {
+            "node": "Notificar por Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificar por WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

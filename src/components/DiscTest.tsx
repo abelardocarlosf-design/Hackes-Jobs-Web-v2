@@ -9,6 +9,7 @@ export function DiscTest() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, DiscType>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalQuestions = discQuestions.length;
   const progressPercentage = ((currentStep) / totalQuestions) * 100;
@@ -36,23 +37,54 @@ export function DiscTest() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
     // Calculate final score
     const scores = { D: 0, I: 0, S: 0, C: 0 };
     Object.values(answers).forEach(val => {
       scores[val]++;
     });
 
-    // Create query parameters with scores
-    const params = new URLSearchParams({
-      D: scores.D.toString(),
-      I: scores.I.toString(),
-      S: scores.S.toString(),
-      C: scores.C.toString(),
-    });
+    const maxScore = Math.max(scores.D, scores.I, scores.S, scores.C);
+    const primaryTrait = Object.keys(scores).find(key => scores[key as keyof typeof scores] === maxScore);
 
-    // Redirect to results page
-    router.push(`/psicometrias/disc/resultado?${params.toString()}`);
+    try {
+      const res = await fetch('/api/tests/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          testType: 'DISC',
+          answers,
+          score: maxScore,
+          summary: `Perfil dominante: ${primaryTrait}. Resultados: D=${scores.D}, I=${scores.I}, S=${scores.S}, C=${scores.C}`
+        })
+      });
+
+      const data = await res.json();
+      
+      if (!data.success) {
+        if (res.status === 401 || res.status === 403) {
+          alert('Por favor inicia sesión como candidato para guardar tus resultados.');
+          // Redirect to login preserving the state could be done, but for now just alert.
+        } else {
+          console.error(data.message);
+        }
+      }
+    } catch (e) {
+      console.error('Error al enviar test', e);
+    } finally {
+      setIsSubmitting(false);
+      // Create query parameters with scores
+      const params = new URLSearchParams({
+        D: scores.D.toString(),
+        I: scores.I.toString(),
+        S: scores.S.toString(),
+        C: scores.C.toString(),
+      });
+
+      // Redirect to results page
+      router.push(`/psicometrias/disc/resultado?${params.toString()}`);
+    }
   };
 
   const isCurrentQuestionAnswered = !!answers[currentQuestion?.id];
@@ -133,10 +165,10 @@ export function DiscTest() {
           ) : (
             <Button 
               onClick={handleSubmit} 
-              disabled={!isCurrentQuestionAnswered}
+              disabled={!isCurrentQuestionAnswered || isSubmitting}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black h-14 px-10 rounded-xl transition-all shadow-xl shadow-blue-600/30 disabled:opacity-50 disabled:hover:shadow-none"
             >
-              Finalizar evaluación
+              {isSubmitting ? 'Guardando...' : 'Finalizar evaluación'}
             </Button>
           )}
         </div>

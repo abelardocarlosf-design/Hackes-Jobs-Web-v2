@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Providers } from "@/components/Providers";
+import { LayoutChrome } from "@/components/LayoutChrome";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -54,11 +54,11 @@ export default function RootLayout({
   return (
     <html lang="es" className={`scroll-smooth ${inter.variable} ${jakarta.variable}`}>
       <body className="antialiased font-sans bg-white text-brand-black">
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <LayoutChrome>
+            {children}
+          </LayoutChrome>
+        </Providers>
       </body>
     </html>
   );

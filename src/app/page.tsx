@@ -1,24 +1,22 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card, CardContent } from '@/components/Card';
 import { Illustration } from '@/components/Illustration';
+import { Typewriter } from '@/components/Typewriter';
 
-export const metadata: Metadata = {
-  title: "Hacke's Jobs | Reclutamiento Inteligente y Atracción de Talento",
-  description: "Transformamos el reclutamiento con IA y psicometría avanzada. Encontramos al top 1% de talento para empresas que buscan escalar.",
-};
+// metadata moved to layout or generateMetadata
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans selection:bg-brand-orange/20 selection:text-brand-orange overflow-x-hidden">
       
       {/* 1. PREMIUM HERO SECTION */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-white">
-        {/* Animated Background Elements */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-white bg-[url('/images/parallax-hero.png')] bg-cover bg-center bg-fixed">
+        {/* Animated Background Elements & Overlay */}
+        <div className="absolute inset-0 bg-brand-black/30 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[url('/grid-light.svg')] bg-center opacity-[0.03] pointer-events-none"></div>
-        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-blue/10 rounded-full blur-[120px] animate-pulse-slow"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-orange/5 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10 py-20">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
@@ -28,13 +26,13 @@ export default function HomePage() {
                 Reclutamiento Inteligente 4.0
               </div>
               
-              <h1 className="text-6xl sm:text-8xl md:text-[7rem] font-black tracking-tighter text-brand-black leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-                Contrata al mejor <br className="hidden md:block" />
+              <h1 className="text-6xl sm:text-8xl md:text-[7rem] font-black tracking-tighter text-white leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                <Typewriter text="Contrata al mejor" speed={70} delay={500} className="text-brand-orange" /> <br className="hidden md:block" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400">talento del país.</span>
               </h1>
               
-              <p className="text-xl sm:text-3xl text-slate-400 max-w-3xl leading-tight font-medium animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-                Filtramos y evaluamos al <span className="text-brand-black font-black italic">Top 1% de perfiles</span> para que tu empresa nunca deje de crecer. <span className="text-brand-blue underline decoration-brand-orange decoration-4 underline-offset-8">Headhunting de alto nivel.</span>
+              <p className="text-xl sm:text-3xl text-white/80 max-w-3xl leading-tight font-medium animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+                Filtramos y evaluamos al <span className="text-brand-orange font-black italic">Top 1% de perfiles</span> para que tu empresa nunca deje de crecer. <span className="text-white underline decoration-brand-orange decoration-4 underline-offset-8">Headhunting de alto nivel.</span>
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
@@ -44,7 +42,7 @@ export default function HomePage() {
                   </Button>
                 </Link>
                 <Link href="#como-funciona">
-                  <Button variant="outline" size="xl" className="w-full sm:w-auto border-brand-black/10 hover:border-brand-blue hover:scale-105">
+                  <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/40 text-white hover:border-brand-orange hover:text-brand-orange hover:scale-105 bg-white/10 backdrop-blur-sm">
                     Ver método HJ
                   </Button>
                 </Link>

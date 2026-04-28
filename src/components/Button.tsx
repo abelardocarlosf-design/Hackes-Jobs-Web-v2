@@ -14,14 +14,14 @@ export function Button({
   className,
   ...props 
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue disabled:opacity-50 disabled:pointer-events-none active:scale-95 select-none';
+  const baseStyles = 'inline-flex items-center justify-center font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue disabled:opacity-50 disabled:pointer-events-none active:scale-[0.95] select-none';
   
   const variants = {
-    primary: 'bg-brand-blue text-white hover:bg-blue-700 shadow-blue hover:shadow-blue/40',
-    secondary: 'bg-brand-orange text-white hover:bg-orange-600 shadow-orange hover:shadow-orange/40',
-    outline: 'border-2 border-slate-200 bg-transparent hover:border-brand-blue hover:text-brand-blue text-brand-black',
-    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-brand-black',
-    dark: 'bg-brand-black text-white hover:bg-zinc-800 shadow-premium',
+    primary: 'bg-brand-blue text-white hover:bg-blue-700 shadow-blue hover:shadow-blue/40 active:shadow-[0_0_20px_rgba(30,64,175,0.6)]',
+    secondary: 'bg-brand-orange text-white hover:bg-orange-600 shadow-orange hover:shadow-orange/40 active:shadow-[0_0_20px_rgba(255,107,0,0.6)]',
+    outline: 'border-2 border-slate-200 bg-transparent hover:border-brand-blue hover:text-brand-blue text-brand-black active:shadow-[0_0_20px_rgba(30,64,175,0.2)]',
+    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-brand-black active:shadow-[0_0_15px_rgba(0,0,0,0.1)]',
+    dark: 'bg-brand-black text-white hover:bg-zinc-800 shadow-premium active:shadow-[0_0_20px_rgba(0,0,0,0.8)]',
   };
 
   const sizes = {

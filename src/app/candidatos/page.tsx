@@ -1,22 +1,21 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card, CardContent } from '@/components/Card';
 import { Illustration } from '@/components/Illustration';
+import { Typewriter } from '@/components/Typewriter';
 
-export const metadata: Metadata = {
-  title: 'Oportunidades para Candidatos | Hacke\'s Jobs',
-  description: 'Impulsa tu carrera profesional con Hacke\'s Jobs. Conectamos tu talento con las mejores empresas. Encuentra vacantes, realiza pruebas psicométricas y crece con nosotros.',
-};
+// metadata moved to layout or generateMetadata
 
 export default function CandidatosPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans selection:bg-brand-orange/20 selection:text-brand-orange overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[85vh] flex items-center pt-32 pb-24 overflow-hidden bg-brand-white">
+      <section className="relative min-h-[85vh] flex items-center pt-32 pb-24 overflow-hidden bg-brand-white bg-[url('/images/parallax-executive.png')] bg-cover bg-center bg-fixed">
+        <div className="absolute inset-0 bg-brand-white/85 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[url('/grid-light.svg')] bg-center opacity-[0.03] pointer-events-none"></div>
-        <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-brand-blue/5 rounded-full blur-[150px] animate-pulse-slow"></div>
         
         <div className="container relative mx-auto px-4 z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
@@ -27,7 +26,7 @@ export default function CandidatosPage() {
               </div>
               
               <h1 className="text-6xl sm:text-7xl md:text-[6.5rem] font-black tracking-tighter text-brand-black leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                Impulsa tu <br/>
+                <Typewriter text="Impulsa tu" speed={70} delay={400} className="text-brand-orange" /> <br/>
                 <span className="text-gradient-blue">Carrera Profesional.</span>
               </h1>
               
@@ -98,25 +97,25 @@ export default function CandidatosPage() {
       {/* 3. CTA & SOCIAL PROOF */}
       <section className="py-32 bg-brand-slate relative pb-60">
         <div className="container mx-auto px-4">
-          <Card className="max-w-6xl mx-auto overflow-hidden bg-brand-orange text-white shadow-orange">
+          <div className="max-w-6xl mx-auto overflow-hidden rounded-[2.5rem] bg-brand-orange shadow-2xl shadow-orange-500/30">
              <div className="p-12 sm:p-24 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
                 <div className="relative z-10 space-y-8 text-center md:text-left">
-                   <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none uppercase">¿Listo para tu <br/> próximo gran reto?</h2>
-                   <p className="text-xl md:text-2xl font-medium text-white/80 max-w-xl">
+                   <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none uppercase text-white drop-shadow-lg">¿Listo para tu <br/> próximo gran reto?</h2>
+                   <p className="text-xl md:text-2xl font-medium text-white/90 max-w-xl">
                      Nuestra bolsa de trabajo se actualiza diariamente con oportunidades en las mejores empresas de México.
                    </p>
                 </div>
                 <Link href="/vacantes" className="relative z-10">
-                   <Button variant="dark" size="xl" className="h-24 px-16 text-2xl shadow-premium hover:scale-110 bg-white text-brand-orange hover:bg-slate-50 border-0">
+                   <Button variant="dark" size="xl" className="h-24 px-16 text-2xl shadow-premium hover:scale-110 bg-brand-black text-white hover:bg-zinc-800 border-0">
                       Explorar Vacantes
                    </Button>
                 </Link>
              </div>
-          </Card>
+          </div>
           
           <div className="mt-20 text-center space-y-4">
-             <p className="text-slate-400 font-black uppercase tracking-[0.5em] text-[10px]">Actualizado hoy por el equipo de Hacke's Jobs</p>
+             <p className="text-[#1A1A1A] font-black uppercase tracking-[0.5em] text-[10px]">Actualizado hoy por el equipo de Hacke's Jobs</p>
           </div>
         </div>
       </section>

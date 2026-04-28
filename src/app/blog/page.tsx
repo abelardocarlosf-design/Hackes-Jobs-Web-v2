@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/Card';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NewsletterForm } from '@/components/NewsletterForm';
+import { TypewriterHeading } from '@/components/TypewriterHeading';
 
 export const metadata: Metadata = {
   title: 'Blog | Hacke\'s Jobs',
@@ -27,15 +28,19 @@ export default async function BlogPage() {
     <div className="flex flex-col min-h-screen bg-brand-slate font-sans selection:bg-brand-orange/20 selection:text-brand-orange overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative pt-40 pb-24 overflow-hidden bg-brand-white">
+      <section className="relative pt-40 pb-24 overflow-hidden bg-brand-white bg-[url('/images/parallax-blog.png')] bg-cover bg-center bg-fixed">
+        <div className="absolute inset-0 bg-brand-white/85 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[url('/grid-light.svg')] bg-center opacity-[0.03] pointer-events-none"></div>
-        <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-brand-blue/5 rounded-full blur-[150px] animate-pulse-slow"></div>
         
         <div className="container relative mx-auto px-4 z-10 text-center space-y-8">
            <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">Conocimiento y Tendencias</span>
-           <h1 className="text-6xl md:text-[7rem] font-black tracking-tighter text-brand-black leading-none animate-in fade-in slide-in-from-bottom-8 duration-1000">
-             Nuestro <span className="text-gradient-blue">Blog.</span>
-           </h1>
+           <TypewriterHeading 
+             text="Nuestro" 
+             speed={80} 
+             delay={300}
+             headingClassName="text-6xl md:text-[7rem] font-black tracking-tighter text-brand-black leading-none animate-in fade-in slide-in-from-bottom-8 duration-1000"
+             afterContent={<span className="text-gradient-blue">Blog.</span>}
+           />
            <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto font-medium">
              Explora artículos sobre el futuro del trabajo, reclutamiento inteligente y desarrollo profesional.
            </p>

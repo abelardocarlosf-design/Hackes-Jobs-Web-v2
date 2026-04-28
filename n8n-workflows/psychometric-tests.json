@@ -1,0 +1,45 @@
+{
+  "name": "Hackes Jobs - Test Completed Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-completed",
+        "options": {}
+      },
+      "name": "Webhook: Test Completado",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "hackesjobs-test-completed"
+    },
+    {
+      "parameters": {
+        "fromEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "toEmail": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=🧠 Nuevo Test Completado: {{ $json.body.data.testName }} ({{ $json.body.data.candidateName }})",
+        "html": "=<h2>Un candidato ha finalizado un test psicométrico</h2><br><ul><li><b>Candidato:</b> {{ $json.body.data.candidateName }} ({{ $json.body.data.candidateEmail }})</li><li><b>Prueba:</b> {{ $json.body.data.testName }} ({{ $json.body.data.testType }})</li><li><b>Score Obtenido:</b> {{ $json.body.data.score }}</li></ul><br><h3>Resumen de Resultados:</h3><p>{{ $json.body.data.summary }}</p>",
+        "options": {}
+      },
+      "name": "Email de Reporte",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [500, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Test Completado": {
+      "main": [
+        [
+          {
+            "node": "Email de Reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

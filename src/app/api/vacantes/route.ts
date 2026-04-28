@@ -1,29 +1,60 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-// TODO: Preparar integración con MongoDB aquí
-// import { connectToDatabase } from '@/lib/mongodb';
+export const dynamic = 'force-dynamic';
 
+/**
+ * GET /api/vacantes — Alias de /api/jobs (retrocompatibilidad)
+ * Retorna vacantes aprobadas con datos de empresa.
+ */
 export async function GET() {
-  // await connectToDatabase();
-  
-  // Dummy data por ahora
-  const vacantes = [
-    { id: 1, title: 'Senior Frontend Developer', location: 'Remoto' },
-    { id: 2, title: 'Product Manager', location: 'Híbrido' },
-  ];
+  try {
+    const vacantes = await prisma.job.findMany({
+      where: { status: 'approved' },
+      include: {
+        company: {
+          select: { name: true, industry: true, verified: true },
+        },
+        _count: { select: { applications: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 
-  return NextResponse.json({ success: true, data: vacantes });
+    return NextResponse.json({ success: true, data: vacantes });
+  } catch (error) {
+    console.error('[Vacantes GET Error]:', error);
+    return NextResponse.json(
+      { success: false, message: 'Error al obtener vacantes' },
+      { status: 500 }
+    );
+  }
 }
 
+/**
+ * POST /api/vacantes — Redirige a /api/jobs
+ */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    // await connectToDatabase();
-    // await VacanteModel.create(body);
-    
-    return NextResponse.json({ success: true, message: 'Vacante creada exitosamente' });
+    // Redirigir al endpoint principal
+    const response = await fetch(new URL('/api/jobs', request.url), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': request.headers.get('cookie') || '',
+        'Authorization': request.headers.get('authorization') || '',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Error al crear la vacante' }, { status: 500 });
+    console.error('[Vacantes POST Error]:', error);
+    return NextResponse.json(
+      { success: false, message: 'Error al crear vacante' },
+      { status: 500 }
+    );
   }
 }

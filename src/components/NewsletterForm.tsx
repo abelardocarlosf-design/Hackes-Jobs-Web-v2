@@ -75,7 +75,7 @@ export function NewsletterForm() {
              <Button 
               type="submit"
               disabled={status === 'loading'}
-              className="h-16 px-10 bg-white text-brand-blue hover:bg-slate-100 border-none font-black uppercase text-xs tracking-widest min-w-[180px] shadow-2xl shadow-black/20"
+              className="h-16 px-10 bg-transparent border-2 border-brand-blue text-brand-blue hover:bg-brand-blue/10 font-black uppercase text-xs tracking-widest min-w-[180px]"
              >
                {status === 'loading' ? (
                  <Loader2 className="animate-spin" />

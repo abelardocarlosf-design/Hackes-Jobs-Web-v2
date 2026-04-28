@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -13,12 +14,10 @@ import {
   TrendingUp, 
   Target 
 } from 'lucide-react';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { Typewriter } from '@/components/Typewriter';
 
-export const metadata: Metadata = {
-  title: 'Encuentra al Talento Ideal sin Perder Tiempo ni Dinero | Hacke\'s Jobs',
-  description: 'Soluciones disruptivas de reclutamiento y headhunting especializado para empresas en México. Automatiza tu perfil de vacante y recibe candidatos calificados en tiempo récord.',
-  keywords: 'reclutamiento, talento, contratación, perfil de puesto, headhunting México, recursos humanos',
-};
+// metadata moved to layout or generateMetadata
 
 export default function EmpresasPage() {
   return (
@@ -26,9 +25,9 @@ export default function EmpresasPage() {
       
       <main className="flex-grow">
         {/* 1. HERO SECTION */}
-        <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden bg-brand-white">
+        <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden bg-brand-white bg-[url('/images/parallax-office.png')] bg-cover bg-center bg-fixed">
+          <div className="absolute inset-0 bg-brand-white/80 pointer-events-none"></div>
           <div className="absolute inset-0 bg-[url('/grid-light.svg')] bg-center opacity-[0.03] pointer-events-none"></div>
-          <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-brand-orange/5 rounded-full blur-[150px]"></div>
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto text-center space-y-10">
@@ -38,7 +37,7 @@ export default function EmpresasPage() {
               </div>
               
               <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-brand-black leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-700">
-                Encuentra al talento ideal <br/>
+                <Typewriter text="Encuentra al talento ideal" speed={60} delay={400} className="text-brand-orange" /> <br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue">sin perder tiempo ni dinero.</span>
               </h1>
               
@@ -53,11 +52,7 @@ export default function EmpresasPage() {
                     <ArrowRight className="ml-3" size={20} />
                   </Button>
                 </Link>
-                <Link href="#contacto">
-                  <Button variant="outline" size="xl" className="w-full sm:w-auto">
-                    Hablar con un experto
-                  </Button>
-                </Link>
+                <WhatsAppButton className="w-full sm:w-auto" />
               </div>
             </div>
           </div>
@@ -192,8 +187,8 @@ export default function EmpresasPage() {
               
               <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
                 {[
-                  { q: "HJ redujo nuestro tiempo de contratación de 45 a 12 días para perfiles críticos de ingeniería.", n: "Carlos Mendoza", p: "CTO @ TechFlow" },
-                  { q: "La calidad de los candidatos es excepcional. Entienden perfectamente la cultura de mi empresa.", n: "Ana Sofía Ruiz", p: "HR Manager @ Grupo Vantus" }
+                  { q: "Hacke's Jobs redujo nuestro tiempo de contratación de 45 a 12 días para perfiles críticos de ingeniería.", n: "Fernando Gomez", p: "CTO @ Goncalves Mexico" },
+                  { q: "La calidad de los candidatos es excepcional. Entienden perfectamente la cultura de mi empresa.", n: "Norma Rosas", p: "HR Manager @ Grupo Prisma" }
                 ].map((t, i) => (
                   <div key={i} className="bg-white p-10 rounded-[3rem] shadow-premium space-y-6">
                     <p className="text-lg text-slate-600 italic font-medium">"{t.q}"</p>
