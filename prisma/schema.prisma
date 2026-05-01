@@ -1,5 +1,5 @@
-// Prisma Schema — Hacke's Jobs SaaS
-// Local: SQLite | Producción: Supabase PostgreSQL
+// Prisma Schema â€” Hacke's Jobs SaaS
+// Local: SQLite | ProducciÃ³n: Supabase PostgreSQL
 // Para migrar a Supabase: cambiar provider a "postgresql" y actualizar DATABASE_URL
 
 generator client {
@@ -11,7 +11,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── USERS ────────────────────────────────────────────
+// â”€â”€â”€ USERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model User {
   id           String    @id @default(cuid())
   name         String
@@ -29,7 +29,7 @@ model User {
   @@map("users")
 }
 
-// ─── COMPANIES ────────────────────────────────────────
+// â”€â”€â”€ COMPANIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Company {
   id        String   @id @default(cuid())
   name      String
@@ -49,14 +49,14 @@ model Company {
   @@map("companies")
 }
 
-// ─── JOBS (VACANTES) ──────────────────────────────────
+// â”€â”€â”€ JOBS (VACANTES) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Job {
   id           String   @id @default(cuid())
   title        String
   description  String
   salaryRange  String?
   location     String?
-  modality     String?  // Presencial | Híbrido | Remoto
+  modality     String?  // Presencial | HÃ­brido | Remoto
   status       String   @default("pending") // pending | approved | rejected | closed
   requirements String?  // JSON string: skills, experience, education
   schedule     String?  // JSON string: jornada laboral
@@ -75,7 +75,7 @@ model Job {
   @@map("jobs")
 }
 
-// ─── CANDIDATES ───────────────────────────────────────
+// â”€â”€â”€ CANDIDATES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Candidate {
   id              String   @id @default(cuid())
   cvUrl           String?
@@ -94,12 +94,13 @@ model Candidate {
   // Relations
   applications Application[]
   testResults  TestResult[]
-  testPurchases TestPurchase[]
+  testpurchases TestPurchase[]
+  catSessions   CatSession[]
 
   @@map("candidates")
 }
 
-// ─── APPLICATIONS ─────────────────────────────────────
+// â”€â”€â”€ APPLICATIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Application {
   id        String   @id @default(cuid())
   status    String   @default("pending") // pending | reviewing | shortlisted | rejected | hired
@@ -118,7 +119,7 @@ model Application {
   @@map("applications")
 }
 
-// ─── PSYCHOMETRIC TESTS ───────────────────────────────
+// â”€â”€â”€ PSYCHOMETRIC TESTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model PsychometricTest {
   id        String   @id @default(cuid())
   name      String
@@ -134,11 +135,13 @@ model PsychometricTest {
   // Relations
   results   TestResult[]
   purchases TestPurchase[]
+  catItems    CatItem[]
+  catSessions CatSession[]
 
   @@map("psychometric_tests")
 }
 
-// ─── TEST RESULTS ─────────────────────────────────────
+// â”€â”€â”€ TEST RESULTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model TestResult {
   id        String   @id @default(cuid())
   results   String   // JSON: respuestas del candidato
@@ -155,7 +158,7 @@ model TestResult {
   @@map("test_results")
 }
 
-// ─── TEST PURCHASES (STRIPE) ──────────────────────────
+// â”€â”€â”€ TEST PURCHASES (STRIPE) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model TestPurchase {
   id              String   @id @default(cuid())
   stripeSessionId String?  @unique
@@ -173,7 +176,7 @@ model TestPurchase {
   @@map("test_purchases")
 }
 
-// ─── SUBSCRIPTIONS ────────────────────────────────────
+// â”€â”€â”€ SUBSCRIPTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Subscription {
   id        String   @id @default(cuid())
   plan      String   @default("basic") // basic | pro | enterprise
@@ -187,4 +190,37 @@ model Subscription {
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
+}
+
+// --- CAT (COMPUTERIZED ADAPTIVE TESTING) --------------
+model CatItem {
+  id              String   @id @default(cuid())
+  testId          String
+  test            PsychometricTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questionText    String
+  options         String   // JSON string: [{"id": "a", "text": "Opción A"}, ...]
+  correctOptionId String
+  parameterA      Float    // Discriminación
+  parameterB      Float    // Dificultad
+  parameterC      Float    // Pseudo-adivinación
+  active          Boolean  @default(true)
+  
+  @@map("cat_items")
+}
+
+model CatSession {
+  id              String   @id @default(cuid())
+  candidateId     String
+  candidate       Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  testId          String
+  test            PsychometricTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+  currentTheta    Float    @default(0.0)
+  standardError   Float    @default(1.0)
+  itemsAnswered   Int      @default(0)
+  responses       String   @default("[]") // JSON: [{"itemId": "1", "isCorrect": true, "thetaBefore": 0.0}]
+  status          String   @default("in_progress") // in_progress | completed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("cat_sessions")
 }

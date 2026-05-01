@@ -9,6 +9,7 @@ const nextConfig = {
     ],
   },
   transpilePackages: ['@react-pdf/renderer'],
+  output: 'standalone',
 };
 
 export default nextConfig;

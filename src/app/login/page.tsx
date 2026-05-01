@@ -59,24 +59,21 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex font-sans">
+    <div className="min-h-screen flex font-sans bg-brand-black overflow-hidden relative">
+      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-40"></div>
       
       {/* ─── LEFT: VISUAL PANEL ──────────────────────── */}
-      <div className="hidden lg:flex lg:w-1/2 bg-brand-black relative overflow-hidden items-center justify-center p-16">
-        {/* Background effects */}
-        <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-brand-blue/20 rounded-full blur-[150px] animate-pulse-slow" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-orange/10 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
-        <div className="absolute inset-0 bg-[url('/grid-light.svg')] opacity-[0.03]" />
-
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center p-16">
+        <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
         <div className="relative z-10 max-w-lg space-y-12">
           <div>
             <div className="relative w-[200px] h-[60px] mb-12">
-              <Image src="/logo.png" fill className="object-contain object-left brightness-0 invert" alt="Hacke's Jobs" priority />
+              <Image src="/logo.png" fill className="object-contain object-left drop-shadow-2xl" alt="Hacke's Jobs" priority />
             </div>
             <h1 className="text-5xl xl:text-6xl font-black text-white tracking-tighter leading-[0.9] mb-6">
               Reclutamiento del <span className="text-brand-orange">futuro.</span>
             </h1>
-            <p className="text-xl text-slate-400 font-medium leading-relaxed">
+            <p className="text-xl text-slate-300 font-medium leading-relaxed">
               Automatiza, evalúa y contrata al mejor talento con la plataforma más avanzada de México.
             </p>
           </div>
@@ -86,17 +83,17 @@ function LoginForm() {
               { icon: Sparkles, text: 'Scoring inteligente de candidatos', color: 'text-brand-orange' },
               { icon: Shield, text: 'Tests psicométricos integrados', color: 'text-brand-blue' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 group">
-                <div className={`w-12 h-12 rounded-2xl bg-white/5 ${item.color} flex items-center justify-center group-hover:bg-white/10 transition-colors`}>
-                  <item.icon size={22} />
+              <div key={i} className="flex items-center gap-6 group">
+                <div className={`w-14 h-14 rounded-2xl bg-white/5 ${item.color} flex items-center justify-center border border-white/10 group-hover:bg-white/10 transition-colors`}>
+                  <item.icon size={26} />
                 </div>
-                <span className="text-white/70 font-bold text-sm group-hover:text-white transition-colors">{item.text}</span>
+                <span className="text-slate-300 font-black uppercase tracking-widest text-[11px] group-hover:text-white transition-colors">{item.text}</span>
               </div>
             ))}
           </div>
 
           <div className="pt-8 border-t border-white/5">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
               Hacke's Jobs Platform © {new Date().getFullYear()}
             </p>
           </div>
@@ -104,25 +101,25 @@ function LoginForm() {
       </div>
 
       {/* ─── RIGHT: LOGIN FORM ───────────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-8 sm:p-12 bg-white">
-        <div className="w-full max-w-md space-y-10">
+      <div className="flex-1 flex items-center justify-center p-8 sm:p-12 relative z-20">
+        <div className="w-full max-w-md space-y-10 bg-brand-black/40 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
           
           {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-4">
+          <div className="lg:hidden flex justify-center mb-8">
             <div className="relative w-[180px] h-[50px]">
-              <Image src="/logo.png" fill className="object-contain" alt="Hacke's Jobs" priority />
+              <Image src="/logo.png" fill className="object-contain drop-shadow-2xl" alt="Hacke's Jobs" priority />
             </div>
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-4xl font-black text-brand-black tracking-tighter">Bienvenido</h2>
+            <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Bienvenido</h2>
             <p className="text-slate-400 font-medium text-lg">
               Ingresa a tu cuenta para continuar
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 rounded-2xl p-4 text-sm font-bold animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl p-6 text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 duration-300">
               {error}
             </div>
           )}
@@ -132,7 +129,7 @@ function LoginForm() {
               onSuccess={handleGoogleSuccess}
               onError={() => setError('Error al conectar con Google')}
               useOneTap
-              theme="outline"
+              theme="filled_black"
               size="large"
               width="100%"
               text="continue_with"
@@ -142,17 +139,17 @@ function LoginForm() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
+              <div className="w-full border-t border-white/10"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-slate-400 font-bold uppercase tracking-widest text-[10px]">O ingresa con tu email</span>
+            <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+              <span className="px-6 bg-transparent text-slate-500">O ingresa con email</span>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
-                Email
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-3">
+              <label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
+                Email Profesional
               </label>
               <input
                 id="email"
@@ -160,18 +157,18 @@ function LoginForm() {
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium text-lg"
+                placeholder="tu@empresa.com"
+                className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-600 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold text-lg"
                 autoComplete="email"
               />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between ml-4">
+                <label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">
                   Contraseña
                 </label>
-                <button type="button" className="text-[10px] font-bold text-brand-blue hover:underline uppercase tracking-widest">
+                <button type="button" className="text-[9px] font-black text-brand-blue hover:text-brand-orange uppercase tracking-widest transition-colors">
                   ¿Olvidaste tu contraseña?
                 </button>
               </div>
@@ -183,15 +180,15 @@ function LoginForm() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-5 py-4 pr-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium text-lg"
+                  className="w-full h-16 px-8 pr-16 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-600 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold text-lg"
                   autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
+                  className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
                 </button>
               </div>
             </div>
@@ -199,29 +196,29 @@ function LoginForm() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-16 bg-brand-black text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-brand-black/90 focus:ring-4 focus:ring-brand-blue/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-brand-black/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-3 group"
+              className="w-full h-20 bg-brand-orange text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] focus:ring-4 focus:ring-brand-orange/20 transition-all duration-300 shadow-xl shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-4 group"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Ingresando...
+                  VALIDANDO...
                 </>
               ) : (
                 <>
                   Iniciar Sesión
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="text-center pt-4">
-            <p className="text-slate-400 font-medium">
+          <div className="text-center pt-6">
+            <p className="text-slate-400 font-medium text-sm">
               ¿No tienes cuenta?{' '}
-              <Link href="/register" className="text-brand-blue font-black hover:underline decoration-brand-orange decoration-2 underline-offset-4 transition-all">
+              <Link href="/register" className="text-brand-orange font-black hover:text-orange-400 transition-colors uppercase tracking-widest text-[10px] ml-2">
                 Regístrate gratis
               </Link>
             </p>

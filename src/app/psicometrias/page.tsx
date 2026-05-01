@@ -65,47 +65,35 @@ export default async function PsicometriasPage() {
   const levels = ['basico', 'intermedio', 'avanzado', 'premium'];
   
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 font-sans selection:bg-brand-orange/20 selection:text-brand-orange pb-32">
+    <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white pb-32 relative">
+      {/* Full page dynamic background - City Theme */}
+      <div className="fixed inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-[0.2] pointer-events-none z-0"></div>
       
       {/* Header Section */}
-      <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-brand-black text-white relative overflow-hidden bg-[url('/images/parallax-psycho.png')] bg-cover bg-center bg-fixed">
-        <div className="absolute inset-0 bg-brand-black/70 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-[url('/grid-light.svg')] opacity-5 pointer-events-none"></div>
-        
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2 text-left">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-brand-orange text-xs sm:text-sm font-black tracking-[0.2em] uppercase mb-8 shadow-sm">
-                <span className="flex h-2 w-2 rounded-full bg-brand-orange animate-pulse" aria-hidden="true"></span>
-                Evaluación Científica
-              </div>
-              <TypewriterHeading 
-                text="Catálogo de" 
-                speed={70} 
-                delay={400}
-                headingClassName="text-5xl sm:text-7xl font-black tracking-tighter mb-8 leading-none"
-                afterContent={<><br className="hidden sm:block" /> <span className="text-brand-blue">Pruebas.</span></>}
-              />
-              <p className="text-xl md:text-2xl text-slate-400 max-w-3xl leading-relaxed font-medium">
-                10 pruebas validadas organizadas en 4 niveles de profundidad. Desbloquea todo tu potencial.
-              </p>
+      <section className="pt-32 pb-20 md:pt-40 md:pb-28 text-white relative overflow-hidden z-10">
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10 text-center">
+          <div className="flex flex-col items-center justify-center max-w-5xl mx-auto">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-brand-orange text-xs sm:text-sm font-black tracking-[0.2em] uppercase mb-8 shadow-sm backdrop-blur-xl">
+              <span className="flex h-2 w-2 rounded-full bg-brand-orange animate-pulse" aria-hidden="true"></span>
+              Evaluación Científica 4.0
             </div>
-            <div className="lg:w-1/2 flex justify-center">
-              <Illustration 
-                src="/images/psicometria-illustration.png"
-                alt="Psicometría y Análisis"
-                width={500}
-                height={400}
-                priority={true}
-                className="w-full max-w-md shadow-2xl shadow-brand-blue/5 border-white/10"
-              />
-            </div>
+            <TypewriterHeading 
+              text="Catálogo de" 
+              speed={70} 
+              delay={400}
+              headingClassName="text-5xl sm:text-8xl font-black tracking-tighter mb-8 leading-none"
+              afterContent={<><br className="hidden sm:block" /> <span className="text-brand-blue drop-shadow-2xl">Psicometrías IA.</span></>}
+            />
+            <p className="text-xl md:text-2xl text-slate-300 max-w-3xl leading-relaxed font-medium drop-shadow-lg">
+              Descubre el potencial oculto de tu talento con evaluaciones validadas científicamente y potenciadas por algoritmos adaptativos.
+            </p>
           </div>
         </div>
       </section>
 
       {/* Tests Catalog */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl mt-12 space-y-24">
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl mt-12 space-y-24 z-10">
+        
         {levels.map(levelKey => {
           const levelTests = tests.filter(t => t.level === levelKey);
           if (levelTests.length === 0) return null;
@@ -116,12 +104,12 @@ export default async function PsicometriasPage() {
           return (
             <section key={levelKey} className="space-y-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
               <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl ${config.border} flex items-center justify-center ${config.color}`}>
+                <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center ${config.color}`}>
                   <Icon size={24} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-brand-black tracking-tight">{config.label}</h2>
-                  <p className="text-slate-500 font-medium">
+                  <h2 className="text-3xl font-black text-white tracking-tight">{config.label}</h2>
+                  <p className="text-slate-400 font-medium">
                     {levelKey === 'basico' ? 'Gratuitas. Ideales para filtros iniciales.' : `Acceso Premium - $${levelTests[0].price} USD por test.`}
                   </p>
                 </div>
@@ -133,49 +121,50 @@ export default async function PsicometriasPage() {
                   const isUnlocked = !test.isPremium || unlockedTestIds.includes(test.id);
 
                   return (
-                    <Card key={test.id} className={`border-2 rounded-3xl bg-white overflow-hidden transition-all duration-300 hover:shadow-xl ${isUnlocked ? 'border-slate-100 hover:border-brand-blue/30' : 'border-slate-100/50 opacity-80 hover:opacity-100'} group relative flex flex-col`}>
+                    <Card key={test.id} className={`glass-card p-0 rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:bg-white/10 ${isUnlocked ? 'border-white/10' : 'opacity-80 hover:opacity-100'} group relative flex flex-col`}>
                       
                       {!isUnlocked && (
-                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 z-10">
+                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-brand-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-slate-300 z-10">
                           <Lock size={14} />
                         </div>
                       )}
                       {isUnlocked && test.isPremium && (
-                        <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest z-10 flex items-center gap-1">
+                        <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase tracking-widest z-10 flex items-center gap-1 border border-emerald-500/20">
                           <Unlock size={10} /> Desbloqueado
                         </div>
                       )}
 
-                      <CardHeader className="p-6 pb-2">
-                        <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg self-start ${config.border} ${config.color} mb-4`}>
+                      <div className="p-8 pb-2">
+                        <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg self-start inline-block ${config.color} bg-white/5 border border-white/10 mb-4`}>
                           {test.type}
                         </span>
-                        <CardTitle className="text-xl font-black text-brand-black leading-tight">
+                        <h3 className="text-xl font-black text-white leading-tight uppercase">
                           {test.name}
-                        </CardTitle>
-                      </CardHeader>
+                        </h3>
+                      </div>
                       
-                      <CardContent className="p-6 pt-2 flex-1 flex flex-col">
-                        <p className="text-sm text-slate-500 font-medium mb-6 flex-1">
+                      <div className="p-8 pt-2 flex-1 flex flex-col">
+                        <p className="text-sm text-slate-400 font-medium mb-6 flex-1 leading-relaxed">
                           {structInfo.description}
                         </p>
                         
                         <div className="flex items-center justify-between mt-auto">
-                          <div className="text-xs font-bold text-slate-400 flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                            ⏱ {test.duration} min
+                          <div className="flex gap-2">
+                            <div className="text-[10px] font-black text-slate-300 flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 uppercase tracking-widest">
+                              ⏱ {test.duration} min
+                            </div>
+                            <div className={`text-[10px] font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg border uppercase tracking-widest ${test.isPremium ? 'text-brand-orange bg-brand-orange/10 border-brand-orange/20' : 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'}`}>
+                              {test.isPremium ? `$${test.price} USD` : 'Gratis'}
+                            </div>
                           </div>
                           
-                          {isUnlocked ? (
-                            <Link href={`/psicometrias/${test.type.toLowerCase() === 'disc' ? 'disc' : 'test/' + test.id}`}>
-                              <Button variant="secondary" className="h-10 px-5 text-xs font-black rounded-xl">
-                                Iniciar <ArrowRight size={14} className="ml-1" />
-                              </Button>
-                            </Link>
-                          ) : (
-                            <UnlockButton testId={test.id} price={test.price} />
-                          )}
+                          <Link href={`/psicometrias/${test.type.toLowerCase() === 'disc' ? 'disc' : 'test/' + test.id}`}>
+                            <Button variant="secondary" className="h-10 px-5 text-[10px] font-black rounded-xl uppercase tracking-widest shadow-orange/40">
+                              Iniciar <ArrowRight size={14} className="ml-1" />
+                            </Button>
+                          </Link>
                         </div>
-                      </CardContent>
+                      </div>
                     </Card>
                   );
                 })}

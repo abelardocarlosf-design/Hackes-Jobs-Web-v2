@@ -46,11 +46,13 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 2);
 
   return (
-    <article className="flex flex-col min-h-screen bg-white font-sans selection:bg-brand-orange/20 selection:text-brand-orange overflow-x-hidden">
+    <article className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
       
       {/* 1. ARTICLE HERO */}
       <header className="relative pt-40 pb-20 overflow-hidden bg-brand-black text-white">
-        <div className="absolute inset-0 bg-[url('/grid-light.svg')] bg-center opacity-[0.05] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-20 bg-fixed pointer-events-none"></div>
+        <div className="absolute inset-0 bg-brand-black/60 pointer-events-none"></div>
+        
         <div className="container relative mx-auto px-4 z-10 max-w-4xl">
            <div className="flex flex-wrap gap-4 mb-8">
               {post.tags.map(tag => (
@@ -60,7 +62,7 @@ export default async function BlogPostPage({ params }: Props) {
               ))}
            </div>
            
-           <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-tight mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+           <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-tight mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 text-white drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
              {post.title}
            </h1>
            
@@ -79,7 +81,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* 2. FEATURED IMAGE */}
       <div className="container mx-auto px-4 -mt-16 relative z-20 max-w-5xl">
-         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden shadow-2xl border-8 border-brand-black/40 backdrop-blur-xl">
             <Image 
               src={post.coverImage || '/images/hero-illustration.png'} 
               alt={post.title}
@@ -92,43 +94,47 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* 3. CONTENT SECTION */}
       <section className="py-24 container mx-auto px-4 max-w-4xl relative">
-        <div 
-          className="prose prose-slate prose-xl max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase prose-a:text-brand-blue prose-img:rounded-[2rem] prose-strong:text-brand-black"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <div className="absolute inset-0 bg-[url('/images/psicometrias-bg.gif')] bg-cover bg-center opacity-[0.03] pointer-events-none"></div>
         
-        {/* SHARE BUTTONS */}
-        <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-8">
-           <div className="space-y-2 text-center sm:text-left">
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400">¿Te gustó el artículo?</p>
-              <h4 className="text-xl font-black text-brand-black uppercase tracking-tight">Compártelo con tu red</h4>
-           </div>
-           <div className="flex gap-4">
-              <Button variant="outline" className="w-12 h-12 rounded-xl p-0 flex items-center justify-center hover:bg-brand-blue hover:text-white transition-all border-slate-200">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-              </Button>
-              <Button variant="outline" className="w-12 h-12 rounded-xl p-0 flex items-center justify-center hover:bg-brand-blue hover:text-white transition-all border-slate-200">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              </Button>
-           </div>
+        <div className="relative z-10 glass-card-dark p-8 md:p-16 rounded-[3rem] border border-white/5">
+          <div 
+            className="prose prose-invert prose-xl max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase prose-a:text-brand-blue prose-img:rounded-[2rem] prose-strong:text-brand-orange"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+          
+          {/* SHARE BUTTONS */}
+          <div className="mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-8">
+             <div className="space-y-2 text-center sm:text-left">
+                <p className="text-xs font-black uppercase tracking-widest text-slate-500">¿Te gustó el artículo?</p>
+                <h4 className="text-xl font-black text-white uppercase tracking-tight">Compártelo con tu red</h4>
+             </div>
+             <div className="flex gap-4">
+                <Button variant="outline" className="w-12 h-12 rounded-xl p-0 flex items-center justify-center hover:bg-brand-blue hover:text-white transition-all border-white/10 bg-white/5">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                </Button>
+                <Button variant="outline" className="w-12 h-12 rounded-xl p-0 flex items-center justify-center hover:bg-brand-blue hover:text-white transition-all border-white/10 bg-white/5">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </Button>
+             </div>
+          </div>
         </div>
       </section>
 
       {/* 4. RELATED POSTS */}
       {relatedPosts.length > 0 && (
-        <section className="py-24 bg-brand-slate">
+        <section className="py-24 bg-brand-black/50 border-y border-white/5">
           <div className="container mx-auto px-4 max-w-7xl">
-            <h3 className="text-3xl font-black text-brand-black uppercase tracking-tighter mb-12 text-center">Artículos Relacionados</h3>
+            <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-12 text-center">Artículos Relacionados</h3>
             <div className="grid md:grid-cols-2 gap-10">
                {relatedPosts.map(p => (
                  <Link key={p.slug} href={`/blog/${p.slug}`} className="group">
-                    <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-500 p-6 flex flex-col sm:flex-row gap-8 items-center">
+                    <div className="glass-card-dark rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-brand-blue/30 transition-all duration-500 p-6 flex flex-col sm:flex-row gap-8 items-center bg-white/5 backdrop-blur-md">
                        <div className="relative w-full sm:w-40 h-40 shrink-0 rounded-2xl overflow-hidden">
                           <Image src={p.coverImage} alt={p.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                        </div>
                        <div className="space-y-4 text-left">
                           <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue">{p.tags[0]}</span>
-                          <h4 className="text-xl font-black text-brand-black uppercase leading-tight group-hover:text-brand-blue transition-colors">{p.title}</h4>
+                          <h4 className="text-xl font-black text-white uppercase leading-tight group-hover:text-brand-blue transition-colors">{p.title}</h4>
                           <p className="text-slate-400 text-sm line-clamp-2">{p.excerpt}</p>
                        </div>
                     </div>
@@ -140,7 +146,7 @@ export default async function BlogPostPage({ params }: Props) {
       )}
 
       {/* 5. BACK TO BLOG */}
-      <div className="py-20 flex justify-center">
+      <div className="py-20 flex justify-center bg-brand-black">
          <Link href="/blog">
            <Button variant="secondary" size="lg" className="h-16 px-12 rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-orange/40">
              Volver al blog

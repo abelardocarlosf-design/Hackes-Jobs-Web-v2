@@ -11,7 +11,7 @@ export function Card({ children, className, style }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-[2.5rem] border border-slate-100 bg-white text-brand-black shadow-premium transition-all duration-500 hover:shadow-premium-hover hover:-translate-y-1",
+        "rounded-[2.5rem] bg-white/5 backdrop-blur-2xl border border-white/10 transition-all duration-500 hover:shadow-premium-hover hover:-translate-y-1 overflow-hidden",
         className
       )}
       style={style}
@@ -31,7 +31,7 @@ export function CardHeader({ children, className }: CardProps) {
 
 export function CardTitle({ children, className }: CardProps) {
   return (
-    <h3 className={cn("text-2xl sm:text-3xl font-black leading-none tracking-tighter text-brand-black uppercase", className)}>
+    <h3 className={cn("text-2xl sm:text-3xl font-black leading-none tracking-tighter uppercase", className)}>
       {children}
     </h3>
   );

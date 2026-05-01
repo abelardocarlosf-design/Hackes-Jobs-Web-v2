@@ -88,23 +88,21 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex font-sans">
+    <div className="min-h-screen flex font-sans bg-brand-black overflow-hidden relative">
+      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-40"></div>
       
       {/* ─── LEFT: VISUAL PANEL ──────────────────────── */}
-      <div className="hidden lg:flex lg:w-[45%] bg-brand-black relative overflow-hidden items-center justify-center p-16">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-brand-orange/15 rounded-full blur-[150px] animate-pulse-slow" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-brand-blue/15 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: '3s' }} />
-        <div className="absolute inset-0 bg-[url('/grid-light.svg')] opacity-[0.03]" />
-
+      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden items-center justify-center p-16">
+        <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
         <div className="relative z-10 max-w-lg space-y-12">
           <div>
             <div className="relative w-[200px] h-[60px] mb-12">
-              <Image src="/logo.png" fill className="object-contain object-left brightness-0 invert" alt="Hacke's Jobs" priority />
+              <Image src="/logo.png" fill className="object-contain object-left drop-shadow-2xl" alt="Hacke's Jobs" priority />
             </div>
             <h1 className="text-5xl font-black text-white tracking-tighter leading-[0.9] mb-6">
               Únete a la revolución del <span className="text-brand-orange">talento.</span>
             </h1>
-            <p className="text-lg text-slate-400 font-medium leading-relaxed">
+            <p className="text-lg text-slate-300 font-medium leading-relaxed">
               Miles de empresas ya optimizan su reclutamiento con nosotros.
             </p>
           </div>
@@ -115,71 +113,76 @@ export default function RegisterPage() {
               { icon: Brain, label: 'Tests psicométricos', desc: 'Evaluaciones DISC y más, integradas' },
               { icon: BarChart3, label: 'Scoring inteligente', desc: 'Rankea candidatos automáticamente' },
             ].map((feature, i) => (
-              <div key={i} className="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
-                <div className="w-10 h-10 rounded-xl bg-brand-orange/20 text-brand-orange flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <feature.icon size={20} />
+              <div key={i} className="flex items-start gap-5 p-6 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group">
+                <div className="w-12 h-12 rounded-2xl bg-brand-orange/20 text-brand-orange flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <feature.icon size={22} />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-sm">{feature.label}</h4>
-                  <p className="text-slate-500 text-xs font-medium">{feature.desc}</p>
+                  <h4 className="text-white font-black text-sm uppercase tracking-tight mb-1">{feature.label}</h4>
+                  <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest leading-tight">{feature.desc}</p>
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="pt-8 border-t border-white/5">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">
+              Hacke's Jobs Platform © {new Date().getFullYear()}
+            </p>
           </div>
         </div>
       </div>
 
       {/* ─── RIGHT: REGISTER FORM ────────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-8 sm:p-12 bg-white overflow-y-auto">
-        <div className="w-full max-w-lg space-y-8">
+      <div className="flex-1 flex items-center justify-center p-8 sm:p-12 relative z-20 overflow-y-auto pt-24 pb-24">
+        <div className="w-full max-w-lg space-y-10 bg-brand-black/40 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
           
           {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-4">
+          <div className="lg:hidden flex justify-center mb-8">
             <div className="relative w-[180px] h-[50px]">
-              <Image src="/logo.png" fill className="object-contain" alt="Hacke's Jobs" priority />
+              <Image src="/logo.png" fill className="object-contain drop-shadow-2xl" alt="Hacke's Jobs" priority />
             </div>
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-4xl font-black text-brand-black tracking-tighter">Crear cuenta</h2>
+            <h2 className="text-4xl font-black text-white tracking-tighter uppercase">Crear cuenta</h2>
             <p className="text-slate-400 font-medium text-lg">Selecciona tu perfil para comenzar</p>
           </div>
 
           {/* ─── ROLE SELECTOR ─────────────────────── */}
           <div className="grid grid-cols-2 gap-4">
             {([
-              { id: 'company' as Role, label: 'Soy Empresa', desc: 'Publicar vacantes y contratar', icon: Building2, color: 'brand-blue' },
-              { id: 'candidate' as Role, label: 'Soy Candidato', desc: 'Buscar empleo y evaluarme', icon: UserCircle, color: 'brand-orange' },
+              { id: 'company' as Role, label: 'Empresa', desc: 'Contratar Talento', icon: Building2, color: 'brand-blue' },
+              { id: 'candidate' as Role, label: 'Candidato', desc: 'Buscar Empleo', icon: UserCircle, color: 'brand-orange' },
             ]).map(option => (
               <button
                 key={option.id}
                 type="button"
                 onClick={() => setRole(option.id)}
-                className={`relative p-6 rounded-2xl border-2 text-left transition-all duration-300 group ${
+                className={`relative p-6 rounded-3xl border-2 text-left transition-all duration-300 group ${
                   role === option.id
-                    ? `border-${option.color} bg-${option.color}/5 shadow-lg`
-                    : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                    ? `border-${option.color} bg-${option.color}/10 shadow-lg`
+                    : 'border-white/5 bg-white/5 hover:border-white/20 hover:bg-white/10'
                 }`}
                 style={role === option.id ? {
                   borderColor: option.id === 'company' ? '#1E40AF' : '#F97316',
-                  backgroundColor: option.id === 'company' ? 'rgba(30,64,175,0.05)' : 'rgba(249,115,22,0.05)',
                 } : {}}
               >
                 {role === option.id && (
-                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center"
+                  <div className="absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center animate-in zoom-in duration-300"
                     style={{ backgroundColor: option.id === 'company' ? '#1E40AF' : '#F97316' }}>
                     <Check size={14} className="text-white" />
                   </div>
                 )}
-                <option.icon size={28} className={`mb-3 ${role === option.id ? (option.id === 'company' ? 'text-brand-blue' : 'text-brand-orange') : 'text-slate-300'} transition-colors`} />
-                <h4 className="font-black text-brand-black text-sm uppercase tracking-tight">{option.label}</h4>
-                <p className="text-[11px] text-slate-400 font-medium mt-1">{option.desc}</p>
+                <option.icon size={32} className={`mb-4 ${role === option.id ? (option.id === 'company' ? 'text-brand-blue' : 'text-brand-orange') : 'text-slate-600'} transition-colors group-hover:scale-110 duration-300`} />
+                <h4 className="font-black text-white text-xs uppercase tracking-widest">{option.label}</h4>
+                <p className="text-[10px] text-slate-500 font-black uppercase mt-1 tracking-widest">{option.desc}</p>
               </button>
             ))}
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 rounded-2xl p-4 text-sm font-bold animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-3xl p-6 text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 duration-300">
               {error}
             </div>
           )}
@@ -191,7 +194,7 @@ export default function RegisterPage() {
                   onSuccess={handleGoogleSuccess}
                   onError={() => setError('Error al conectar con Google')}
                   useOneTap
-                  theme="outline"
+                  theme="filled_black"
                   size="large"
                   width="100%"
                   text="signup_with"
@@ -201,19 +204,19 @@ export default function RegisterPage() {
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
+                  <div className="w-full border-t border-white/10"></div>
                 </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-400 font-bold uppercase tracking-widest text-[10px]">O regístrate con tu email</span>
+                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+                  <span className="px-6 bg-transparent text-slate-600">O regístrate con email</span>
                 </div>
               </div>
             </>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
-                Nombre completo <span className="text-brand-orange">*</span>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-3">
+              <label htmlFor="name" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
+                Nombre Completo <span className="text-brand-orange">*</span>
               </label>
               <input
                 id="name"
@@ -223,12 +226,12 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Tu nombre completo"
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium"
+                className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-700 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold"
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+            <div className="space-y-3">
+              <label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
                 Email {role === 'company' ? 'corporativo' : ''} <span className="text-brand-orange">*</span>
               </label>
               <input
@@ -239,12 +242,12 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={role === 'company' ? 'contacto@empresa.com' : 'tu@email.com'}
-                className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium"
+                className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-700 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold"
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+            <div className="space-y-3">
+              <label htmlFor="password" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
                 Contraseña <span className="text-brand-orange">*</span>
               </label>
               <div className="relative">
@@ -256,23 +259,23 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Mínimo 6 caracteres"
-                  className="w-full px-5 py-4 pr-14 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium"
+                  className="w-full h-16 px-8 pr-16 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-700 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors"
+                  className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
                 </button>
               </div>
             </div>
 
             {/* ─── COMPANY FIELDS ──────────────────── */}
             {role === 'company' && (
-              <div className="space-y-5 pt-2 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="pt-4 space-y-2">
-                  <label htmlFor="companyName" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+              <div className="space-y-6 pt-6 border-t border-white/5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-3">
+                  <label htmlFor="companyName" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
                     Nombre de la empresa <span className="text-brand-orange">*</span>
                   </label>
                   <input
@@ -283,13 +286,13 @@ export default function RegisterPage() {
                     value={formData.companyName}
                     onChange={handleChange}
                     placeholder="Ej. TechCorp México"
-                    className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium"
+                    className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-700 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="companyIndustry" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+                  <div className="space-y-3">
+                    <label htmlFor="companyIndustry" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
                       Industria
                     </label>
                     <input
@@ -299,11 +302,11 @@ export default function RegisterPage() {
                       value={formData.companyIndustry}
                       onChange={handleChange}
                       placeholder="Ej. Fintech"
-                      className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium"
+                      className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white placeholder-slate-700 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label htmlFor="companySize" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+                  <div className="space-y-3">
+                    <label htmlFor="companySize" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">
                       Tamaño
                     </label>
                     <select
@@ -311,14 +314,14 @@ export default function RegisterPage() {
                       name="companySize"
                       value={formData.companySize}
                       onChange={handleChange}
-                      className="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 text-brand-black focus:bg-white focus:ring-4 focus:ring-brand-blue/5 focus:border-brand-blue outline-none transition-all font-medium appearance-none"
+                      className="w-full h-16 px-8 rounded-3xl border border-white/10 bg-white/5 text-white focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all font-bold appearance-none cursor-pointer"
                     >
-                      <option value="">Seleccionar...</option>
-                      <option value="1-10">1-10</option>
-                      <option value="11-50">11-50</option>
-                      <option value="51-200">51-200</option>
-                      <option value="201-500">201-500</option>
-                      <option value="500+">500+</option>
+                      <option value="" className="bg-brand-black">Seleccionar...</option>
+                      <option value="1-10" className="bg-brand-black">1-10</option>
+                      <option value="11-50" className="bg-brand-black">11-50</option>
+                      <option value="51-200" className="bg-brand-black">51-200</option>
+                      <option value="201-500" className="bg-brand-black">201-500</option>
+                      <option value="500+" className="bg-brand-black">500+</option>
                     </select>
                   </div>
                 </div>
@@ -328,37 +331,37 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-16 bg-brand-black text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-brand-black/90 focus:ring-4 focus:ring-brand-blue/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-brand-black/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group mt-2"
+              className="w-full h-20 bg-brand-orange text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] focus:ring-4 focus:ring-brand-orange/20 transition-all duration-300 shadow-xl shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-4 group mt-4"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Creando cuenta...
+                  CREANDO CUENTA...
                 </>
               ) : (
                 <>
                   Crear mi cuenta
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="text-center">
-            <p className="text-slate-400 font-medium">
+          <div className="text-center space-y-6">
+            <p className="text-slate-400 font-medium text-sm">
               ¿Ya tienes cuenta?{' '}
-              <Link href="/login" className="text-brand-blue font-black hover:underline decoration-brand-orange decoration-2 underline-offset-4 transition-all">
+              <Link href="/login" className="text-brand-orange font-black hover:text-orange-400 transition-colors uppercase tracking-widest text-[10px] ml-2">
                 Inicia sesión
               </Link>
             </p>
+            <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest leading-loose">
+              Al registrarte aceptas nuestros <br/> 
+              <span className="text-brand-blue">Términos de Servicio</span> y <span className="text-brand-blue">Privacidad</span>
+            </p>
           </div>
-
-          <p className="text-center text-[10px] text-slate-300 font-medium uppercase tracking-widest">
-            Al registrarte aceptas los Términos de Servicio
-          </p>
         </div>
       </div>
     </div>

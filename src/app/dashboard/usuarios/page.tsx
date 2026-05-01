@@ -68,50 +68,50 @@ export default function DashboardUsuariosPage() {
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-         <div className="space-y-1">
-            <h1 className="text-4xl font-black text-brand-black uppercase tracking-tighter">Equipo de Trabajo</h1>
-            <p className="text-slate-400 font-medium">Gestiona los accesos y roles de tus colaboradores.</p>
+         <div className="space-y-2">
+            <h1 className="text-5xl font-black text-white uppercase tracking-tighter leading-none">Equipo de Élite</h1>
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-[11px]">Control de accesos y protocolos de seguridad del sistema.</p>
          </div>
          {!isAdding && (
-           <Button onClick={() => setIsAdding(true)} variant="secondary" className="flex gap-2 h-14 px-8 rounded-2xl shadow-orange/20">
-             <UserPlus size={18} /> Invitar Miembro
+           <Button onClick={() => setIsAdding(true)} variant="secondary" className="flex gap-4 h-16 px-10 rounded-2xl shadow-orange/20 text-[11px] font-black uppercase tracking-widest border-none">
+             <UserPlus size={20} /> Invitar Operador
            </Button>
          )}
       </div>
 
       {isAdding ? (
-        <Card className="p-10 space-y-8 animate-in fade-in zoom-in duration-500 max-w-4xl">
-           <div className="flex items-center justify-between border-b border-slate-50 pb-6">
-              <h2 className="text-2xl font-black text-brand-black uppercase tracking-tighter">Nuevo Colaborador</h2>
-              <Button variant="ghost" onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-brand-black">
-                 <X size={24} />
+        <Card className="p-12 space-y-10 animate-in fade-in zoom-in duration-500 max-w-4xl bg-brand-black/40 backdrop-blur-3xl border-white/10 rounded-[3rem]">
+           <div className="flex items-center justify-between border-b border-white/5 pb-8">
+              <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Nuevo Perfil</h2>
+              <Button variant="ghost" onClick={() => setIsAdding(false)} className="text-slate-500 hover:text-white transition-colors">
+                 <X size={28} />
               </Button>
            </div>
 
-           <form onSubmit={handleCreateUser} className="space-y-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nombre Completo</label>
+           <form onSubmit={handleCreateUser} className="space-y-10">
+              <div className="grid md:grid-cols-2 gap-10">
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Nombre Completo</label>
                     <input 
                       type="text" 
                       required
                       placeholder="Ej: Juan Pérez"
-                      className="w-full h-14 bg-slate-50 border-none rounded-xl px-6 font-bold text-brand-black focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
+                      className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                       value={newUser.name}
                       onChange={e => setNewUser({...newUser, name: e.target.value})}
                     />
                  </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Usuario / Email</label>
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Identificador / Email</label>
                     <div className="relative">
-                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                       <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                        <input 
                         type="text" 
                         required
                         placeholder="ejemplo@hackesjobs.com"
-                        className="w-full h-14 bg-slate-50 border-none rounded-xl pl-12 pr-6 font-bold text-brand-black focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
+                        className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl pl-16 pr-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                         value={newUser.username}
                         onChange={e => setNewUser({...newUser, username: e.target.value})}
                        />
@@ -119,81 +119,82 @@ export default function DashboardUsuariosPage() {
                  </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Contraseña Temporal</label>
+              <div className="grid md:grid-cols-2 gap-10">
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Contraseña de Seguridad</label>
                     <div className="relative">
-                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                       <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
                        <input 
                         type="password" 
                         required
-                        className="w-full h-14 bg-slate-50 border-none rounded-xl pl-12 pr-6 font-bold text-brand-black focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
+                        className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl pl-16 pr-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                         value={newUser.passwordHash}
                         onChange={e => setNewUser({...newUser, passwordHash: e.target.value})}
                        />
                     </div>
                  </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Nivel de Acceso</label>
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Privilegios de Acceso</label>
                     <select 
-                      className="w-full h-14 bg-slate-50 border-none rounded-xl px-6 font-bold text-brand-black focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all appearance-none cursor-pointer"
+                      className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all appearance-none cursor-pointer"
                       value={newUser.role}
                       onChange={e => setNewUser({...newUser, role: e.target.value as UserRole})}
                     >
-                       <option value="EDITOR">EDITOR (Sólo Contenido)</option>
-                       <option value="ADMIN">ADMIN (Acceso Total)</option>
+                       <option value="EDITOR" className="bg-brand-black">EDITOR (Sólo Contenido)</option>
+                       <option value="ADMIN" className="bg-brand-black">ADMIN (Control Total)</option>
                     </select>
                  </div>
               </div>
 
-              <div className="pt-8 border-t border-slate-50 flex justify-end gap-4">
-                 <Button variant="ghost" type="button" onClick={() => setIsAdding(false)}>Cancelar</Button>
-                 <Button type="submit" className="h-14 px-10 rounded-xl flex gap-3">
-                    <Save size={18} /> Crear Usuario
+              <div className="pt-10 border-t border-white/5 flex justify-end gap-6">
+                 <Button variant="ghost" type="button" onClick={() => setIsAdding(false)} className="text-slate-500 hover:text-white uppercase font-black text-[11px] tracking-widest">Descartar</Button>
+                 <Button type="submit" className="h-16 px-12 rounded-2xl flex gap-4 text-[11px] font-black uppercase tracking-widest shadow-2xl shadow-brand-blue/20">
+                    <Save size={20} /> Autorizar Usuario
                  </Button>
               </div>
            </form>
         </Card>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {loading ? (
-            <div className="col-span-full py-20 flex justify-center">
-               <Loader2 className="animate-spin text-brand-blue" size={40} />
+            <div className="col-span-full py-40 flex flex-col items-center gap-6">
+               <Loader2 className="animate-spin text-brand-blue" size={60} />
+               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Sincronizando Base de Datos...</p>
             </div>
           ) : users.map((u) => (
-            <Card key={u.id} className="p-8 hover:border-brand-blue transition-all group relative overflow-hidden shadow-premium">
-               {/* Background detail */}
-               <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-full -mr-12 -mt-12 group-hover:bg-brand-blue/5 transition-colors"></div>
+            <Card key={u.id} className="p-10 bg-white/5 backdrop-blur-3xl border-white/10 hover:border-brand-blue/50 transition-all duration-500 group relative overflow-hidden rounded-[2.5rem]">
+               {/* Decorative Gradient */}
+               <div className={`absolute top-0 right-0 w-32 h-32 ${u.role === 'ADMIN' ? 'bg-brand-orange/10' : 'bg-brand-blue/10'} rounded-full blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700`}></div>
                
-               <div className="flex flex-col items-center text-center space-y-6 relative z-10">
+               <div className="flex flex-col items-center text-center space-y-8 relative z-10">
                   <div className="relative">
-                     <div className="w-24 h-24 rounded-[2rem] bg-slate-50 flex items-center justify-center text-slate-300 border-2 border-transparent group-hover:border-brand-blue/20 transition-all group-hover:bg-white group-hover:rotate-6">
-                        <UserIcon size={40} className="group-hover:text-brand-blue transition-colors" />
+                     <div className="w-28 h-28 rounded-[2.5rem] bg-white/5 flex items-center justify-center text-slate-500 border border-white/10 group-hover:border-brand-blue/40 transition-all duration-500 group-hover:bg-white/10 group-hover:rotate-6">
+                        <UserIcon size={48} className="group-hover:text-brand-blue transition-colors" />
                      </div>
-                     <div className={`absolute -bottom-2 -right-2 w-10 h-10 rounded-full ${u.role === 'ADMIN' ? 'bg-brand-orange' : 'bg-brand-blue'} text-white flex items-center justify-center border-4 border-white shadow-lg`}>
-                        {u.role === 'ADMIN' ? <Shield size={16} /> : <UserIcon size={16} />}
+                     <div className={`absolute -bottom-2 -right-2 w-12 h-12 rounded-2xl ${u.role === 'ADMIN' ? 'bg-brand-orange' : 'bg-brand-blue'} text-white flex items-center justify-center border-4 border-brand-black shadow-2xl transform group-hover:scale-110 transition-transform`}>
+                        {u.role === 'ADMIN' ? <Shield size={20} /> : <UserIcon size={20} />}
                      </div>
                   </div>
                   
-                  <div className="space-y-2">
-                     <h3 className="text-xl font-black text-brand-black uppercase tracking-tight">{u.name}</h3>
-                     <div className="flex items-center justify-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em]">
-                        <Mail size={12} className="text-brand-blue" />
+                  <div className="space-y-3">
+                     <h3 className="text-2xl font-black text-white uppercase tracking-tight group-hover:text-brand-blue transition-colors">{u.name}</h3>
+                     <div className="flex items-center justify-center gap-3 text-slate-500 font-black uppercase text-[9px] tracking-[0.2em] bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                        <Mail size={14} className="text-brand-blue" />
                         {u.username.includes('@') ? u.username : `${u.username}@hackesjobs.com`}
                      </div>
                   </div>
 
-                  <div className="w-full pt-8 flex items-center justify-between">
-                     <span className={`${u.role === 'ADMIN' ? 'bg-brand-orange/10 text-brand-orange border-brand-orange/20' : 'bg-brand-blue/10 text-brand-blue border-brand-blue/20'} text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-widest border`}>
+                  <div className="w-full pt-8 border-t border-white/5 flex items-center justify-between">
+                     <span className={`${u.role === 'ADMIN' ? 'bg-brand-orange/20 text-brand-orange border-brand-orange/30' : 'bg-brand-blue/20 text-brand-blue border-brand-blue/30'} text-[9px] font-black px-5 py-2.5 rounded-full uppercase tracking-widest border backdrop-blur-md`}>
                         {u.role}
                      </span>
                      {u.username !== 'admin' && (
                        <Button 
                         onClick={() => handleDeleteUser(u.id, u.name)}
                         variant="ghost" 
-                        className="h-10 w-10 p-0 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl"
+                        className="h-12 w-12 p-0 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-2xl transition-all"
                        >
-                          <Trash2 size={18} />
+                          <Trash2 size={22} />
                        </Button>
                      )}
                   </div>

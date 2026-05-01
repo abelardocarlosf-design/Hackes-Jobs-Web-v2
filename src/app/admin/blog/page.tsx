@@ -98,28 +98,35 @@ export default function AdminBlogPage() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-slate px-4">
-        <Card className="w-full max-w-md p-10">
-           <div className="flex justify-center mb-8">
-              <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
+      <div className="min-h-screen flex items-center justify-center bg-brand-black px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-10 bg-fixed pointer-events-none"></div>
+        <Card className="w-full max-w-lg p-12 bg-brand-black/60 backdrop-blur-3xl border-white/10 rounded-[3rem] shadow-2xl relative z-10">
+           <div className="flex justify-center mb-10">
+              <img src="/logo.png" alt="Logo" className="h-16 w-auto drop-shadow-2xl" />
            </div>
-           <h1 className="text-2xl font-black text-brand-black mb-8 uppercase tracking-tighter text-center">Panel de Control</h1>
-           <form onSubmit={handleLogin} className="space-y-6">
-              <input 
-                type="text" 
-                placeholder="Usuario" 
-                className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-brand-blue font-bold"
-                value={user}
-                onChange={e => setUser(e.target.value)}
-              />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
-                className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-brand-blue font-bold"
-                value={pass}
-                onChange={e => setPass(e.target.value)}
-              />
-              <Button type="submit" className="w-full h-14 uppercase tracking-widest text-xs shadow-orange/40">Entrar al sistema</Button>
+           <h1 className="text-3xl font-black text-white mb-10 uppercase tracking-tighter text-center">Neural Blog Center</h1>
+           <form onSubmit={handleLogin} className="space-y-8">
+              <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Identificador de Acceso</label>
+                 <input 
+                   type="text" 
+                   placeholder="Usuario" 
+                   className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
+                   value={user}
+                   onChange={e => setUser(e.target.value)}
+                 />
+              </div>
+              <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Código de Seguridad</label>
+                 <input 
+                   type="password" 
+                   placeholder="Contraseña" 
+                   className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
+                   value={pass}
+                   onChange={e => setPass(e.target.value)}
+                 />
+              </div>
+              <Button type="submit" className="w-full h-16 uppercase tracking-[0.3em] font-black text-[11px] shadow-orange/40 rounded-2xl border-none">Sincronizar Nodo</Button>
            </form>
         </Card>
       </div>
@@ -127,27 +134,29 @@ export default function AdminBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-slate p-8 pt-40">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen bg-brand-black p-8 pt-40 relative">
+      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-[0.05] bg-fixed pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
         
         {/* Header & Tabs */}
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 bg-white p-6 rounded-[2.5rem] shadow-premium">
-           <div className="flex items-center gap-4 bg-slate-50 p-2 rounded-2xl">
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 bg-brand-black/40 backdrop-blur-3xl p-8 rounded-[3rem] border border-white/10 shadow-2xl">
+           <div className="flex items-center gap-6 bg-white/5 p-3 rounded-2xl border border-white/5">
               <button 
                 onClick={() => setActiveTab('posts')}
-                className={`flex items-center gap-3 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === 'posts' ? 'bg-brand-black text-white shadow-xl' : 'text-slate-400 hover:text-brand-black'}`}
+                className={`flex items-center gap-4 px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === 'posts' ? 'bg-brand-orange text-white shadow-2xl shadow-brand-orange/20' : 'text-slate-500 hover:text-white'}`}
               >
-                <FileText size={16} /> Blog Posts
+                <FileText size={18} /> Artículos
               </button>
               <button 
                 onClick={() => setActiveTab('subscribers')}
-                className={`flex items-center gap-3 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === 'subscribers' ? 'bg-brand-black text-white shadow-xl' : 'text-slate-400 hover:text-brand-black'}`}
+                className={`flex items-center gap-4 px-8 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === 'subscribers' ? 'bg-brand-blue text-white shadow-2xl shadow-brand-blue/20' : 'text-slate-500 hover:text-white'}`}
               >
-                <Users size={16} /> Suscriptores ({subscribers.length})
+                <Users size={18} /> Suscriptores ({subscribers.length})
               </button>
            </div>
 
-           <div className="flex gap-4">
+           <div className="flex gap-6">
               {activeTab === 'posts' ? (
                 <Button onClick={() => {
                   setIsEditing(true);
@@ -160,145 +169,151 @@ export default function AdminBlogPage() {
                     published: false,
                     coverImage: '/images/hero-illustration.png'
                   });
-                }} variant="secondary" className="flex gap-2 h-12">
-                  <Plus size={18} /> Nuevo Post
+                }} variant="secondary" className="flex gap-4 h-16 px-10 rounded-2xl text-[11px] font-black uppercase tracking-widest border-none">
+                  <Plus size={20} /> Nuevo Post
                 </Button>
               ) : (
-                <Button onClick={exportSubscribers} variant="outline" className="flex gap-2 h-12 border-slate-200">
-                  <Download size={18} /> Exportar CSV
+                <Button onClick={exportSubscribers} variant="outline" className="flex gap-4 h-16 px-10 rounded-2xl border-white/10 text-white bg-white/5 hover:bg-white/10 font-black text-[11px] uppercase tracking-widest">
+                  <Download size={20} /> Exportar CSV
                 </Button>
               )}
-              <Button onClick={() => setIsLoggedIn(false)} variant="ghost" className="flex gap-2 h-12 text-red-500 hover:bg-red-50">
-                <LogOut size={18} /> Salir
+              <Button onClick={() => setIsLoggedIn(false)} variant="ghost" className="flex gap-4 h-16 px-8 text-red-400 hover:bg-red-500/10 font-black text-[11px] uppercase tracking-widest">
+                <LogOut size={20} /> Desconexión
               </Button>
            </div>
         </div>
 
         {activeTab === 'posts' ? (
           isEditing ? (
-            <Card className="p-10 space-y-8 animate-in fade-in zoom-in duration-500">
-               <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Título del Post</label>
+            <Card className="p-12 space-y-10 animate-in fade-in zoom-in duration-500 bg-brand-black/40 backdrop-blur-3xl border-white/10 rounded-[3rem]">
+               <div className="grid md:grid-cols-2 gap-10">
+                  <div className="space-y-3">
+                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Título de la Publicación</label>
                      <input 
                       type="text" 
-                      className="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-brand-blue font-black text-xl"
+                      className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-black text-2xl text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                       value={currentPost.title}
                       onChange={e => setCurrentPost({...currentPost, title: e.target.value})}
                      />
                   </div>
-                  <div className="space-y-2">
-                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Imagen de Portada (URL)</label>
+                  <div className="space-y-3">
+                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Imagen de Portada (URL)</label>
                      <input 
                       type="text" 
-                      className="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-brand-blue font-bold"
+                      className="w-full h-16 bg-white/5 border border-white/5 rounded-2xl px-8 font-bold text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                       value={currentPost.coverImage}
                       onChange={e => setCurrentPost({...currentPost, coverImage: e.target.value})}
                      />
                   </div>
                </div>
                
-               <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Resumen (SEO)</label>
+               <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Resumen de Impacto (SEO)</label>
                   <textarea 
-                    className="w-full p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-brand-blue font-medium h-24"
+                    className="w-full p-8 bg-white/5 border border-white/5 rounded-[2rem] font-medium text-white focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner h-32 resize-none"
                     value={currentPost.excerpt}
                     onChange={e => setCurrentPost({...currentPost, excerpt: e.target.value})}
                   />
                </div>
 
-               <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Contenido Enriquecido</label>
-                  <RichTextEditor 
-                    value={currentPost.content || ''}
-                    onChange={content => setCurrentPost({...currentPost, content})}
-                  />
+               <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-2">Cuerpo del Artículo</label>
+                  <div className="bg-white/5 rounded-[2.5rem] border border-white/5 overflow-hidden">
+                    <RichTextEditor 
+                      value={currentPost.content || ''}
+                      onChange={content => setCurrentPost({...currentPost, content})}
+                    />
+                  </div>
                </div>
 
-               <div className="flex flex-wrap gap-8 items-center pt-8 border-t border-slate-100">
-                  <label className="flex items-center gap-3 cursor-pointer group">
+               <div className="flex flex-wrap gap-10 items-center pt-10 border-t border-white/5">
+                  <label className="flex items-center gap-4 cursor-pointer group">
                      <input 
                       type="checkbox" 
-                      className="w-6 h-6 rounded-lg border-2 border-slate-200 text-brand-blue focus:ring-brand-blue"
+                      className="w-8 h-8 rounded-xl border-2 border-white/10 bg-white/5 text-brand-orange focus:ring-brand-orange"
                       checked={currentPost.published}
                       onChange={e => setCurrentPost({...currentPost, published: e.target.checked})}
                      />
-                     <span className="font-black uppercase tracking-widest text-xs group-hover:text-brand-blue">Publicado</span>
+                     <span className="font-black uppercase tracking-[0.3em] text-[10px] text-slate-500 group-hover:text-brand-orange transition-colors">Estado de Publicación</span>
                   </label>
                   
                   <div className="flex-grow"></div>
                   
-                  <Button onClick={() => setIsEditing(false)} variant="outline">Cancelar</Button>
-                  <Button onClick={handleSave} className="flex gap-2"><Save size={18} /> Guardar Post</Button>
+                  <Button onClick={() => setIsEditing(false)} variant="ghost" className="text-slate-500 hover:text-white uppercase font-black text-[11px] tracking-widest">Descartar</Button>
+                  <Button onClick={handleSave} className="h-16 px-12 rounded-2xl flex gap-4 text-[11px] font-black uppercase tracking-widest shadow-2xl shadow-brand-orange/20">
+                    <Save size={20} /> Guardar Artículo
+                  </Button>
                </div>
             </Card>
           ) : (
             <div className="grid gap-6">
                {posts.map(post => (
-                 <Card key={post.slug} className="p-8 group hover:border-brand-blue transition-colors">
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-8">
-                       <div className="flex gap-6 items-center flex-1">
-                          <div className="w-20 h-20 rounded-2xl overflow-hidden relative shrink-0">
+                 <Card key={post.slug} className="p-8 bg-white/5 backdrop-blur-3xl border-white/10 hover:border-brand-blue/50 transition-all duration-500 group relative overflow-hidden rounded-[2.5rem]">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-10 relative z-10">
+                       <div className="flex gap-8 items-center flex-1">
+                          <div className="w-24 h-24 rounded-2xl overflow-hidden relative shrink-0 border border-white/10 group-hover:rotate-3 transition-transform">
                              <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
                           </div>
-                          <div className="space-y-1">
-                             <h3 className="text-xl font-black text-brand-black uppercase tracking-tighter">{post.title}</h3>
-                             <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                <span>{post.date.split('T')[0]}</span>
-                                <span className={`px-2 py-0.5 rounded-full ${post.published ? 'bg-emerald-50 text-emerald-500' : 'bg-slate-100 text-slate-400'}`}>
+                          <div className="space-y-2">
+                             <h3 className="text-2xl font-black text-white uppercase tracking-tight group-hover:text-brand-blue transition-colors">{post.title}</h3>
+                             <div className="flex items-center gap-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                                <span className="flex items-center gap-2"><FileText size={14} className="text-brand-orange" /> {post.date.split('T')[0]}</span>
+                                <span className={`px-4 py-1.5 rounded-full border ${post.published ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-white/5 text-slate-500 border-white/10'}`}>
                                    {post.published ? 'Publicado' : 'Borrador'}
                                 </span>
                              </div>
                           </div>
                        </div>
-                       <div className="flex gap-3">
+                       <div className="flex gap-4">
                           <Link href={`/blog/${post.slug}`} target="_blank">
-                             <Button variant="ghost" size="sm" className="h-10 w-10 p-0" title="Ver post"><Eye size={18} /></Button>
+                             <Button variant="ghost" className="h-14 w-14 p-0 bg-white/5 text-slate-500 hover:text-brand-blue hover:bg-white/10 rounded-2xl" title="Vista Previa"><Eye size={22} /></Button>
                           </Link>
                           <Button onClick={() => {
                             setCurrentPost(post);
                             setIsEditing(true);
-                          }} variant="outline" size="sm" className="h-10 w-10 p-0 text-brand-blue border-brand-blue/20" title="Editar"><Edit2 size={18} /></Button>
-                          <Button onClick={() => handleDelete(post.slug)} variant="outline" size="sm" className="h-10 w-10 p-0 text-red-500 border-red-100" title="Eliminar"><Trash2 size={18} /></Button>
+                          }} variant="ghost" className="h-14 w-14 p-0 bg-white/5 text-slate-500 hover:text-brand-blue hover:bg-white/10 rounded-2xl" title="Editar"><Edit2 size={22} /></Button>
+                          <Button onClick={() => handleDelete(post.slug)} variant="ghost" className="h-14 w-14 p-0 bg-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-2xl" title="Eliminar"><Trash2 size={22} /></Button>
                        </div>
                     </div>
                  </Card>
                ))}
                {posts.length === 0 && (
-                 <div className="py-20 text-center text-slate-400 font-bold uppercase tracking-widest bg-white rounded-[2rem] border border-dashed border-slate-200">
-                    No hay artículos registrados aún.
+                 <div className="py-40 text-center text-slate-500 font-black uppercase tracking-[0.4em] bg-white/5 rounded-[4rem] border-2 border-dashed border-white/10 backdrop-blur-md">
+                    El repositorio está vacío. Crea contenido de impacto.
                  </div>
                )}
             </div>
           )
         ) : (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <Card className="overflow-hidden">
-                <table className="w-full text-left">
-                   <thead className="bg-slate-50 border-b border-slate-100">
-                      <tr>
-                         <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Email del Suscriptor</th>
-                         <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Fecha de Registro</th>
-                         <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Estado</th>
-                      </tr>
-                   </thead>
-                   <tbody className="divide-y divide-slate-50">
-                      {subscribers.map((s, i) => (
-                        <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                           <td className="px-8 py-6 font-black text-brand-black">{s.email}</td>
-                           <td className="px-8 py-6 text-slate-500 font-medium">
-                              {new Date(s.date).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}
-                           </td>
-                           <td className="px-8 py-6 text-right">
-                              <span className="bg-emerald-50 text-emerald-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Activo</span>
-                           </td>
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+             <Card className="overflow-hidden bg-brand-black/40 backdrop-blur-3xl border-white/10 rounded-[3rem] shadow-2xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                     <thead className="bg-white/5 border-b border-white/5">
+                        <tr>
+                           <th className="px-10 py-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">Email del Suscriptor</th>
+                           <th className="px-10 py-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">Nodo de Registro</th>
+                           <th className="px-10 py-8 text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 text-right">Estatus</th>
                         </tr>
-                      ))}
-                   </tbody>
-                </table>
+                     </thead>
+                     <tbody className="divide-y divide-white/5">
+                        {subscribers.map((s, i) => (
+                          <tr key={i} className="hover:bg-white/5 transition-colors group">
+                             <td className="px-10 py-8 font-black text-white group-hover:text-brand-blue transition-colors">{s.email}</td>
+                             <td className="px-10 py-8 text-slate-500 font-bold uppercase text-[10px] tracking-widest">
+                                {new Date(s.date).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}
+                             </td>
+                             <td className="px-10 py-8 text-right">
+                                <span className="bg-emerald-500/10 text-emerald-400 text-[9px] font-black px-5 py-2.5 rounded-full uppercase tracking-widest border border-emerald-500/20 backdrop-blur-md">Activo</span>
+                             </td>
+                          </tr>
+                        ))}
+                     </tbody>
+                  </table>
+                </div>
                 {subscribers.length === 0 && (
-                  <div className="py-20 text-center text-slate-400 font-bold uppercase tracking-widest">
-                     Aún no hay suscriptores registrados.
+                  <div className="py-40 text-center text-slate-500 font-black uppercase tracking-[0.4em]">
+                     No hay conexiones registradas aún.
                   </div>
                 )}
              </Card>

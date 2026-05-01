@@ -34,10 +34,31 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, SECRET, {
+      const { payload } = await jwtVerify(token, SECRET, {
         issuer: 'hackesjobs',
         audience: 'hackesjobs-app',
       });
+
+      const role = payload.role as string | undefined;
+      const tenantId = payload.tenantId as string | undefined;
+
+      // ─── RBAC Logic ────────────────────────────────────
+      // Restrict /dashboard/admin to only 'admin' role
+      if (pathname.startsWith('/dashboard/admin') && role !== 'admin') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+      
+      // Restrict /dashboard/vacantes to 'company' or 'admin'
+      if (pathname.startsWith('/dashboard/vacantes') && !['admin', 'company'].includes(role || '')) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+
+      // Add custom headers for downstream API usage
+      const response = NextResponse.next();
+      if (role) response.headers.set('x-user-role', role);
+      if (tenantId) response.headers.set('x-tenant-id', tenantId);
+      
+      return response;
     } catch {
       // Token inválido o expirado
       const loginUrl = new URL('/login', request.url);

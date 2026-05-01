@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Base de Datos Redis para Celery
+  redis:
+    image: redis:7-alpine
+    container_name: hackes_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - hackes_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Motor de IA (FastAPI)
+  ai_engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: hackes_ai_engine
+    ports:
+      - "8000:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      # Pasar llaves de API
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-}
+    networks:
+      - hackes_network
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Worker Nodes para Tareas Pesadas (Celery)
+  celery_worker:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: hackes_celery_worker
+    command: celery -A worker.celery_app worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-}
+    networks:
+      - hackes_network
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # Aplicación Principal (Next.js)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hackes_web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - AI_ENGINE_URL=http://ai_engine:8000
+      - DATABASE_URL=file:../prisma/dev.db # En prod usar PostgreSQL
+    networks:
+      - hackes_network
+    depends_on:
+      - ai_engine
+    restart: unless-stopped
+
+networks:
+  hackes_network:
+    driver: bridge
