@@ -84,8 +84,14 @@ export default function VacantesPage() {
       
       {/* ─── HERO ───────────────────────────────────── */}
       <section className="relative container mx-auto px-4 mb-16 pt-16 pb-24 rounded-[4rem] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed"></div>
-        <div className="absolute inset-0 bg-brand-black/70"></div>
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/hero-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-60 mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-brand-black/60"></div>
+        </div>
         <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
           <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Oportunidades Activas</span>
           <h1 className="text-5xl md:text-[6.5rem] font-black text-white tracking-tighter leading-[0.9]">
@@ -100,7 +106,14 @@ export default function VacantesPage() {
 
       {/* ─── SEARCH & FILTERS ────────────────────────── */}
       <section className="container relative mx-auto px-4 mb-12 z-20">
-        <div className="absolute inset-0 bg-[url('/images/candidatos-bg.gif')] bg-cover bg-center opacity-10 bg-fixed -z-10 rounded-[4rem]"></div>
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/candidatos-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-10 rounded-[4rem]"
+          />
+          <div className="absolute inset-0 bg-brand-black/40 rounded-[4rem]"></div>
+        </div>
         <div className="max-w-4xl mx-auto">
           <form onSubmit={handleSearch} className="relative mb-8 group">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-orange group-focus-within:scale-110 transition-transform" size={24} />

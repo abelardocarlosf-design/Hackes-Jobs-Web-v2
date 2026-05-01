@@ -35,7 +35,14 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-brand-black flex font-sans selection:bg-brand-orange/40 selection:text-white overflow-hidden relative">
       {/* Background GIF layer */}
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-10 pointer-events-none"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img 
+          src="/images/hero-bg.gif" 
+          alt="" 
+          className="w-full h-full object-cover opacity-10"
+        />
+        <div className="absolute inset-0 bg-brand-black/60"></div>
+      </div>
 
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-80 bg-brand-black/60 backdrop-blur-3xl border-r border-white/10 transition-all duration-500 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 flex flex-col`}>

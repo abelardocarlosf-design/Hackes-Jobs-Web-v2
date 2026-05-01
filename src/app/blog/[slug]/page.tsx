@@ -50,8 +50,14 @@ export default async function BlogPostPage({ params }: Props) {
       
       {/* 1. ARTICLE HERO */}
       <header className="relative pt-40 pb-20 overflow-hidden bg-brand-black text-white">
-        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-20 bg-fixed pointer-events-none"></div>
-        <div className="absolute inset-0 bg-brand-black/60 pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/hero-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-60 mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-brand-black/60"></div>
+        </div>
         
         <div className="container relative mx-auto px-4 z-10 max-w-4xl">
            <div className="flex flex-wrap gap-4 mb-8">
@@ -94,7 +100,13 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* 3. CONTENT SECTION */}
       <section className="py-24 container mx-auto px-4 max-w-4xl relative">
-        <div className="absolute inset-0 bg-[url('/images/psicometrias-bg.gif')] bg-cover bg-center opacity-[0.03] pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/psicometrias-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-[0.05]"
+          />
+        </div>
         
         <div className="relative z-10 glass-card-dark p-8 md:p-16 rounded-[3rem] border border-white/5">
           <div 

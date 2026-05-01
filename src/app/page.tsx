@@ -14,8 +14,16 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
       
       {/* 1. PREMIUM HERO SECTION */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-white bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed">
-        <div className="absolute inset-0 bg-brand-black/60 pointer-events-none"></div>
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-black">
+        {/* Background GIF */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/hero-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-60 mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-brand-black/40"></div>
+        </div>
         
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10 py-20">
           <div className="flex flex-col items-center justify-center text-center max-w-5xl mx-auto space-y-12">
@@ -53,8 +61,14 @@ export default function HomePage() {
 
       {/* 2. TRUST STRIP */}
       <section className="relative py-16 bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-20 bg-fixed"></div>
-        <div className="absolute inset-0 bg-brand-black/60 pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/hero-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-brand-black/60"></div>
+        </div>
         
         <div className="container relative mx-auto px-4 z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
@@ -176,9 +190,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4.5 PRICING - B2B SAAS */}
-      <section className="relative py-32 bg-brand-black text-white overflow-hidden bg-[url('/images/empresas-bg.gif')] bg-cover bg-center bg-fixed" aria-labelledby="pricing-title">
-        <div className="absolute inset-0 bg-brand-black/70 pointer-events-none"></div>
+      {/* 7. PRICING B2B SECTION */}
+      <section className="relative py-32 bg-brand-black text-white overflow-hidden" aria-labelledby="pricing-title">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/empresas-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-50"
+          />
+          <div className="absolute inset-0 bg-brand-black/60"></div>
+        </div>
         
         <div className="container relative mx-auto px-4 z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 max-w-6xl mx-auto mb-24">

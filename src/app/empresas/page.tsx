@@ -24,7 +24,14 @@ export default function EmpresasPage() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
       {/* Full page dynamic background */}
-      <div className="fixed inset-0 bg-[url('/images/empresas-bg.gif')] bg-cover bg-center bg-fixed opacity-[0.2] pointer-events-none z-0"></div>
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="/images/empresas-bg.gif" 
+          alt="" 
+          className="w-full h-full object-cover opacity-[0.2]"
+        />
+        <div className="absolute inset-0 bg-brand-black/20"></div>
+      </div>
       
       <main className="flex-grow relative z-10">
         {/* 1. HERO SECTION */}

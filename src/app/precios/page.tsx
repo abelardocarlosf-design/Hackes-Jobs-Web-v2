@@ -36,7 +36,14 @@ export default function PreciosPage() {
 
   return (
     <div className="min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden pt-40 pb-32">
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-10"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img 
+          src="/images/hero-bg.gif" 
+          alt="" 
+          className="w-full h-full object-cover opacity-10"
+        />
+        <div className="absolute inset-0 bg-brand-black/60"></div>
+      </div>
       <div className="container relative mx-auto px-4 max-w-7xl z-10">
         
         <div className="text-center max-w-4xl mx-auto mb-24 space-y-8">

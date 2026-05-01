@@ -67,7 +67,14 @@ export default async function PsicometriasPage() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white pb-32 relative">
       {/* Full page dynamic background - City Theme */}
-      <div className="fixed inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-[0.2] pointer-events-none z-0"></div>
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="/images/hero-bg.gif" 
+          alt="" 
+          className="w-full h-full object-cover opacity-[0.2]"
+        />
+        <div className="absolute inset-0 bg-brand-black/20"></div>
+      </div>
       
       {/* Header Section */}
       <section className="pt-32 pb-20 md:pt-40 md:pb-28 text-white relative overflow-hidden z-10">

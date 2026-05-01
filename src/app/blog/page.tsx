@@ -28,8 +28,15 @@ export default async function BlogPage() {
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative pt-40 pb-24 overflow-hidden bg-brand-black text-white bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed">
-        <div className="absolute inset-0 bg-brand-black/70 pointer-events-none"></div>
+      <section className="relative pt-40 pb-24 overflow-hidden bg-brand-black text-white">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img 
+            src="/images/hero-bg.gif" 
+            alt="" 
+            className="w-full h-full object-cover opacity-60 mix-blend-screen"
+          />
+          <div className="absolute inset-0 bg-brand-black/60"></div>
+        </div>
         
         <div className="container relative mx-auto px-4 z-10 text-center space-y-8">
            <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Conocimiento y Tendencias</span>
