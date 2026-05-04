@@ -108,9 +108,9 @@ export default async function BlogPostPage({ params }: Props) {
           />
         </div>
         
-        <div className="relative z-10 glass-card-dark p-8 md:p-16 rounded-[3rem] border border-white/5">
+        <div className="relative z-10 glass-card-dark p-8 md:p-20 rounded-[3rem] border border-white/10 shadow-3xl">
           <div 
-            className="prose prose-invert prose-xl max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase prose-a:text-brand-blue prose-img:rounded-[2rem] prose-strong:text-brand-orange"
+            className="prose prose-invert prose-xl max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase prose-a:text-brand-blue prose-img:rounded-[2rem] prose-strong:text-brand-orange text-white prose-p:text-white prose-headings:text-white prose-li:text-white prose-strong:text-white/90"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
           

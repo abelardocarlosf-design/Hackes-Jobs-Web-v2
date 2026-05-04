@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="container relative mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20 z-10">
         <div className="space-y-8">
           <Link href="/" className="flex items-center gap-3">
-             <img src="/logo.png" alt="Hacke's Jobs" className="h-12 w-auto drop-shadow-2xl" />
+             <img src="/logo.png" alt="Hacke's Jobs" className="h-12 w-auto drop-shadow-2xl brightness-0 invert" />
           </Link>
           <p className="text-slate-400 text-lg leading-relaxed max-w-xs font-medium">
             Redefiniendo el futuro del trabajo con Inteligencia Artificial y un enfoque humano inquebrantable.
@@ -30,8 +30,8 @@ export default function Footer() {
         <div>
           <h4 className="font-black uppercase tracking-[0.4em] text-[10px] text-brand-orange mb-10">Compañía</h4>
           <ul className="space-y-5 text-[14px] font-black uppercase tracking-widest text-slate-300">
-            <li><Link href="#" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Sobre Nosotros</Link></li>
-            <li><Link href="#" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Contacto</Link></li>
+            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Sobre Nosotros</Link></li>
+            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Contacto</Link></li>
             <li><Link href="/privacidad" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Privacidad</Link></li>
             <li><Link href="/terminos" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Términos</Link></li>
           </ul>
@@ -64,7 +64,7 @@ export default function Footer() {
           <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">¿Dudas? Escríbenos:</p>
             <a href="mailto:abelardo.carlos@hackesjobs.com.mx" className="block text-white font-black text-lg hover:text-brand-orange transition-colors truncate max-w-full tracking-tight">
-              soporte@hackesjobs.com.mx
+              abelardo.carlos@hackesjobs.com.mx
             </a>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function Footer() {
         <div className="flex gap-8 items-center">
            <span className="hidden sm:inline">Ciudad de México, MX</span>
            <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
-           <span className="text-brand-orange animate-pulse">Engineering Excellence</span>
+           <span className="text-brand-orange">Engineering Excellence</span>
         </div>
       </div>
     </footer>

@@ -45,12 +45,12 @@ export default function HomePage() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
               <Link href="/empresas" className="w-full sm:w-auto">
-                <Button variant="secondary" size="xl" className="w-full sm:w-auto shadow-2xl hover:scale-105 h-20 px-12 text-xl">
+                <Button variant="secondary" size="xl" className="w-full sm:w-auto shadow-orange/40">
                   Solicitar Demo
                 </Button>
               </Link>
               <Link href="/empresas" className="w-full sm:w-auto">
-                <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/40 text-white hover:border-brand-orange hover:text-brand-orange hover:scale-105 bg-white/10 backdrop-blur-md h-20 px-12 text-xl">
+                <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/30 text-white hover:border-brand-orange hover:text-brand-orange bg-white/5 backdrop-blur-md">
                   Explorar Soluciones
                 </Button>
               </Link>
@@ -230,12 +230,12 @@ export default function HomePage() {
                 <li className="flex items-center gap-3 text-slate-300 font-medium"><svg className="w-5 h-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg> Filtro ATS Básico</li>
               </ul>
               <Link href="/precios" className="mt-auto block">
-                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange mt-auto bg-white/5">Ver Plan Starter</Button>
+                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-white/5">Ver Plan Starter</Button>
               </Link>
             </Card>
 
             {/* Pro - Destacado */}
-            <Card className="p-10 flex flex-col border-2 border-brand-blue bg-brand-blue/30 backdrop-blur-3xl relative transform lg:-translate-y-4 shadow-[0_20px_50px_rgba(59,130,246,0.3)] group">
+            <Card className="p-10 flex flex-col border-2 border-brand-blue bg-brand-blue/20 backdrop-blur-3xl relative transform lg:-translate-y-4 shadow-blue group">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-blue text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border border-white/20">Más Popular</div>
               <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 drop-shadow-md">Professional</h3>
               <div className="text-5xl font-black text-white tracking-tighter mb-8 drop-shadow-lg">$999<span className="text-lg text-white/70 font-medium">/mo</span></div>
@@ -266,7 +266,12 @@ export default function HomePage() {
                 </li>
               </ul>
               <Link href="/precios" className="mt-auto block">
-                <Button variant="primary" className="w-full h-16 bg-white text-brand-blue hover:bg-brand-blue hover:text-white shadow-2xl shadow-white/10 mt-auto border-none font-black text-[11px] uppercase tracking-widest rounded-2xl">Elegir Professional</Button>
+                <Button 
+                  variant="primary" 
+                  className="w-full h-14 mt-auto font-black text-xs uppercase tracking-widest rounded-2xl"
+                >
+                  Elegir Professional
+                </Button>
               </Link>
             </Card>
 
@@ -280,7 +285,7 @@ export default function HomePage() {
                 <li className="flex items-center gap-3 text-slate-300 font-medium"><svg className="w-5 h-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg> API Access</li>
               </ul>
               <Link href="/precios" className="mt-auto block">
-                <Button variant="secondary" className="w-full h-16 bg-white/10 text-white hover:bg-white/20 mt-auto border-white/20 font-black text-[11px] uppercase tracking-widest rounded-2xl backdrop-blur-md">Contactar Ventas</Button>
+                <Button variant="outline" className="w-full h-14 text-white border-white/20 hover:border-brand-orange hover:text-brand-orange font-black text-xs uppercase tracking-widest rounded-2xl bg-white/5 backdrop-blur-md">Contactar Ventas</Button>
               </Link>
             </Card>
           </div>
@@ -305,12 +310,12 @@ export default function HomePage() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-6">
                   <Link href="/empresas">
-                    <Button variant="secondary" size="xl" className="h-24 px-16 text-2xl shadow-orange/60">
+                    <Button variant="secondary" size="xl" className="shadow-orange/40">
                       Comenzar Ahora
                     </Button>
                   </Link>
                   <Link href="/vacantes">
-                    <Button variant="outline" size="xl" className="h-24 px-16 text-2xl border-white/10 text-white hover:bg-white/5">
+                    <Button variant="outline" size="xl" className="border-white/10 text-white hover:bg-white/5">
                       Soy Candidato
                     </Button>
                   </Link>

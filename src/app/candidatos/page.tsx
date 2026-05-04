@@ -50,7 +50,7 @@ export default function CandidatosPage() {
                 </Button>
               </Link>
               <Link href="/vacantes">
-                <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/40 text-white hover:border-brand-orange hover:text-brand-orange bg-white/10 backdrop-blur-md">
+                <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/30 text-white hover:border-brand-orange hover:text-brand-orange bg-white/5 backdrop-blur-md">
                   Ver Vacantes Disponibles
                 </Button>
               </Link>
@@ -102,7 +102,7 @@ export default function CandidatosPage() {
                 </p>
               </div>
               <Link href="/vacantes" className="relative z-10">
-                <Button variant="dark" size="xl" className="h-24 px-16 text-2xl shadow-premium hover:scale-110 bg-brand-black text-white hover:bg-zinc-800 border-0 rounded-3xl">
+                <Button variant="dark" size="xl" className="shadow-premium bg-brand-black text-white hover:bg-zinc-800 border-0 rounded-2xl">
                   Explorar Vacantes
                 </Button>
               </Link>

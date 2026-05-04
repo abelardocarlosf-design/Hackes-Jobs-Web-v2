@@ -38,6 +38,10 @@
     @apply bg-brand-blue/10 backdrop-blur-xl border border-brand-blue/20 shadow-2xl;
   }
 
+  .glass-card-dark {
+    @apply bg-zinc-900/90 backdrop-blur-2xl border border-white/10 shadow-2xl;
+  }
+
   .text-gradient-blue {
     @apply text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400;
   }
@@ -51,17 +55,21 @@
   }
 }
 
-/* Scrollbar Styles */
+/* Scrollbar Styles — Dark Mode */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-50;
+  background: #0A0A0A;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full hover:bg-brand-blue/20 transition-colors;
+  @apply bg-white/15 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/25;
 }
 
 /* Custom Utilities for Premium Look */
@@ -72,3 +80,4 @@
 .mask-fade-bottom {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
+

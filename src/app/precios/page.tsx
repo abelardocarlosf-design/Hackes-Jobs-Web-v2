@@ -6,14 +6,39 @@ import { Card } from '@/components/Card';
 import { CheckCircle2, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 
+import { Typewriter } from '@/components/Typewriter';
+
 export default function PreciosPage() {
   const [isLoading, setIsLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<string | null>(null);
 
   const handleCheckout = async (planId: string) => {
     setIsLoading(planId);
     setError(null);
+    setIsSuccess(null);
+    
     try {
+      if (planId === 'starter') {
+        // Conexión con el webhook de n8n para el Plan Inicial
+        const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-inicial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            plan: 'Starter / Plan Inicial',
+            action: 'CTA_CLICK',
+            timestamp: new Date().toISOString(),
+            source: 'pricing_page'
+          })
+        });
+
+        if (!res.ok) throw new Error('Error al conectar con el servicio de activación.');
+        
+        setIsSuccess('starter');
+        return;
+      }
+
+      // Lógica original para otros planes
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,8 +73,11 @@ export default function PreciosPage() {
         
         <div className="text-center max-w-4xl mx-auto mb-24 space-y-8">
           <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Módulo B2B Enterprise</span>
-          <h1 className="text-5xl md:text-[6.5rem] font-black text-white tracking-tighter leading-none uppercase">
-            Planes <span className="text-brand-blue">Escalables.</span>
+          <h1 className="text-5xl md:text-[6.5rem] font-black text-white tracking-tighter leading-none uppercase flex flex-col items-center gap-2">
+            <span className="leading-none"><Typewriter text="Planes" speed={70} delay={400} /></span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
+              Escalables.
+            </span>
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed">
             Tecnología de reclutamiento empresarial de última generación. Elige el plan que impulsará tu crecimiento.
@@ -63,7 +91,7 @@ export default function PreciosPage() {
           </div>
         )}
 
-        <div className="grid lg:grid-cols-3 gap-12 items-stretch mt-56">
+        <div className="grid lg:grid-cols-3 gap-12 items-stretch mt-16">
           {/* STARTER */}
           <Card className="glass-card p-12 flex flex-col hover:bg-white/10 transition-all duration-500 border-none group">
             <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand-orange transition-colors">Starter</h3>
@@ -77,11 +105,16 @@ export default function PreciosPage() {
             </ul>
             <Button 
               variant="outline" 
-              className="w-full border-white/20 text-white hover:bg-white/10 h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all" 
-              disabled={isLoading !== null}
+              className={`w-full border-white/20 text-white hover:bg-white/10 h-14 rounded-2xl font-black uppercase tracking-widest text-xs transition-all ${isSuccess === 'starter' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:border-emerald-500/30 hover:text-emerald-400' : ''}`} 
+              disabled={isLoading !== null || isSuccess === 'starter'}
               onClick={() => handleCheckout('starter')}
             >
-              {isLoading === 'starter' ? 'Procesando...' : 'Prueba 14 Días Gratis'}
+              {isLoading === 'starter' ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+                  Procesando...
+                </>
+              ) : isSuccess === 'starter' ? '¡Solicitud Enviada!' : 'Prueba 14 Días Gratis'}
             </Button>
           </Card>
 
@@ -102,8 +135,8 @@ export default function PreciosPage() {
                 <li className="flex items-start gap-4 text-white font-bold leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-blue shrink-0 mt-0.5"/> Advanced HR Analytics.</li>
               </ul>
               <Button 
-                variant="secondary" 
-                className="w-full bg-brand-blue hover:bg-brand-blue/90 text-white shadow-2xl shadow-brand-blue/40 h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] border-none"
+                variant="primary" 
+                className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs"
                 disabled={isLoading !== null}
                 onClick={() => handleCheckout('professional')}
               >
@@ -126,7 +159,7 @@ export default function PreciosPage() {
             <Link href="/empresas">
               <Button 
                 variant="secondary" 
-                className="w-full bg-brand-orange hover:bg-orange-600 shadow-orange/40 h-16 rounded-2xl font-black uppercase tracking-widest text-[10px]"
+                className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs"
               >
                 Hablar con Consultor
               </Button>

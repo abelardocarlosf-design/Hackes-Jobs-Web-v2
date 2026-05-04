@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
 import { GoogleLogin } from '@react-oauth/google';
+import { Button } from '@/components/Button';
 import { Eye, EyeOff, ArrowRight, Sparkles, Shield } from 'lucide-react';
 
 function LoginForm() {
@@ -193,26 +194,27 @@ function LoginForm() {
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
+              variant="secondary"
               disabled={isLoading}
-              className="w-full h-20 bg-brand-orange text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] focus:ring-4 focus:ring-brand-orange/20 transition-all duration-300 shadow-xl shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-4 group"
+              className="w-full h-16 rounded-3xl font-black text-xs uppercase tracking-[0.3em] shadow-orange/20 flex items-center justify-center gap-3 group"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  VALIDANDO...
+                  Validando...
                 </>
               ) : (
                 <>
                   Iniciar Sesión
-                  <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </>
               )}
-            </button>
+            </Button>
           </form>
 
           <div className="text-center pt-6">

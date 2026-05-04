@@ -53,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`scroll-smooth ${inter.variable} ${jakarta.variable}`}>
-      <body className="antialiased font-sans bg-white text-brand-black">
+      <body className="antialiased font-sans bg-brand-black text-white overflow-x-hidden">
         <Providers>
           <LayoutChrome>
             {children}

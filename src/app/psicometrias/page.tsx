@@ -8,7 +8,7 @@ import { verifyAuth } from '@/lib/jwt';
 import { cookies } from 'next/headers';
 import { Lock, Unlock, ArrowRight, Brain, Briefcase, Activity, ShieldCheck } from 'lucide-react';
 import { UnlockButton } from '@/components/UnlockButton';
-import { TypewriterHeading } from '@/components/TypewriterHeading';
+import { Typewriter } from '@/components/Typewriter';
 
 import { fallbackTests } from '@/lib/fallback-tests';
 
@@ -84,13 +84,12 @@ export default async function PsicometriasPage() {
               <span className="flex h-2 w-2 rounded-full bg-brand-orange animate-pulse" aria-hidden="true"></span>
               Evaluación Científica 4.0
             </div>
-            <TypewriterHeading 
-              text="Catálogo de" 
-              speed={70} 
-              delay={400}
-              headingClassName="text-5xl sm:text-8xl font-black tracking-tighter mb-8 leading-none"
-              afterContent={<><br className="hidden sm:block" /> <span className="text-brand-blue drop-shadow-2xl">Psicometrías IA.</span></>}
-            />
+            <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter text-white leading-none uppercase flex flex-col items-center gap-2 mb-8">
+              <span className="leading-none"><Typewriter text="Catálogo de" speed={70} delay={400} /></span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
+                Psicometrías IA.
+              </span>
+            </h1>
             <p className="text-xl md:text-2xl text-slate-300 max-w-3xl leading-relaxed font-medium drop-shadow-lg">
               Descubre el potencial oculto de tu talento con evaluaciones validadas científicamente y potenciadas por algoritmos adaptativos.
             </p>

@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/Card';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NewsletterForm } from '@/components/NewsletterForm';
-import { TypewriterHeading } from '@/components/TypewriterHeading';
+import { Typewriter } from '@/components/Typewriter';
 
 export const metadata: Metadata = {
   title: 'Blog | Hacke\'s Jobs',
@@ -40,13 +40,12 @@ export default async function BlogPage() {
         
         <div className="container relative mx-auto px-4 z-10 text-center space-y-8">
            <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Conocimiento y Tendencias</span>
-           <TypewriterHeading 
-             text="Nuestro" 
-             speed={80} 
-             delay={300}
-             headingClassName="text-6xl md:text-[7rem] font-black tracking-tighter text-white leading-none animate-in fade-in slide-in-from-bottom-8 duration-1000"
-             afterContent={<span className="text-brand-blue">Blog.</span>}
-           />
+           <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter text-white leading-none uppercase flex flex-col items-center gap-2 mb-8">
+              <span className="leading-none"><Typewriter text="Nuestro" speed={70} delay={400} /></span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
+                Blog.
+              </span>
+            </h1>
            <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto font-medium">
              Explora artículos sobre el futuro del trabajo, reclutamiento inteligente y desarrollo profesional.
            </p>
@@ -63,9 +62,9 @@ export default async function BlogPage() {
                  Todo
               </Link>
               {allTags.map(tag => (
-                <button key={tag} className="px-8 py-3 rounded-full bg-white/5 text-slate-300 text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-brand-blue hover:text-white transition-all hover:scale-105">
+                <span key={tag} className="px-8 py-3 rounded-full bg-white/5 text-slate-300 text-[10px] font-black uppercase tracking-widest border border-white/10 cursor-default">
                    {tag}
-                </button>
+                </span>
               ))}
             </div>
           </div>
@@ -100,7 +99,7 @@ export default async function BlogPage() {
                           {featuredPost.excerpt}
                        </p>
                        <div className="pt-4">
-                          <Button variant="secondary" size="xl" className="h-20 px-16 rounded-2xl font-black uppercase text-xs tracking-widest shadow-orange/40">
+                          <Button variant="secondary" size="xl" className="rounded-2xl shadow-orange/40">
                              Leer ahora
                           </Button>
                        </div>
