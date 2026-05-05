@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card, CardContent } from '@/components/Card';
@@ -11,6 +12,7 @@ import { TypewriterHeading } from '@/components/TypewriterHeading';
 // metadata moved to layout or generateMetadata
 
 export default function HomePage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -22,12 +24,16 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           plan: 'Plan Growth',
-          action: 'CTA_CLICK',
+          action: 'CHECKOUT_START',
           timestamp: new Date().toISOString(),
           source: 'home_page'
         })
       });
-      if (res.ok) setIsSuccess(true);
+
+      if (res.ok) {
+        setIsSuccess(true);
+        setTimeout(() => router.push('/exito'), 1500);
+      }
     } catch (err) {
       console.error(err);
     } finally {

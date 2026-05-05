@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { CheckCircle2, ShieldAlert } from 'lucide-react';
@@ -9,6 +10,7 @@ import Link from 'next/link';
 import { Typewriter } from '@/components/Typewriter';
 
 export default function PreciosPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<string | null>(null);
@@ -26,15 +28,18 @@ export default function PreciosPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             plan: 'Plan Growth',
-            action: 'CTA_CLICK',
+            action: 'CHECKOUT_START',
             timestamp: new Date().toISOString(),
             source: 'pricing_page'
           })
         });
 
-        if (!res.ok) throw new Error('Error al conectar con el servicio de activación.');
-        
-        setIsSuccess('starter');
+        if (res.ok) {
+          setIsSuccess('starter');
+          setTimeout(() => router.push('/exito'), 1000);
+        } else {
+          throw new Error('Error al conectar con el servicio de activación.');
+        }
         return;
       }
 
