@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card, CardContent } from '@/components/Card';
@@ -10,6 +11,30 @@ import { TypewriterHeading } from '@/components/TypewriterHeading';
 // metadata moved to layout or generateMetadata
 
 export default function HomePage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleGrowthPlan = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-pro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          plan: 'Plan Growth',
+          action: 'CTA_CLICK',
+          timestamp: new Date().toISOString(),
+          source: 'home_page'
+        })
+      });
+      if (res.ok) setIsSuccess(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
       
@@ -229,9 +254,14 @@ export default function HomePage() {
                 <li className="flex items-center gap-3 text-slate-300 font-medium"><svg className="w-5 h-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg> 100 Créditos Antigravity IA</li>
                 <li className="flex items-center gap-3 text-slate-300 font-medium"><svg className="w-5 h-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg> Filtro ATS Básico</li>
               </ul>
-              <Link href="/precios" className="mt-auto block">
-                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-white/5">Ver Plan Starter</Button>
-              </Link>
+              <Button 
+                variant="outline" 
+                className={`w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-14 rounded-2xl font-black text-xs uppercase tracking-widest bg-white/5 transition-all ${isSuccess ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : ''}`}
+                onClick={handleGrowthPlan}
+                disabled={isLoading || isSuccess}
+              >
+                {isLoading ? 'Procesando...' : isSuccess ? '¡Solicitud Enviada!' : 'Comenzar Plan Growth'}
+              </Button>
             </Card>
 
             {/* Pro - Destacado */}

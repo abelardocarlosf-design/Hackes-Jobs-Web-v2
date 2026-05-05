@@ -21,11 +21,11 @@ export default function PreciosPage() {
     try {
       if (planId === 'starter') {
         // Conexión con el webhook de n8n para el Plan Inicial
-        const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-inicial', {
+        const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-pro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            plan: 'Starter / Plan Inicial',
+            plan: 'Plan Growth',
             action: 'CTA_CLICK',
             timestamp: new Date().toISOString(),
             source: 'pricing_page'
@@ -94,7 +94,7 @@ export default function PreciosPage() {
         <div className="grid lg:grid-cols-3 gap-12 items-stretch mt-16">
           {/* STARTER */}
           <Card className="glass-card p-12 flex flex-col hover:bg-white/10 transition-all duration-500 border-none group">
-            <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand-orange transition-colors">Starter</h3>
+            <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand-orange transition-colors">Plan Growth</h3>
             <p className="text-[10px] font-black text-slate-500 mb-8 uppercase tracking-[0.3em]">Ideal para Pymes</p>
             <div className="text-6xl font-black text-white tracking-tighter mb-10">$499<span className="text-lg text-slate-500 font-black uppercase ml-2 tracking-widest">/mo</span></div>
             <ul className="space-y-6 mb-12 flex-1">
@@ -114,7 +114,7 @@ export default function PreciosPage() {
                   <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
                   Procesando...
                 </>
-              ) : isSuccess === 'starter' ? '¡Solicitud Enviada!' : 'Prueba 14 Días Gratis'}
+              ) : isSuccess === 'starter' ? '¡Solicitud Enviada!' : 'Comenzar Plan Growth'}
             </Button>
           </Card>
 
