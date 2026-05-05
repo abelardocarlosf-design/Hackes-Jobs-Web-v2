@@ -15,25 +15,25 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Hacke's Jobs | Reclutamiento Inteligente y Atracción de Talento",
+    default: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
     template: "%s | Hacke's Jobs"
   },
-  description: "Transformamos el reclutamiento con IA y psicometría avanzada. Encontramos al top 1% de talento para empresas que buscan escalar. Especialistas en Headhunting y Reclutamiento Masivo.",
-  keywords: ["Reclutamiento", "Recursos Humanos", "Talento IT", "Headhunting México", "Psicometría DISC", "Atracción de Talento", "Hackes Jobs"],
+  description: "Agencia de reclutamiento en Toluca y headhunting en CDMX. Usamos IA y psicometría avanzada para encontrar el top 1% de talento. ¡Contrata el mejor equipo hoy!",
+  keywords: ["Reclutamiento Toluca", "Headhunting CDMX", "Psicometrias Toluca", "Agencia de reclutamiento", "Selección de personal", "Talento IT", "Recursos Humanos", "IA", "Psicometría avanzada", "Hacke's Jobs"],
   authors: [{ name: "Hacke's Jobs Team" }],
   creator: "Hacke's Jobs",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://hackesjobs.com.mx/",
-    title: "Hacke's Jobs | Reclutamiento Inteligente",
-    description: "Conectamos empresas con el mejor talento mediante tecnología y análisis profundo.",
+    title: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
+    description: "Encontramos al top 1% de talento en Toluca y CDMX con IA y psicometría avanzada. ¡Escala tu empresa hoy!",
     siteName: "Hacke's Jobs",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hacke's Jobs | Reclutamiento Inteligente",
-    description: "Encontramos al talento que tu empresa necesita para crecer.",
+    title: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
+    description: "Expertos en Headhunting CDMX y Reclutamiento Toluca. Top 1% de talento con IA.",
   },
   robots: {
     index: true,
