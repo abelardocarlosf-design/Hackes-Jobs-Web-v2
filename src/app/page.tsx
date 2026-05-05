@@ -19,7 +19,7 @@ export default function HomePage() {
   const handleGrowthPlan = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-pro', {
+      const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/checkout-growth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -23,7 +23,7 @@ export default function PreciosPage() {
     try {
       if (planId === 'starter') {
         // Conexión con el webhook de n8n para el Plan Inicial
-        const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/hackesjobs-plan-pro', {
+        const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/checkout-growth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
