@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/jwt';
 import { verifyGoogleToken } from '@/lib/googleAuth';
+import { triggerWebhookAsync } from '@/lib/webhook';
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +40,16 @@ export async function POST(request: Request) {
             create: {} // Crea el perfil de candidato vacío
           }
         },
+      });
+
+      // Notificar a n8n sobre el nuevo usuario de Google
+      triggerWebhookAsync('crear-usuario-hj', {
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        provider: 'google',
       });
     }
 

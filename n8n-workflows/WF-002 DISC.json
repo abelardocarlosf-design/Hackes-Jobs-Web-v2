@@ -1,0 +1,267 @@
+{
+  "name": "WF-002 DISC",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wf-002-disc",
+        "options": {}
+      },
+      "name": "Webhook Recepción",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        240
+      ],
+      "id": "0020511e-1ebb-4c53-8eaf-6ca601db9ae7",
+      "webhookId": "f7abd219-1957-4dbe-91c1-c062c803ca26"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Actúa como psicólogo organizacional experto. Analiza los resultados del Test DISC: {{ JSON.stringify($json.body.respuestas) }}.\n\nEvalúa las dimensiones conductuales de Dominancia, Influencia, Estabilidad y Cumplimiento. Determina el perfil natural del candidato en el entorno laboral.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON. Sin saludos, sin formato markdown, sin bloques de código. Solo esta estructura exacta:\n{\n  \"perfil_natural\": \"Breve descripción de su estilo de comportamiento innato y básico\"\n}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "name": "Análisis Psicométrico Gemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        240
+      ],
+      "id": "1d882392-021f-4df1-8409-7ca40765ea35",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LFuDxpvMiT0jA4Yu",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1. Extracción profunda y específica para Gemini 3.1 Flash Lite\nlet rawData = $input.item.json;\nlet textToParse = \"\";\n\n// Buscamos la ruta exacta donde Gemini 3.1 esconde el texto\nif (rawData.content && rawData.content.parts && rawData.content.parts[0] && rawData.content.parts[0].text) {\n    textToParse = rawData.content.parts[0].text;\n} else if (rawData.message && rawData.message.content) {\n    textToParse = rawData.message.content;\n} else if (rawData.text) {\n    textToParse = rawData.text;\n} else {\n    textToParse = JSON.stringify(rawData);\n}\n\n// 2. Forzar conversión a String\ntextToParse = String(textToParse);\n\n// 3. Extracción Blindada con Regex\nconst match = textToParse.match(/\\{[\\s\\S]*\\}/);\nlet extractedJson = match ? match[0] : textToParse;\n\n// 4. Parseo y salida\ntry {\n    const parsedData = JSON.parse(extractedJson);\n    return { json: parsedData };\n} catch (error) {\n    return {\n        json: {\n            \"perfil_natural\": \"Error de Parseo. Revisar logs en n8n.\"\n        }\n    };\n}"
+      },
+      "name": "Parsear JSON Seguro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        240
+      ],
+      "id": "62d28923-a2db-4f89-bf38-0c34575fb108"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0",
+          "mode": "list",
+          "cachedResultName": "Usuarios_Plataforma_test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030819794,
+          "mode": "list",
+          "cachedResultName": "  WF-002_DISC",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit#gid=2030819794"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "        Email": "={{ $('Webhook Recepción').item.json.body.datos_paciente.email }}",
+            "Nombre": "={{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}",
+            "        Fecha": "={{ $('Webhook Recepción').item.json.body.datos_prueba.fecha_aplicacion }}",
+            "        Perfil_Natural": "={{ $('Webhook Recepción').item.json.body.respuestas.notas_sistema }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "        Email",
+              "displayName": "        Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "        Fecha",
+              "displayName": "        Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "        Perfil_Natural",
+              "displayName": "        Perfil_Natural",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "2037d79a-f670-4abb-b3cf-9ca08d01cf39",
+      "name": "Respaldar en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -576,
+        240
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rXBYdqJuk2U0W18Y",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=Alerta Hacke's Jobs: Nuevo Test DISC Completado [{{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }} - {{ $('Webhook Recepción').item.json.body.datos_paciente.email }}]",
+        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">\n    \n    <div style=\"background-color: #FF8C00; padding: 25px 20px; text-align: center;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;\">Reporte Psicométrico Completado</h2>\n        <p style=\"color: #FFF3E0; margin: 5px 0 0 0; font-size: 14px;\">Test Conductual DISC</p>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 30px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">El sistema ha procesado exitosamente una nueva evaluación. A continuación, se presenta el análisis conductual generado por IA:</p>\n\n        <div style=\"background-color: #F8F9FA; border-left: 4px solid #333333; padding: 15px 20px; margin: 25px 0;\">\n            <p style=\"margin: 0; font-size: 14px; color: #666666; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Datos del Candidato</p>\n            <p style=\"margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #000000;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}</p>\n            \n            <p style=\"margin: 15px 0 0 0; font-size: 14px; color: #666666; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Contacto</p>\n            <p style=\"margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #FF8C00;\">\n                <a href=\"mailto:{{ $('Webhook Recepción').item.json.body.datos_paciente.email }}\" style=\"color: #FF8C00; text-decoration: none;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.email }}</a>\n            </p>\n        </div>\n\n        <h3 style=\"color: #000000; border-bottom: 2px solid #EEEEEE; padding-bottom: 8px; margin-top: 30px; font-size: 18px;\">Análisis de Resultados DISC</h3>\n        \n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Perfil Natural:</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.perfil_natural }}</p>\n        </div>\n\n        <p style=\"font-size: 14px; color: #888888; font-style: italic; margin-top: 30px; text-align: center;\">\n            * Los datos de esta evaluación han sido respaldados automáticamente en Google Sheets.\n        </p>\n    </div>\n\n    <div style=\"background-color: #1A1A1A; padding: 15px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 1px;\">HACKE'S JOBS RECRUITMENT SYSTEM</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "390e9f2e-13f7-4047-9ac1-49fb2bfafd04",
+      "name": "Gmail Notificación RH",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -256,
+        144
+      ],
+      "webhookId": "dba41a2b-6f3c-4a5b-81f6-9084748435c4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook Recepción').item.json.body.datos_paciente.email }}",
+        "subject": "¡Test DISC Completado con Éxito!",
+        "message": "<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">\n    \n    <div style=\"background-color: #FF8C00; padding: 25px 20px; text-align: center;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px;\">¡Evaluación Recibida!</h2>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 30px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">Te confirmamos que hemos recibido correctamente tus respuestas del <strong>Test Conductual DISC</strong>.</p>\n        \n        <p style=\"font-size: 16px; line-height: 1.6;\">Nuestro equipo de Atracción de Talento integrará esta información a tu expediente. Nos pondremos en contacto contigo próximamente para indicarte los siguientes pasos del proceso de selección.</p>\n\n        <p style=\"font-size: 16px; line-height: 1.6;\">Agradecemos mucho tu participación en esta fase.</p>\n\n        <div style=\"margin-top: 35px; border-top: 1px solid #EEEEEE; padding-top: 20px;\">\n            <p style=\"font-size: 14px; color: #666666; margin: 0;\">Saludos cordiales,</p>\n            <p style=\"font-size: 16px; color: #000000; font-weight: 700; margin: 5px 0 0 0;\">Equipo de Reclutamiento</p>\n            <p style=\"font-size: 14px; color: #FF8C00; font-weight: 600; margin: 2px 0 0 0;\">Hacke's Jobs</p>\n        </div>\n    </div>\n\n    <div style=\"background-color: #000000; padding: 15px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 1px;\">HACKE'S JOBS RECRUITMENT SYSTEM</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "374a8c88-f805-4f9f-b540-430449bbc16b",
+      "name": "Gmail Confirmación Cliente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -256,
+        352
+      ],
+      "webhookId": "a75a3e66-153c-4b42-a07f-b8e6f84885ef",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Recepción": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Análisis Psicométrico Gemini": {
+      "main": [
+        [
+          {
+            "node": "Parsear JSON Seguro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear JSON Seguro": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respaldar en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notificación RH",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "07637763-ee9d-4780-b058-b7794898260c",
+  "meta": {
+    "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
+  },
+  "id": "BhxYaYWs58ZGDlNy",
+  "tags": []
+}

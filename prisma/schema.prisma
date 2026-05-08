@@ -147,6 +147,7 @@ model TestResult {
   results   String   // JSON: respuestas del candidato
   score     Int?
   summary   String?  // Resumen generado
+  status    String   @default("completado") // pendiente | procesando | completado | fallido
   createdAt DateTime @default(now())
 
   // FK

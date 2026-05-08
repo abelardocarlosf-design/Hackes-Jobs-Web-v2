@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { verifyAuth } from '@/lib/jwt';
 import { cookies } from 'next/headers';
-import { triggerWebhookAsync } from '@/lib/webhook';
+import { triggerWebhookAsync, WebhookEvent } from '@/lib/webhook';
 
 export async function POST(request: Request) {
   try {
@@ -16,10 +16,10 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { testId, testType, answers, score, summary } = body;
+    const { slug, respuestas, timestamp, metadata } = body;
 
-    if ((!testId && !testType) || !answers) {
-      return NextResponse.json({ success: false, message: 'Faltan datos requeridos' }, { status: 400 });
+    if (!slug || !respuestas) {
+      return NextResponse.json({ success: false, message: 'Faltan datos requeridos (slug, respuestas)' }, { status: 400 });
     }
 
     const candidate = await prisma.candidate.findUnique({
@@ -30,51 +30,70 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Candidato no encontrado' }, { status: 404 });
     }
 
-    // Verificar si el test es premium y si lo ha comprado
-    let test;
-    if (testId) {
-      test = await prisma.psychometricTest.findUnique({ where: { id: testId } });
-    } else if (testType) {
-      test = await prisma.psychometricTest.findFirst({ where: { type: testType } });
-    }
+    // Buscar test por type (ignorando case si es posible, o haciendo matching manual)
+    // Asumimos que los types en la BD coinciden con el slug (ej. "DISC" o "disc")
+    const allTests = await prisma.psychometricTest.findMany({ where: { active: true } });
+    const test = allTests.find(t => t.type.toLowerCase() === slug.toLowerCase() || t.name.toLowerCase().includes(slug.toLowerCase()));
 
     if (!test) {
-      return NextResponse.json({ success: false, message: 'Test no encontrado' }, { status: 404 });
+      return NextResponse.json({ success: false, message: 'Test no encontrado en la base de datos' }, { status: 404 });
     }
 
-    if (test.isPremium) {
-      const purchase = await prisma.testPurchase.findUnique({
-        where: { candidateId_testId: { candidateId: candidate.id, testId: test.id } }
+    if (test.isPremium || test.price > 0) {
+      const purchase = await prisma.testPurchase.findFirst({
+        where: { candidateId: candidate.id, testId: test.id, status: 'completed' }
       });
-      if (!purchase || purchase.status !== 'completed') {
+      if (!purchase) {
         return NextResponse.json({ success: false, message: 'Debes adquirir este test primero' }, { status: 403 });
       }
     }
 
-    // Guardar el resultado
+    // Guardar el resultado inicial en estado "procesando"
     const result = await prisma.testResult.create({
       data: {
         candidateId: candidate.id,
         testId: test.id,
-        results: JSON.stringify(answers),
-        score: score || 0,
-        summary: summary || 'Test completado satisfactoriamente.',
+        results: JSON.stringify({ respuestas, metadata, timestamp }),
+        status: 'procesando',
+        summary: 'Procesando resultados...',
       }
     });
 
-    // Disparar webhook
-    triggerWebhookAsync('test-completed', {
-      candidateId: candidate.id,
+    // Determinar el webhook según el slug
+    const eventNameMap: Record<string, string> = {
+      'luscher': 'wf-001-luscher',
+      'disc': 'wf-002-disc',
+      'allport': 'wf-003-allport',
+      'moss': 'wf-004-moss',
+      'zavic': 'wf-005-zavic',
+      'kostick': 'wf-006-kostick',
+      'raven': 'wf-007-raven',
+      'terman': 'wf-008-terman',
+      '16pf': 'wf-009-16pf',
+      'mmpi': 'wf-010-mmpi',
+    };
+
+    const n8nEvent = eventNameMap[slug.toLowerCase()] || 'test-completed';
+
+    // Disparar webhook específico de la psicometría
+    // Como el webhook original triggerWebhookAsync enviaba al event param de n8n, 
+    // y los webhooks en n8n suelen configurarse en /webhook/wf-001-luscher, 
+    // pasamos el slug mapeado como evento.
+    // También enviamos el resultId para que n8n pueda actualizar el status al terminar.
+    triggerWebhookAsync(n8nEvent as WebhookEvent, {
+      candidatoId: candidate.id,
       candidateEmail: decoded.email,
       candidateName: decoded.name,
       testId: test.id,
       testName: test.name,
-      testType: test.type,
-      score: result.score,
-      summary: result.summary,
+      slug: slug,
+      resultId: result.id,
+      respuestas,
+      timestamp,
+      metadata
     });
 
-    return NextResponse.json({ success: true, data: result });
+    return NextResponse.json({ success: true, resultId: result.id });
   } catch (error) {
     console.error('Error submitting test:', error);
     return NextResponse.json(

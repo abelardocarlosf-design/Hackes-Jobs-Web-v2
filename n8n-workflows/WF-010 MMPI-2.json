@@ -1,0 +1,436 @@
+{
+  "name": "WF-010 MMPI-2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wf-010-mmpi-2",
+        "options": {}
+      },
+      "name": "Webhook Recepción",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        80
+      ],
+      "id": "3853f407-81f3-4e56-ade9-b15eac84d1f8",
+      "webhookId": "ebeeb5c3-f7a2-43d2-8aeb-f081b5c07e9c"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.1-flash-lite-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Actúa como psicólogo clínico y organizacional experto. Analiza los resultados del MMPI-2 (Inventario Multifásico de Personalidad de Minnesota) del candidato: {{ JSON.stringify($json.body.respuestas) }}.\n\nEvalúa las 3 escalas de validez (L, F, K) y las 10 escalas clínicas básicas. Determina si el perfil es válido, genera un resumen ejecutivo y emite una alerta de riesgo clínico/laboral en caso de detectar alteraciones severas.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura y claves exactas. Los textos deben ser formales, analíticos y extensos (mínimo 20 palabras por escala). Sin saludos, sin formato markdown. Solo esta estructura exacta:\n{\n  \"L_Mentira\": \"Puntuación T y evaluación de intentos de dar buena impresión...\",\n  \"F_Incoherencia\": \"Puntuación T y evaluación de respuestas atípicas o exageración...\",\n  \"K_Correccion\": \"Puntuación T y evaluación de actitud defensiva y recursos de afrontamiento...\",\n  \"1_Hs\": \"Puntuación T y evaluación de Hipocondriasis (preocupación somática)...\",\n  \"2_D\": \"Puntuación T y evaluación de Depresión (insatisfacción, pesimismo)...\",\n  \"3_Hy\": \"Puntuación T y evaluación de Histeria (negación, somatización)...\",\n  \"4_Pd\": \"Puntuación T y evaluación de Desviación Psicopática (rebeldía, conflicto con autoridad)...\",\n  \"5_Mf\": \"Puntuación T y evaluación de Masculinidad/Feminidad (intereses y roles)...\",\n  \"6_Pa\": \"Puntuación T y evaluación de Paranoia (suspicacia, sensibilidad interpersonal)...\",\n  \"7_Pt\": \"Puntuación T y evaluación de Psicastenia (ansiedad, obsesividad)...\",\n  \"8_Sc\": \"Puntuación T y evaluación de Esquizofrenia (aislamiento, pensamiento inusual)...\",\n  \"9_Ma\": \"Puntuación T y evaluación de Hipomanía (energía, impulsividad)...\",\n  \"0_Si\": \"Puntuación T y evaluación de Introversión Social (aislamiento vs sociabilidad)...\",\n  \"Validez_Perfil\": \"Válido o Inválido con justificación técnica...\",\n  \"Interpretacion_Breve\": \"Resumen ejecutivo integral del perfil clínico y su impacto laboral...\",\n  \"Alerta_Riesgo\": \"Sí/No y descripción detallada del riesgo para la empresa en caso de patología...\"\n}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "name": "Análisis Psicométrico Gemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1232,
+        80
+      ],
+      "id": "2d28f118-437f-4578-957e-a611c371444b",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LFuDxpvMiT0jA4Yu",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1. Extracción profunda y específica para Gemini 3.1 Flash Lite\nlet rawData = $input.item.json;\nlet textToParse = \"\";\n\nif (rawData.content && rawData.content.parts && rawData.content.parts[0] && rawData.content.parts[0].text) {\n    textToParse = rawData.content.parts[0].text;\n} else if (rawData.message && rawData.message.content) {\n    textToParse = rawData.message.content;\n} else if (rawData.text) {\n    textToParse = rawData.text;\n} else {\n    textToParse = JSON.stringify(rawData);\n}\n\ntextToParse = String(textToParse);\nconst match = textToParse.match(/\\{[\\s\\S]*\\}/);\nlet extractedJson = match ? match[0] : textToParse;\n\ntry {\n    const parsedData = JSON.parse(extractedJson);\n    return { json: parsedData };\n} catch (error) {\n    return {\n        json: {\n            \"L_Mentira\": \"Error\", \"F_Incoherencia\": \"Error\", \"K_Correccion\": \"Error\", \n            \"1_Hs\": \"Error\", \"2_D\": \"Error\", \"3_Hy\": \"Error\", \"4_Pd\": \"Error\", \n            \"5_Mf\": \"Error\", \"6_Pa\": \"Error\", \"7_Pt\": \"Error\", \"8_Sc\": \"Error\", \n            \"9_Ma\": \"Error\", \"0_Si\": \"Error\", \"Validez_Perfil\": \"Error\", \n            \"Interpretacion_Breve\": \"Error de Parseo\", \"Alerta_Riesgo\": \"Error\"\n        }\n    };\n}"
+      },
+      "name": "Parsear JSON Seguro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        80
+      ],
+      "id": "0f15c253-a2f6-425c-b09e-6d90287910ca"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0",
+          "mode": "list",
+          "cachedResultName": "Usuarios_Plataforma_test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 251248637,
+          "mode": "list",
+          "cachedResultName": "  WF-010_MMPI-2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit#gid=251248637"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $('Webhook Recepción').item.json.body.name }}",
+            "Email": "={{ $('Webhook Recepción').item.json.body.to }}",
+            "Fecha": "={{ $now }}",
+            "L_Mentira": "={{ $json.L_Mentira }}",
+            "F_Incoherencia": "={{ $json.F_Incoherencia }}",
+            "K_Correccion": "={{ $json.K_Correccion }}",
+            "1_Hs": "={{ $json['1_Hs'] }}",
+            "2_D": "={{ $json['2_D'] }}",
+            "3_Hy": "={{ $json['3_Hy'] }}",
+            "4_Pd": "={{ $json['4_Pd'] }}",
+            "5_Mf": "={{ $json['5_Mf'] }}",
+            "6_Pa": "={{ $json['6_Pa'] }}",
+            "7_Pt": "={{ $json['7_Pt'] }}",
+            "8_Sc": "={{ $json['8_Sc'] }}",
+            "9_Ma": "={{ $json['9_Ma'] }}",
+            "0_Si": "={{ $json['0_Si'] }}",
+            "Validez_Perfil": "={{ $json.Validez_Perfil }}",
+            "Interpretacion_Breve": "={{ $json.Interpretacion_Breve }}",
+            "Alerta_Riesgo": "={{ $json.Alerta_Riesgo }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "L_Mentira",
+              "displayName": "L_Mentira",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "F_Incoherencia",
+              "displayName": "F_Incoherencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "K_Correccion",
+              "displayName": "K_Correccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "1_Hs",
+              "displayName": "1_Hs",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "2_D",
+              "displayName": "2_D",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "3_Hy",
+              "displayName": "3_Hy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "4_Pd",
+              "displayName": "4_Pd",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "5_Mf",
+              "displayName": "5_Mf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "6_Pa",
+              "displayName": "6_Pa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "7_Pt",
+              "displayName": "7_Pt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "8_Sc",
+              "displayName": "8_Sc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "9_Ma",
+              "displayName": "9_Ma",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "0_Si",
+              "displayName": "0_Si",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Validez_Perfil",
+              "displayName": "Validez_Perfil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interpretacion_Breve",
+              "displayName": "Interpretacion_Breve",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Alerta_Riesgo",
+              "displayName": "Alerta_Riesgo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "3709c029-25a0-4766-a9ce-6e18a6d4cf37",
+      "name": "Respaldar en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -496,
+        80
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rXBYdqJuk2U0W18Y",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=Alerta Hackes Jobs Technologies: Nuevo Reporte MMPI-2 Procesado [ Paciente: {{ $('Webhook Recepción').item.json.body.name }} | {{ $('Webhook Recepción').item.json.body.to }} ]",
+        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 800px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08);\">\n    <div style=\"background-color: #D32F2F; padding: 30px 20px; text-align: center; border-bottom: 4px solid #B71C1C;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 1px;\">Reporte Clínico Ejecutivo MMPI-2</h2>\n        <p style=\"color: #FFEBEE; margin: 8px 0 0 0; font-size: 15px; font-weight: 500;\">Inventario Multifásico de Personalidad de Minnesota</p>\n    </div>\n    <div style=\"background-color: #FFFFFF; padding: 40px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">La IA ha completado el análisis clínico profundo de la prueba MMPI-2. El candidato ha recibido el enlace de pago correspondiente para liberar el proceso técnico.</p>\n\n        <div style=\"background-color: #F8F9FA; border-left: 5px solid #000000; padding: 20px; margin: 30px 0; border-radius: 0 4px 4px 0;\">\n            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                <tr>\n                    <td width=\"50%\" style=\"padding-bottom: 15px;\">\n                        <p style=\"margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Candidato Evaluado</p>\n                        <p style=\"margin: 5px 0 0 0; font-size: 18px; font-weight: 700; color: #000000;\">{{ $('Webhook Recepción').item.json.body.name }}</p>\n                    </td>\n                    <td width=\"50%\" style=\"padding-bottom: 15px;\">\n                        <p style=\"margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Correo Electrónico</p>\n                        <p style=\"margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #D32F2F;\">{{ $('Webhook Recepción').item.json.body.to }}</p>\n                    </td>\n                </tr>\n            </table>\n        </div>\n\n        <h3 style=\"color: #000000; border-bottom: 2px solid #EEEEEE; padding-bottom: 10px; margin-top: 40px; font-size: 20px;\">Escalas de Validez</h3>\n        \n        <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;\">\n            <div style=\"background-color: #FFF4F4; padding: 15px; border-radius: 6px; border-left: 3px solid #D32F2F;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">L (Mentira)</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json.L_Mentira }}</p>\n            </div>\n            <div style=\"background-color: #FFF4F4; padding: 15px; border-radius: 6px; border-left: 3px solid #D32F2F;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">F (Incoherencia)</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json.F_Incoherencia }}</p>\n            </div>\n            <div style=\"background-color: #FFF4F4; padding: 15px; border-radius: 6px; border-left: 3px solid #D32F2F;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">K (Corrección)</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json.K_Correccion }}</p>\n            </div>\n        </div>\n\n        <h3 style=\"color: #000000; border-bottom: 2px solid #EEEEEE; padding-bottom: 10px; margin-top: 40px; font-size: 20px;\">Escalas Clínicas</h3>\n        \n        <div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;\">\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">1 (Hs) Hipocondriasis</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['1_Hs'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">2 (D) Depresión</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['2_D'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">3 (Hy) Histeria</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['3_Hy'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">4 (Pd) Desviación Psicopática</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['4_Pd'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">5 (Mf) Masc./Feminidad</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['5_Mf'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">6 (Pa) Paranoia</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['6_Pa'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">7 (Pt) Psicastenia</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['7_Pt'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">8 (Sc) Esquizofrenia</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['8_Sc'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">9 (Ma) Hipomanía</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['9_Ma'] }}</p>\n            </div>\n            <div style=\"background-color: #F8F9FA; padding: 12px; border-radius: 6px; border-left: 3px solid #333333;\">\n                <p style=\"margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000000;\">0 (Si) Introversión Social</p>\n                <p style=\"margin: 0; font-size: 12px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json['0_Si'] }}</p>\n            </div>\n        </div>\n\n        <h3 style=\"color: #000000; border-bottom: 2px solid #EEEEEE; padding-bottom: 10px; margin-top: 40px; font-size: 20px;\">Diagnóstico Ejecutivo Integral</h3>\n\n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #D32F2F;\">Validez del Perfil:</p>\n            <p style=\"margin: 0 0 15px 0; font-size: 14px; color: #444444; line-height: 1.5;\">{{ $('Parsear JSON Seguro').item.json.Validez_Perfil }}</p>\n            \n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #D32F2F;\">Interpretación Breve:</p>\n            <p style=\"margin: 0 0 15px 0; font-size: 14px; color: #444444; line-height: 1.5; background-color: #FAFAFA; padding: 15px; border-radius: 6px; border: 1px solid #EEEEEE;\">{{ $('Parsear JSON Seguro').item.json.Interpretacion_Breve }}</p>\n        </div>\n        \n        <div style=\"margin-top: 30px; padding: 20px; background-color: #FFF4F4; border-radius: 8px; border: 2px solid #D32F2F;\">\n            <p style=\"margin: 0 0 10px 0; font-size: 16px; color: #B71C1C; text-transform: uppercase; font-weight: 800;\">⚠️ Alerta de Riesgo Organizacional</p>\n            <p style=\"margin: 0; font-size: 15px; color: #000000;\">{{ $('Parsear JSON Seguro').item.json.Alerta_Riesgo }}</p>\n        </div>\n\n    </div>\n    <div style=\"background-color: #000000; padding: 20px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 2px; font-weight: 600;\">HACKES JOBS TECHNOLOGIES</p>\n        <p style=\"color: #666666; font-size: 11px; margin: 5px 0 0 0;\">AI Recruitment & Assessment Core</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "be010736-18f3-4a5a-9f0e-198c80597719",
+      "name": "Gmail Notificación RH",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -176,
+        -16
+      ],
+      "webhookId": "513c521c-0141-45d8-a8fd-01291d24e64d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook Recepción').item.json.body.to }}",
+        "subject": "Siguiente paso: Resultados de tu Test MMPI-2",
+        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">\n    <div style=\"background-color: #FF8C00; padding: 25px 20px; text-align: center;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 22px; font-weight: 600;\">¡Test Recibido Exitosamente!</h2>\n    </div>\n    <div style=\"background-color: #FFFFFF; padding: 30px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">Te confirmamos que nuestro sistema ha recibido y procesado correctamente tus respuestas del <strong>Inventario Multifásico de Personalidad (MMPI-2)</strong>.</p>\n        \n        <p style=\"font-size: 16px; line-height: 1.6; background-color: #FFF8F0; padding: 15px; border-left: 4px solid #FF8C00; border-radius: 4px;\">\n            Esta evaluación forma parte de nuestras pruebas premium y clínicas de alta especialidad. Para liberar tus resultados técnicos y permitirnos continuar con el proceso de atracción de talento, es necesario cubrir la cuota de procesamiento de <strong>$867 MXN</strong>.\n        </p>\n\n        <div style=\"text-align: center; margin: 35px 0;\">\n            <a href=\"https://buy.stripe.com/cNicN5czza9v5eJ0GK7Vm09?prefilled_email={{ encodeURIComponent($('Webhook Recepción').item.json.body.datos_paciente.email) }}\" style=\"background-color: #000000; color: #FFFFFF; padding: 14px 28px; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 16px; display: inline-block; letter-spacing: 0.5px;\">Realizar Pago en Stripe</a>\n        </div>\n\n        <p style=\"font-size: 15px; line-height: 1.6; color: #666666;\">Una vez procesado tu pago, el equipo de reclutamiento será notificado automáticamente y nos pondremos en contacto contigo para los siguientes pasos.</p>\n\n        <div style=\"margin-top: 35px; border-top: 1px solid #EEEEEE; padding-top: 20px;\">\n            <p style=\"font-size: 14px; color: #666666; margin: 0;\">Saludos cordiales,</p>\n            <p style=\"font-size: 16px; color: #000000; font-weight: 700; margin: 5px 0 0 0;\">Equipo de Reclutamiento</p>\n            <p style=\"font-size: 14px; color: #FF8C00; font-weight: 600; margin: 2px 0 0 0;\">Hackes Jobs Technologies</p>\n        </div>\n    </div>\n    <div style=\"background-color: #000000; padding: 15px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 1px;\">HACKES JOBS TECHNOLOGIES</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a736309d-34f8-45d9-8d0e-e92a9658f837",
+      "name": "Gmail Confirmación Cliente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -176,
+        192
+      ],
+      "webhookId": "41bccbe3-29bc-44e5-8fc7-d20ba222f25d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Recepción": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Análisis Psicométrico Gemini": {
+      "main": [
+        [
+          {
+            "node": "Parsear JSON Seguro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear JSON Seguro": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respaldar en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notificación RH",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "552a0279-0686-40ab-81e2-08fec6c020e2",
+  "meta": {
+    "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
+  },
+  "id": "BH8EJsZVYWcfq2Jw",
+  "tags": []
+}

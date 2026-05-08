@@ -1,6 +1,6 @@
 const WEBHOOK_BASE_URL = process.env.WEBHOOK_BASE_URL || 'https://api.hackesjobs.com.mx/webhook';
 
-export type WebhookEvent = 'job-created' | 'new-application' | 'test-completed' | 'company-lead' | 'payment-completed';
+export type WebhookEvent = 'job-created' | 'new-application' | 'test-completed' | 'company-lead' | 'payment-completed' | 'crear-usuario-hj' | string;
 
 interface WebhookResult {
   success: boolean;

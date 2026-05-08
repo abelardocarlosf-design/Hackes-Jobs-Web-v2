@@ -1,0 +1,315 @@
+{
+  "name": "WF-001 Lüscher",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wf-001-luscher",
+        "options": {}
+      },
+      "name": "Webhook Recepción",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -2304,
+        480
+      ],
+      "id": "31b8916a-d170-447f-9de1-bedfbe238754",
+      "webhookId": "a3212f80-5bb9-4154-a3d4-0667cd5a0a51"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Actúa como psicólogo organizacional experto. Analiza los resultados del Test de Colores de Lüscher: {{ JSON.stringify($json.body.respuestas) }}.\n\nEvalúa la selección y el orden de los colores. Determina el estado psicofísico actual, los objetivos/deseos, las fuentes de estrés reprimidas y su perfil conductual en el entorno laboral.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON. Sin saludos, sin formato markdown, sin bloques de código. Solo esta estructura exacta:\n{\n  \"secuencia_colores\": \"Ej. 34061257 - 43061257\",\n  \"estado_psicofisico\": \"Breve descripción de su estado actual\",\n  \"objetivos_y_deseos\": \"Breve descripción de sus motivaciones internas\",\n  \"fuentes_de_estres\": \"Breve descripción de tensiones o bloqueos\",\n  \"perfil_laboral\": \"Breve descripción de su comportamiento esperado en el trabajo\"\n}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "name": "Análisis Psicométrico Gemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -2064,
+        480
+      ],
+      "id": "cbe2b4f6-fec2-456f-a2e8-c0277d66f1af",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LFuDxpvMiT0jA4Yu",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 1. Extracción profunda y específica para Gemini 3.1 Flash Lite\nlet rawData = $input.item.json;\nlet textToParse = \"\";\n\n// Buscamos la ruta exacta donde Gemini 3.1 esconde el texto\nif (rawData.content && rawData.content.parts && rawData.content.parts[0] && rawData.content.parts[0].text) {\n    textToParse = rawData.content.parts[0].text;\n} else if (rawData.message && rawData.message.content) {\n    textToParse = rawData.message.content;\n} else if (rawData.text) {\n    textToParse = rawData.text;\n} else {\n    textToParse = JSON.stringify(rawData);\n}\n\n// 2. Forzar conversión a String\ntextToParse = String(textToParse);\n\n// 3. Extracción Blindada con Regex\nconst match = textToParse.match(/\\{[\\s\\S]*\\}/);\nlet extractedJson = match ? match[0] : textToParse;\n\n// 4. Parseo y salida\ntry {\n    const parsedData = JSON.parse(extractedJson);\n    return { json: parsedData };\n} catch (error) {\n    return {\n        json: {\n            \"secuencia_colores\": \"Error de Parseo\",\n            \"estado_psicofisico\": \"Fallo al convertir la respuesta.\",\n            \"objetivos_y_deseos\": \"Revisar logs en n8n.\",\n            \"fuentes_de_estres\": \"Error detectado.\",\n            \"perfil_laboral\": \"Error detectado.\"\n        }\n    };\n}"
+      },
+      "name": "Parsear JSON Seguro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1712,
+        480
+      ],
+      "id": "9639b971-07da-423c-b5a9-c4483f1cb0a4"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0",
+          "mode": "list",
+          "cachedResultName": "Usuarios_Plataforma_test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1101981002,
+          "mode": "list",
+          "cachedResultName": "  WF-001_Lüscher",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit#gid=1101981002"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}",
+            "Email": "={{ $('Webhook Recepción').item.json.body.datos_paciente.email }}",
+            "Fecha": "={{ $('Webhook Recepción').item.json.body.datos_prueba.fecha_aplicacion }}",
+            "Secuencia_Colores": "={{ $json.secuencia_colores }}",
+            "Estado_Psicofisico": "={{ $json.estado_psicofisico }}",
+            "Objetivos_y_Deseos": "={{ $json.objetivos_y_deseos }}",
+            "Fuentes_de_Estres": "={{ $json.fuentes_de_estres }}",
+            "Perfil_Laboral": "={{ $json.perfil_laboral }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Secuencia_Colores",
+              "displayName": "Secuencia_Colores",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado_Psicofisico",
+              "displayName": "Estado_Psicofisico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Objetivos_y_Deseos",
+              "displayName": "Objetivos_y_Deseos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fuentes_de_Estres",
+              "displayName": "Fuentes_de_Estres",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Perfil_Laboral",
+              "displayName": "Perfil_Laboral",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "df940eb8-54f3-45cc-aafe-555e6d050a14",
+      "name": "Respaldar en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1328,
+        480
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rXBYdqJuk2U0W18Y",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=Alerta Hacke's Jobs: Nuevo Test Lüscher Completado [{{ $json.Nombre }} - {{ $json.Email }}]",
+        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">\n    \n    <div style=\"background-color: #FF8C00; padding: 25px 20px; text-align: center;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;\">Reporte Psicométrico Completado</h2>\n        <p style=\"color: #FFF3E0; margin: 5px 0 0 0; font-size: 14px;\">Test de Colores de Lüscher</p>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 30px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">El sistema ha procesado exitosamente una nueva evaluación. A continuación, se presenta el análisis clínico y laboral generado por IA:</p>\n\n        <div style=\"background-color: #F8F9FA; border-left: 4px solid #333333; padding: 15px 20px; margin: 25px 0;\">\n            <p style=\"margin: 0; font-size: 14px; color: #666666; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Datos del Candidato</p>\n            <p style=\"margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #000000;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}</p>\n            \n            <p style=\"margin: 15px 0 0 0; font-size: 14px; color: #666666; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;\">Contacto</p>\n            <p style=\"margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #FF8C00;\">\n                <a href=\"mailto:{{ $('Webhook Recepción').item.json.body.datos_paciente.email }}\" style=\"color: #FF8C00; text-decoration: none;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.email }}</a>\n            </p>\n        </div>\n\n        <h3 style=\"color: #000000; border-bottom: 2px solid #EEEEEE; padding-bottom: 8px; margin-top: 30px; font-size: 18px;\">Análisis de Resultados Lüscher</h3>\n        \n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Secuencia de Colores:</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.secuencia_colores }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Estado Psicofísico:</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.estado_psicofisico }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Objetivos y Deseos:</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.objetivos_y_deseos }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Fuentes de Estrés:</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.fuentes_de_estres }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 20px;\">\n            <p style=\"margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #FF8C00;\">Perfil Laboral (Encaje Organizacional):</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.5; color: #444444; background-color: #FFF8F0; padding: 10px; border-radius: 4px;\">{{ $('Parsear JSON Seguro').item.json.perfil_laboral }}</p>\n        </div>\n\n        <p style=\"font-size: 14px; color: #888888; font-style: italic; margin-top: 30px; text-align: center;\">\n            * Los datos de esta evaluación han sido respaldados automáticamente en Google Sheets.\n        </p>\n    </div>\n\n    <div style=\"background-color: #1A1A1A; padding: 15px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 1px;\">HACKE'S JOBS RECRUITMENT SYSTEM</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "55b8575c-8856-48fe-a314-df8c65336cee",
+      "name": "Gmail Notificación RH",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1008,
+        384
+      ],
+      "webhookId": "27572fe7-3384-4534-b52e-6f14dfc44097",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "¡Test de Lüscher Completado con Éxito!",
+        "message": "<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">\n    \n    <div style=\"background-color: #FF8C00; padding: 25px 20px; text-align: center;\">\n        <h2 style=\"color: #FFFFFF; margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px;\">¡Evaluación Recibida!</h2>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 30px; color: #333333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola,</p>\n        <p style=\"font-size: 16px; line-height: 1.6;\">Te confirmamos que hemos recibido correctamente tus respuestas del <strong>Test de Colores de Lüscher</strong>.</p>\n        \n        <p style=\"font-size: 16px; line-height: 1.6;\">Nuestro equipo de Atracción de Talento integrará esta información a tu expediente. Nos pondremos en contacto contigo próximamente para indicarte los siguientes pasos del proceso de selección.</p>\n\n        <p style=\"font-size: 16px; line-height: 1.6;\">Agradecemos mucho tu participación en esta fase.</p>\n\n        <div style=\"margin-top: 35px; border-top: 1px solid #EEEEEE; padding-top: 20px;\">\n            <p style=\"font-size: 14px; color: #666666; margin: 0;\">Saludos cordiales,</p>\n            <p style=\"font-size: 16px; color: #000000; font-weight: 700; margin: 5px 0 0 0;\">Equipo de Reclutamiento</p>\n            <p style=\"font-size: 14px; color: #FF8C00; font-weight: 600; margin: 2px 0 0 0;\">Hacke's Jobs</p>\n        </div>\n    </div>\n\n    <div style=\"background-color: #000000; padding: 15px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 12px; margin: 0; letter-spacing: 1px;\">HACKE'S JOBS RECRUITMENT SYSTEM</p>\n    </div>\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cbf4a634-025e-48eb-a2b7-b15e50a0024f",
+      "name": "Gmail Confirmación Cliente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1008,
+        592
+      ],
+      "webhookId": "8bba25b9-72a7-4a12-879a-c9d35abba66f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Recepción": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Análisis Psicométrico Gemini": {
+      "main": [
+        [
+          {
+            "node": "Parsear JSON Seguro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear JSON Seguro": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respaldar en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Gmail Notificación RH",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ffd0bcc5-b7d7-443f-b960-a3e1d2be2011",
+  "meta": {
+    "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
+  },
+  "id": "1LtHAWlOTjofn4E0",
+  "tags": []
+}

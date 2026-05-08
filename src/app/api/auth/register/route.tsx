@@ -51,6 +51,15 @@ export async function POST(request: Request) {
       },
     });
 
+    // Notificar a n8n sobre el nuevo usuario
+    triggerWebhookAsync('crear-usuario-hj', {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    });
+
     // Si es empresa, crear registro de Company
     if (role === 'company' && companyName) {
       await prisma.company.create({

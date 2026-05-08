@@ -1,68 +1,25 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/Card';
-import { Illustration } from '@/components/Illustration';
-import { prisma } from '@/lib/prisma';
-import { verifyAuth } from '@/lib/jwt';
-import { cookies } from 'next/headers';
-import { Lock, Unlock, ArrowRight, Brain, Briefcase, Activity, ShieldCheck } from 'lucide-react';
-import { UnlockButton } from '@/components/UnlockButton';
+import { Card } from '@/components/Card';
 import { Typewriter } from '@/components/Typewriter';
-
-import { fallbackTests } from '@/lib/fallback-tests';
+import { Brain, Briefcase, Activity, ShieldCheck, ArrowRight } from 'lucide-react';
+import { testsByLevel } from '@/lib/psicometriasConfig';
 
 export const metadata: Metadata = {
   title: 'Catálogo de Evaluaciones Psicométricas | Hacke\'s Jobs',
   description: 'Descubre el potencial de tu talento con nuestras pruebas psicométricas validadas.',
 };
 
-export const dynamic = 'force-dynamic';
-
 const levelConfig: Record<string, { color: string; label: string; icon: any; border: string }> = {
-  basico: { color: 'text-emerald-500', label: 'Nivel Básico (Gratuito)', icon: Activity, border: 'border-emerald-200 bg-emerald-50' },
+  basico: { color: 'text-emerald-500', label: 'Nivel Básico', icon: Activity, border: 'border-emerald-200 bg-emerald-50' },
   intermedio: { color: 'text-brand-blue', label: 'Nivel Intermedio', icon: Briefcase, border: 'border-blue-200 bg-blue-50' },
   avanzado: { color: 'text-brand-orange', label: 'Nivel Avanzado', icon: Brain, border: 'border-orange-200 bg-orange-50' },
   premium: { color: 'text-purple-500', label: 'Nivel Clínico / Premium', icon: ShieldCheck, border: 'border-purple-200 bg-purple-50' }
 };
 
-export default async function PsicometriasPage() {
-  let tests: any[] = [];
-  let unlockedTestIds: string[] = [];
-
-  try {
-    const token = cookies().get('hj_token')?.value;
-    let candidateId = null;
-
-    if (token) {
-      const decoded = await verifyAuth(token);
-      if (decoded && decoded.role === 'candidate') {
-        const candidate = await prisma.candidate.findUnique({
-          where: { userId: decoded.userId as string },
-        });
-        if (candidate) candidateId = candidate.id;
-      }
-    }
-
-    tests = await prisma.psychometricTest.findMany({
-      where: { active: true },
-    });
-
-    let purchases: any[] = [];
-    if (candidateId) {
-      purchases = await prisma.testPurchase.findMany({
-        where: { candidateId, status: 'completed' }
-      });
-    }
-    unlockedTestIds = purchases.map(p => p.testId);
-  } catch (error) {
-    console.error('[Psicometrias] Database unavailable, using fallback data:', error);
-    tests = fallbackTests;
-    unlockedTestIds = [];
-  }
-
-  // Agrupar por nivel
-  const levels = ['basico', 'intermedio', 'avanzado', 'premium'];
+export default function PsicometriasPage() {
+  const levels = ['basico', 'intermedio', 'avanzado', 'premium'] as const;
   
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white pb-32 relative">
@@ -101,8 +58,8 @@ export default async function PsicometriasPage() {
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl mt-12 space-y-24 z-10">
         
         {levels.map(levelKey => {
-          const levelTests = tests.filter(t => t.level === levelKey);
-          if (levelTests.length === 0) return null;
+          const levelTests = testsByLevel[levelKey];
+          if (!levelTests || levelTests.length === 0) return null;
 
           const config = levelConfig[levelKey];
           const Icon = config.icon;
@@ -116,55 +73,40 @@ export default async function PsicometriasPage() {
                 <div>
                   <h2 className="text-3xl font-black text-white tracking-tight">{config.label}</h2>
                   <p className="text-slate-400 font-medium">
-                    {levelKey === 'basico' ? 'Gratuitas. Ideales para filtros iniciales.' : `Acceso Premium - $${levelTests[0].price} USD por test.`}
+                    {levelKey === 'basico' ? 'Evaluaciones fundamentales gratuitas.' : `Acceso Profesional - Mide dimensiones profundas.`}
                   </p>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {levelTests.map(test => {
-                  const structInfo = JSON.parse(test.structure);
-                  const isUnlocked = !test.isPremium || unlockedTestIds.includes(test.id);
-
                   return (
-                    <Card key={test.id} className={`glass-card p-0 rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:bg-white/10 ${isUnlocked ? 'border-white/10' : 'opacity-80 hover:opacity-100'} group relative flex flex-col`}>
-                      
-                      {!isUnlocked && (
-                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-brand-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-slate-300 z-10">
-                          <Lock size={14} />
-                        </div>
-                      )}
-                      {isUnlocked && test.isPremium && (
-                        <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase tracking-widest z-10 flex items-center gap-1 border border-emerald-500/20">
-                          <Unlock size={10} /> Desbloqueado
-                        </div>
-                      )}
-
+                    <Card key={test.slug} className={`glass-card p-0 rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:bg-white/10 border-white/10 group relative flex flex-col`}>
                       <div className="p-8 pb-2">
                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg self-start inline-block ${config.color} bg-white/5 border border-white/10 mb-4`}>
-                          {test.type}
+                          {test.categoria}
                         </span>
                         <h3 className="text-xl font-black text-white leading-tight uppercase">
-                          {test.name}
+                          {test.nombre}
                         </h3>
                       </div>
                       
                       <div className="p-8 pt-2 flex-1 flex flex-col">
                         <p className="text-sm text-slate-400 font-medium mb-6 flex-1 leading-relaxed">
-                          {structInfo.description}
+                          {test.descripcion}
                         </p>
                         
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex gap-2">
                             <div className="text-[10px] font-black text-slate-300 flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 uppercase tracking-widest">
-                              ⏱ {test.duration} min
+                              ⏱ {test.duracion}
                             </div>
-                            <div className={`text-[10px] font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg border uppercase tracking-widest ${test.isPremium ? 'text-brand-orange bg-brand-orange/10 border-brand-orange/20' : 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'}`}>
-                              {test.isPremium ? `$${test.price} USD` : 'Gratis'}
+                            <div className={`text-[10px] font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg border uppercase tracking-widest ${test.precio > 0 ? 'text-brand-orange bg-brand-orange/10 border-brand-orange/20' : 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'}`}>
+                              {test.precioFormateado}
                             </div>
                           </div>
                           
-                          <Link href={`/psicometrias/${test.type.toLowerCase() === 'disc' ? 'disc' : 'test/' + test.id}`}>
+                          <Link href={`/psicometrias/${test.slug}`}>
                             <Button variant="secondary" className="h-10 px-5 text-[10px] font-black rounded-xl uppercase tracking-widest shadow-orange/40">
                               Iniciar <ArrowRight size={14} className="ml-1" />
                             </Button>
