@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TestAplicacionBase } from '../TestAplicacionBase';
 import { Button } from '@/components/Button';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 export interface ChoiceOption {
   id: string;

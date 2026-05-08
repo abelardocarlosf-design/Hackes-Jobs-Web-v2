@@ -2,7 +2,7 @@
 
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 // MOCK: 90 pares para Kostick
 const KOSTICK_QUESTIONS = Array.from({ length: 90 }).map((_, i) => ({

@@ -2,15 +2,15 @@
 
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 // MOCK: 567 preguntas para MMPI
 const MMPI_QUESTIONS = Array.from({ length: 567 }).map((_, i) => ({
   id: `mmpi_${i + 1}`,
-  question: `Afirmación de MMPI ${i + 1}: Me gustan las revistas de mecánica.`,
+  question: `Afirmación de MMPI-2 número ${i + 1}`,
   options: [
-    { id: 'true', text: 'Verdadero' },
-    { id: 'false', text: 'Falso' }
+    { id: 'v', text: 'Verdadero' },
+    { id: 'f', text: 'Falso' }
   ]
 }));
 

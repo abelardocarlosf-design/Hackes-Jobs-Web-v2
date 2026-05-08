@@ -2,15 +2,15 @@
 
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 // MOCK: 185 preguntas para 16PF
 const PF16_QUESTIONS = Array.from({ length: 185 }).map((_, i) => ({
   id: `16pf_${i + 1}`,
-  question: `Pregunta de 16PF ${i + 1}: Cuando estoy en un grupo de personas...`,
+  question: `Pregunta de 16PF número ${i + 1}`,
   options: [
     { id: 'a', text: 'Opción A' },
-    { id: 'b', text: 'Opción B (Término medio)' },
+    { id: 'b', text: 'Opción B (Intermedia)' },
     { id: 'c', text: 'Opción C' }
   ]
 }));
@@ -20,7 +20,6 @@ export default function PF16Test({ config }: { config: TestInfoProps }) {
     <GenericChoiceTest
       config={config}
       questions={PF16_QUESTIONS}
-      timeLimitMinutes={60}
     />
   );
 }

@@ -2,17 +2,17 @@
 
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 // MOCK: 60 preguntas para Zavic
 const ZAVIC_QUESTIONS = Array.from({ length: 60 }).map((_, i) => ({
   id: `zavic_${i + 1}`,
-  question: `Pregunta de Zavic ${i + 1}: Selecciona la opción que mejor represente tus valores.`,
+  question: `Situación de Zavic número ${i + 1}`,
   options: [
-    { id: 'a', text: 'Valor A' },
-    { id: 'b', text: 'Valor B' },
-    { id: 'c', text: 'Valor C' },
-    { id: 'd', text: 'Valor D' }
+    { id: 'a', text: 'Opción A' },
+    { id: 'b', text: 'Opción B' },
+    { id: 'c', text: 'Opción C' },
+    { id: 'd', text: 'Opción D' }
   ]
 }));
 

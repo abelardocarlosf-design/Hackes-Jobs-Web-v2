@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TestAplicacionBase } from '../TestAplicacionBase';
 import { Button } from '@/components/Button';
-import { TestInfoProps } from '../TestInstrucciones';
+import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 // MOCK de preguntas para Allport.
 // En producción, estas deberían venir de una base de datos o un archivo de datos local.
@@ -211,7 +211,7 @@ export default function AllportTest({ config }: { config: TestInfoProps }) {
               <Button 
                 variant="primary"
                 onClick={handleNext} 
-                disabled={currentQuestionPart2 && (answersPart2[currentQuestionPart2.id]?.length !== 4)}
+                disabled={!!(currentQuestionPart2 && (answersPart2[currentQuestionPart2.id]?.length !== 4))}
                 className={`h-14 px-10 rounded-xl uppercase tracking-widest ${currentStep === totalQuestions - 1 ? 'hidden' : ''}`}
               >
                 Siguiente →
