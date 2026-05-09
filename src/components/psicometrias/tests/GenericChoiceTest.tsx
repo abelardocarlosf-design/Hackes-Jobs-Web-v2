@@ -13,6 +13,7 @@ export interface ChoiceOption {
 export interface ChoiceQuestion {
   id: string;
   question: string;
+  imageUrl?: string;
   options: ChoiceOption[];
 }
 
@@ -79,9 +80,8 @@ export default function GenericChoiceTest({ config, questions, timeLimitMinutes 
   };
 
   const handleFinalSubmit = () => {
-    return {
-      respuestas: answers
-    };
+    // Retornamos directamente el objeto plano { "Q1": "A", ... }
+    return answers;
   };
 
   if (!currentQuestion) return null;
@@ -104,6 +104,15 @@ export default function GenericChoiceTest({ config, questions, timeLimitMinutes 
             <h2 className="text-xl sm:text-2xl font-medium text-slate-300 leading-snug">
               {currentQuestion.question}
             </h2>
+            {currentQuestion.imageUrl && (
+              <div className="mt-6 flex justify-center">
+                <img 
+                  src={currentQuestion.imageUrl} 
+                  alt={`Imagen para pregunta ${currentStep + 1}`} 
+                  className="max-w-full max-h-[300px] object-contain rounded-xl border border-white/10 shadow-lg"
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-4 mb-12 animate-in fade-in slide-in-from-bottom-2">

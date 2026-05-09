@@ -5,27 +5,35 @@ import { TestAplicacionBase } from '../TestAplicacionBase';
 import { Button } from '@/components/Button';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
 
-// MOCK de preguntas para Allport.
-// En producción, estas deberían venir de una base de datos o un archivo de datos local.
-const ALLPORT_PART_1 = Array.from({ length: 30 }).map((_, i) => ({
-  id: `p1_${i + 1}`,
-  question: `Situación o afirmación de la parte 1, pregunta ${i + 1}`,
-  options: [
-    { id: 'a', text: 'Opción A' },
-    { id: 'b', text: 'Opción B' }
-  ]
-}));
+// MOCK de preguntas para Allport con descripciones más realistas
+const ALLPORT_PART_1 = [
+  { id: 'p1_1', question: '¿Cuál de estos dos logros te parece más importante?', options: [{ id: 'a', text: 'Descubrir una nueva teoría científica.' }, { id: 'b', text: 'Mejorar las condiciones de vida de la sociedad.' }] },
+  { id: 'p1_2', question: 'Si tuvieras tiempo libre extra, preferirías:', options: [{ id: 'a', text: 'Leer libros sobre filosofía y arte.' }, { id: 'b', text: 'Participar en un proyecto comunitario.' }] },
+  { id: 'p1_3', question: '¿Qué te atrae más de un trabajo?', options: [{ id: 'a', text: 'El poder e influencia que me otorga.' }, { id: 'b', text: 'El salario y los beneficios económicos.' }] },
+  { id: 'p1_4', question: '¿Qué valoras más en una persona?', options: [{ id: 'a', text: 'Su devoción religiosa o espiritual.' }, { id: 'b', text: 'Su sentido del humor y practicidad.' }] },
+  { id: 'p1_5', question: 'Si heredaras una gran fortuna, ¿qué harías con parte de ella?', options: [{ id: 'a', text: 'Donarla a organizaciones benéficas.' }, { id: 'b', text: 'Invertirla en negocios rentables.' }] }
+];
+// Para rellenar las 30 preguntas de la parte 1
+for (let i = 6; i <= 30; i++) {
+  ALLPORT_PART_1.push({
+    id: `p1_${i}`,
+    question: `Situación o afirmación número ${i}: ¿Qué prefieres en este caso?`,
+    options: [{ id: 'a', text: 'Opción enfocada a resultados prácticos o teóricos.' }, { id: 'b', text: 'Opción enfocada a impacto social o estético.' }]
+  });
+}
 
-const ALLPORT_PART_2 = Array.from({ length: 15 }).map((_, i) => ({
-  id: `p2_${i + 1}`,
-  question: `Situación para ordenar de la parte 2, pregunta ${i + 1}`,
-  options: [
-    { id: 'a', text: 'Preferencia A' },
-    { id: 'b', text: 'Preferencia B' },
-    { id: 'c', text: 'Preferencia C' },
-    { id: 'd', text: 'Preferencia D' }
-  ]
-}));
+const ALLPORT_PART_2 = [
+  { id: 'p2_1', question: 'Si tuvieras que elegir una carrera, ordena tus preferencias (1 = Mayor, 4 = Menor):', options: [{ id: 'a', text: 'Investigador Científico' }, { id: 'b', text: 'Artista o Diseñador' }, { id: 'c', text: 'Político o Líder' }, { id: 'd', text: 'Empresario' }] },
+  { id: 'p2_2', question: 'Al leer un periódico, ¿qué sección buscas primero?', options: [{ id: 'a', text: 'Negocios y Finanzas' }, { id: 'b', text: 'Cultura y Arte' }, { id: 'c', text: 'Política Internacional' }, { id: 'd', text: 'Ciencia y Tecnología' }] }
+];
+// Para rellenar las 15 preguntas de la parte 2
+for (let i = 3; i <= 15; i++) {
+  ALLPORT_PART_2.push({
+    id: `p2_${i}`,
+    question: `Situación para ordenar número ${i}: Ordena tus prioridades (1 al 4)`,
+    options: [{ id: 'a', text: 'Preferencia Teórica/Económica' }, { id: 'b', text: 'Preferencia Estética/Social' }, { id: 'c', text: 'Preferencia Política/Religiosa' }, { id: 'd', text: 'Otra preferencia de valor' }]
+  });
+}
 
 export default function AllportTest({ config }: { config: TestInfoProps }) {
   const [answersPart1, setAnswersPart1] = useState<Record<string, string>>({});
@@ -108,10 +116,17 @@ export default function AllportTest({ config }: { config: TestInfoProps }) {
   };
 
   const handleFinalSubmit = () => {
-    return {
-      parte1: answersPart1,
-      parte2: answersPart2
-    };
+    // Flatten para que sea JSON clave-valor estricto
+    const flatAnswers: Record<string, string> = { ...answersPart1 };
+    
+    Object.keys(answersPart2).forEach(qId => {
+      // En parte 2 el valor guardado es un array de IDs ordenados: ej ['a', 'c', 'b', 'd']
+      // donde el índice 0 es el de mayor preferencia (1) y el índice 3 es el menor (4).
+      // Lo enviamos como un string unido por comas.
+      flatAnswers[qId] = answersPart2[qId].join(',');
+    });
+
+    return flatAnswers;
   };
 
   const renderPart1 = () => {

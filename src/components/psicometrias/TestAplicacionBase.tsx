@@ -85,13 +85,18 @@ export function TestAplicacionBase({
       const timeSpentMinutes = timeSpentSeconds / 60;
       const fechaAplicacion = new Date().toISOString().split('T')[0];
 
+      // Sanitizar email para evitar nulos en webhook
+      const safeEmail = leadData.email ? leadData.email.trim() : 'sin_correo@hackes.com';
+      const safeName = leadData.nombre_completo ? leadData.nombre_completo.trim() : 'Candidato Anónimo';
+      const safePhone = leadData.telefono ? leadData.telefono.trim() : 'Sin teléfono';
+
       // Payload JSON estricto requerido por n8n
       const payload = {
         body: {
           datos_paciente: {
-            nombre_completo: leadData.nombre_completo,
-            email: leadData.email,
-            telefono: leadData.telefono
+            nombre_completo: safeName,
+            email: safeEmail,
+            telefono: safePhone
           },
           datos_prueba: {
             fecha_aplicacion: fechaAplicacion,
@@ -120,8 +125,6 @@ export function TestAplicacionBase({
       sessionStorage.removeItem(`hj_lead_${slug}`);
       
       // Redirigir directamente a la pantalla de éxito genérica o al resultado
-      // Usaremos un resultId ficticio o lo pasamos si la API lo devuelve, 
-      // pero como no hay polling de BD, solo redirigimos a una vista de éxito estática.
       router.push(`/psicometrias/${slug}/resultado?success=true`);
 
     } catch (err: any) {

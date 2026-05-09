@@ -73,14 +73,13 @@ export default function DiscTest({ config }: { config: TestInfoProps }) {
   };
 
   const handleFinalSubmit = () => {
-    // Retorna el payload específico para el webhook de n8n
-    const respuestasArray = Object.keys(answers).map(key => ({
-      grupo: key,
-      mas_parecido: answers[Number(key)].mas_parecido,
-      menos_parecido: answers[Number(key)].menos_parecido,
-    }));
-
-    return respuestasArray;
+    // Retorna el payload como mapa clave-valor para webhook n8n
+    const respuestasObj: Record<string, string> = {};
+    Object.keys(answers).forEach(key => {
+      respuestasObj[`G${key}_mas`] = answers[Number(key)].mas_parecido || '';
+      respuestasObj[`G${key}_menos`] = answers[Number(key)].menos_parecido || '';
+    });
+    return respuestasObj;
   };
 
   const isCurrentQuestionAnswered = 

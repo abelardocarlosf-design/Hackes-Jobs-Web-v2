@@ -4,20 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { TestAplicacionBase } from '../TestAplicacionBase';
 import { Button } from '@/components/Button';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
-import { Clock } from 'lucide-react';
+import { Clock, AlertTriangle } from 'lucide-react';
 
 // MOCK: Configuración de las 10 series de Terman
 const TERMAN_SERIES = [
-  { id: 1, title: 'Serie 1 - Información', timeMinutes: 2, questions: 16 },
-  { id: 2, title: 'Serie 2 - Juicio Práctico', timeMinutes: 2, questions: 11 },
-  { id: 3, title: 'Serie 3 - Vocabulario', timeMinutes: 2, questions: 30 },
-  { id: 4, title: 'Serie 4 - Lógica', timeMinutes: 3, questions: 18 },
-  { id: 5, title: 'Serie 5 - Aritmética', timeMinutes: 5, questions: 12 },
-  { id: 6, title: 'Serie 6 - Juicio Práctico 2', timeMinutes: 2, questions: 20 },
-  { id: 7, title: 'Serie 7 - Analogías', timeMinutes: 2, questions: 20 },
-  { id: 8, title: 'Serie 8 - Ordenamiento de Oraciones', timeMinutes: 3, questions: 17 },
-  { id: 9, title: 'Serie 9 - Clasificación', timeMinutes: 2, questions: 18 },
-  { id: 10, title: 'Serie 10 - Razonamiento', timeMinutes: 4, questions: 11 }
+  { id: 1, title: 'Serie 1 - Información', timeMinutes: 2, questions: 16, desc: 'Escriba la respuesta correcta (ej. verdadero/falso, o la palabra adecuada).' },
+  { id: 2, title: 'Serie 2 - Juicio Práctico', timeMinutes: 2, questions: 11, desc: 'Determine la mejor razón o explicación lógica.' },
+  { id: 3, title: 'Serie 3 - Vocabulario', timeMinutes: 2, questions: 30, desc: 'Indique si las palabras significan lo mismo o lo opuesto.' },
+  { id: 4, title: 'Serie 4 - Lógica', timeMinutes: 3, questions: 18, desc: 'Identifique el orden lógico o la relación.' },
+  { id: 5, title: 'Serie 5 - Aritmética', timeMinutes: 5, questions: 12, desc: 'Resuelva los problemas matemáticos propuestos.' },
+  { id: 6, title: 'Serie 6 - Juicio Práctico 2', timeMinutes: 2, questions: 20, desc: 'Responda a las situaciones planteadas de forma directa.' },
+  { id: 7, title: 'Serie 7 - Analogías', timeMinutes: 2, questions: 20, desc: 'Complete la analogía (A es a B como C es a...).' },
+  { id: 8, title: 'Serie 8 - Ordenamiento de Oraciones', timeMinutes: 3, questions: 17, desc: 'Ordene las palabras para formar una oración y responda V o F.' },
+  { id: 9, title: 'Serie 9 - Clasificación', timeMinutes: 2, questions: 18, desc: 'Encuentre la palabra que no pertenece al grupo.' },
+  { id: 10, title: 'Serie 10 - Razonamiento', timeMinutes: 4, questions: 11, desc: 'Siga las instrucciones lógicas paso a paso.' }
 ];
 
 export default function TermanTest({ config }: { config: TestInfoProps }) {
@@ -35,7 +35,6 @@ export default function TermanTest({ config }: { config: TestInfoProps }) {
       try {
         const parsed = JSON.parse(saved);
         setAnswers(parsed.answers || {});
-        // Restoring time precisely requires timestamp tracking, for simplicity we just restart the series time if reloaded
         const savedSeries = parsed.currentSeriesIndex || 0;
         setCurrentSeriesIndex(savedSeries);
         setSeriesTimeLeft(TERMAN_SERIES[savedSeries].timeMinutes * 60);
@@ -79,9 +78,8 @@ export default function TermanTest({ config }: { config: TestInfoProps }) {
   };
 
   const handleFinalSubmit = () => {
-    return {
-      respuestas: answers
-    };
+    // Ya es un objeto plano { "s1_q1": "respuesta" }
+    return answers;
   };
 
   const currentSeries = TERMAN_SERIES[currentSeriesIndex];
@@ -96,7 +94,7 @@ export default function TermanTest({ config }: { config: TestInfoProps }) {
     >
       <div className="bg-[#111] rounded-3xl shadow-2xl border border-white/10 overflow-hidden mt-6">
         <div className="p-8 sm:p-12">
-          <div className="mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <span className="inline-block px-3 py-1 bg-white/5 border border-white/10 text-brand-orange text-sm font-bold rounded-lg mb-2 uppercase tracking-widest">
                 Serie {currentSeries.id} de {TERMAN_SERIES.length}
@@ -106,31 +104,41 @@ export default function TermanTest({ config }: { config: TestInfoProps }) {
               </h2>
             </div>
             
-            <div className={`px-4 py-2 rounded-xl flex items-center gap-2 font-black ${seriesTimeLeft < 30 ? 'bg-red-500/10 text-red-500 border border-red-500/20 animate-pulse' : 'bg-white/5 text-slate-300 border border-white/10'}`}>
-              <Clock size={18} />
+            <div className={`px-6 py-3 rounded-xl flex items-center gap-3 font-black text-xl transition-colors duration-500 ${seriesTimeLeft < 30 ? 'bg-red-500/20 text-red-500 border border-red-500/50 animate-pulse' : 'bg-white/5 text-slate-300 border border-white/10'}`}>
+              <Clock size={24} />
               {Math.floor(seriesTimeLeft / 60).toString().padStart(2, '0')}:{(seriesTimeLeft % 60).toString().padStart(2, '0')}
             </div>
           </div>
 
           <div className="space-y-6">
-            <p className="text-slate-400">
-              Responde las {currentSeries.questions} preguntas de esta serie antes de que el tiempo se agote. El sistema avanzará automáticamente a la siguiente serie.
-            </p>
+            <div className="bg-brand-orange/10 border border-brand-orange/30 p-4 rounded-xl flex items-start gap-3">
+              <AlertTriangle className="text-brand-orange shrink-0 mt-0.5" size={20} />
+              <div>
+                <h4 className="font-bold text-brand-orange mb-1">Instrucciones de la Serie:</h4>
+                <p className="text-brand-orange/80 text-sm">
+                  {currentSeries.desc}. Responda las {currentSeries.questions} preguntas lo más rápido posible. 
+                  <strong> ¡El tiempo es estricto y la serie avanzará automáticamente al llegar a 00:00!</strong>
+                </p>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-6 mt-8">
               {Array.from({ length: currentSeries.questions }).map((_, i) => {
                 const qId = i + 1;
                 const key = `s${currentSeries.id}_q${qId}`;
                 const val = answers[key] || '';
                 return (
-                  <div key={qId} className="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
-                    <span className="text-brand-orange font-black w-6">{qId}.</span>
+                  <div key={qId} className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl">
+                    <span className="text-brand-orange font-black w-8 shrink-0">{qId}.</span>
+                    <span className="text-slate-300 flex-1">
+                      Pregunta de razonamiento/lógica {qId} para la serie {currentSeries.id}...
+                    </span>
                     <input 
                       type="text" 
                       value={val}
                       onChange={(e) => handleAnswer(qId, e.target.value)}
-                      placeholder="Tu respuesta..."
-                      className="flex-1 bg-transparent border-b border-white/20 px-2 py-1 text-white focus:outline-none focus:border-brand-orange transition-colors"
+                      placeholder="Respuesta..."
+                      className="w-full sm:w-48 bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange transition-all"
                     />
                   </div>
                 );

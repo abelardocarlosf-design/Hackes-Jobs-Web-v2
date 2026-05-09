@@ -30,7 +30,12 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
         const parsed = JSON.parse(saved);
         setSequence1(parsed.sequence1 || []);
         setSequence2(parsed.sequence2 || []);
-        setIsFirstSequence(parsed.isFirstSequence !== undefined ? parsed.isFirstSequence : true);
+        // Strict boolean check
+        if (typeof parsed.isFirstSequence === 'boolean') {
+          setIsFirstSequence(parsed.isFirstSequence);
+        } else if (parsed.sequence1?.length === 8) {
+          setIsFirstSequence(false);
+        }
       } catch (e) {}
     }
   }, [config.slug]);
@@ -42,13 +47,19 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
   };
 
   const currentSequence = isFirstSequence ? sequence1 : sequence2;
-  const availableColors = COLORS.filter(c => !currentSequence.includes(c.id));
 
   const handleSelectColor = (colorId: string) => {
     if (isFirstSequence) {
       const newSeq = [...sequence1, colorId];
       setSequence1(newSeq);
-      saveState(newSeq, sequence2, true);
+      // Auto advance to second sequence if sequence 1 is full
+      if (newSeq.length === 8) {
+         // Optionally we can auto-advance or let them click the button. 
+         // The user complained the button was broken, so maybe they prefer a clear button.
+         saveState(newSeq, sequence2, true);
+      } else {
+         saveState(newSeq, sequence2, true);
+      }
     } else {
       const newSeq = [...sequence2, colorId];
       setSequence2(newSeq);
@@ -73,10 +84,15 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
   };
 
   const handleFinalSubmit = () => {
-    return {
-      secuencia1: sequence1,
-      secuencia2: sequence2
-    };
+    // Return a flat dictionary: { "S1_1": "blue", "S1_2": "red", ... "S2_1": "green" }
+    const flatAnswers: Record<string, string> = {};
+    sequence1.forEach((color, index) => {
+      flatAnswers[`S1_${index + 1}`] = color;
+    });
+    sequence2.forEach((color, index) => {
+      flatAnswers[`S2_${index + 1}`] = color;
+    });
+    return flatAnswers;
   };
 
   // El progreso es el total de selecciones hechas
@@ -100,6 +116,11 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
             <h2 className="text-xl sm:text-2xl font-medium text-slate-300 leading-snug">
               Selecciona el color que te resulte más agradable en este momento.
             </h2>
+            {isFirstSequence && sequence1.length === 8 && (
+              <p className="text-emerald-400 mt-4 font-bold animate-pulse">
+                ¡Secuencia completada! Por favor, presiona el botón "Continuar a Segunda Fase" abajo.
+              </p>
+            )}
           </div>
 
           <div className="mb-12">
@@ -108,7 +129,7 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
               <button 
                 onClick={handleResetCurrent}
                 disabled={currentSequence.length === 0}
-                className="text-xs text-slate-500 hover:text-white uppercase tracking-widest flex items-center gap-1 disabled:opacity-50"
+                className="text-xs text-slate-500 hover:text-white uppercase tracking-widest flex items-center gap-1 disabled:opacity-50 transition-colors"
               >
                 <RotateCcw size={12} /> Reiniciar selección
               </button>
@@ -140,7 +161,7 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
                 return (
                   <button
                     key={color.id}
-                    disabled={isSelected}
+                    disabled={isSelected || (isFirstSequence && sequence1.length >= 8)}
                     onClick={() => handleSelectColor(color.id)}
                     className={`aspect-square rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl ${isSelected ? 'opacity-10 scale-90 pointer-events-none' : 'hover:ring-4 ring-white/20'}`}
                     style={{ backgroundColor: color.hex }}
@@ -150,12 +171,12 @@ export default function LuscherTest({ config }: { config: TestInfoProps }) {
             </div>
           </div>
 
-          <div className="flex items-center justify-end pt-12 border-t border-white/10 mt-12">
+          <div className="flex items-center justify-center sm:justify-end pt-12 border-t border-white/10 mt-12 min-h-[100px]">
             {isFirstSequence && sequence1.length === 8 && (
               <Button 
                 variant="primary"
                 onClick={handleNextSequence} 
-                className="h-14 px-10 rounded-xl uppercase tracking-widest w-full sm:w-auto"
+                className="h-14 px-10 rounded-xl uppercase tracking-widest w-full sm:w-auto animate-in fade-in slide-in-from-bottom-4"
               >
                 Continuar a Segunda Fase →
               </Button>
