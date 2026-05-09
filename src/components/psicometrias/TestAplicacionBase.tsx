@@ -101,7 +101,9 @@ export function TestAplicacionBase({
           datos_prueba: {
             fecha_aplicacion: fechaAplicacion,
             tiempo_completado_minutos: timeSpentMinutes,
-            time_out_agotado: timeOut
+            time_out_agotado: timeOut,
+            total_preguntas: totalQuestions,
+            preguntas_contestadas: answeredQuestions
           },
           respuestas: testPayload
         }
@@ -148,7 +150,7 @@ export function TestAplicacionBase({
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-black pt-24 pb-32">
+    <div className="flex flex-col min-h-screen bg-brand-black pt-64 pb-32">
       {/* Top Bar Fixed (Adjusted top to not overlap with global navbar) */}
       <div className="fixed top-20 left-0 right-0 h-16 bg-brand-black/80 backdrop-blur-md border-y border-white/10 z-40 flex items-center px-4 md:px-8 justify-between mt-2">
         <div className="flex items-center gap-4 w-1/3">
