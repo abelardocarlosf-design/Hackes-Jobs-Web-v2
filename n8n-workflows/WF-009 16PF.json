@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Cuestionario de los 16 Factores de Personalidad de Cattell (16PF). Evalúa rasgos clínicos y de personalidad profunda. Sé exhaustivo en la combinación de factores primarios y secundarios.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"A_Afabilidad\": \"Decatipo y análisis de su calidez y apertura hacia los demás...\",\n  \"B_Razonamiento\": \"Decatipo y análisis de su capacidad de resolución de problemas lógicos...\",\n  \"C_Estabilidad\": \"Decatipo y análisis de su madurez emocional y tolerancia a la frustración...\",\n  \"E_Dominancia\": \"Decatipo y análisis de su nivel de asertividad, competitividad e influencia...\",\n  \"F_Animacion\": \"Decatipo y análisis de su entusiasmo, espontaneidad y expresividad...\",\n  \"G_Atencion_Normas\": \"Decatipo y análisis de su sentido del deber, perseverancia y apego a reglas...\",\n  \"H_Atrevimiento\": \"Decatipo y análisis de su audacia social y capacidad para asumir riesgos...\",\n  \"I_Sensibilidad\": \"Decatipo y análisis de su intuición, objetividad y pragmatismo...\",\n  \"L_Vigilancia\": \"Decatipo y análisis de su nivel de suspicacia, escepticismo y confianza...\",\n  \"M_Abstraccion\": \"Decatipo y análisis de su orientación hacia las ideas vs hechos prácticos...\",\n  \"N_Privacidad\": \"Decatipo y análisis de su discreción, diplomacia y transparencia...\",\n  \"O_Aprension\": \"Decatipo y análisis de su seguridad en sí mismo vs tendencia a la preocupación...\",\n  \"Q1_Apertura_Cambio\": \"Decatipo y análisis de su flexibilidad, innovación y resistencia a lo tradicional...\",\n  \"Q2_Autosuficiencia\": \"Decatipo y análisis de su dependencia del grupo vs capacidad de trabajo individual...\",\n  \"Q3_Perfeccionismo\": \"Decatipo y análisis de su organización, compulsión y control interno...\",\n  \"Q4_Tension\": \"Decatipo y análisis de su nivel de ansiedad somática e impaciencia...\",\n  \"Ext_Extraversion\": \"Análisis de su extraversión global frente a la introversión...\",\n  \"Ans_Ansiedad\": \"Análisis de su ansiedad global y gestión del estrés continuo...\",\n  \"Ten_Tenacidad\": \"Análisis de su tenacidad, dureza y determinación...\",\n  \"Ind_Independencia\": \"Análisis de su nivel de independencia y persuasión general...\",\n  \"Con_Autocontrol\": \"Análisis de su nivel de autocontrol y disciplina interna...\",\n  \"IM_Manipulacion_Imagen\": \"Nivel detectado (ej. Bajo, Medio, Alto) y si intentó falsear la prueba...\",\n  \"Perfil_Resumen\": \"Resumen ejecutivo integral de su estructura de personalidad y estilo de trabajo.\",\n  \"Adecuacion_Puesto\": \"Conclusión cualitativa (o porcentaje) sobre su encaje laboral general.\"\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Cuestionario 16PF de Cattell. Evalúa rasgos clínicos y de personalidad profunda.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"A_Afabilidad\": \"Decatipo y análisis de su calidez y apertura hacia los demás...\",\n  \"B_Razonamiento\": \"Decatipo y análisis de su capacidad de resolución de problemas lógicos...\",\n  \"C_Estabilidad\": \"Decatipo y análisis de su madurez emocional y tolerancia a la frustración...\",\n  \"E_Dominancia\": \"Decatipo y análisis de su nivel de asertividad, competitividad e influencia...\",\n  \"F_Animacion\": \"Decatipo y análisis de su entusiasmo, espontaneidad y expresividad...\",\n  \"G_Atencion_Normas\": \"Decatipo y análisis de su sentido del deber, perseverancia y apego a reglas...\",\n  \"H_Atrevimiento\": \"Decatipo y análisis de su audacia social y capacidad para asumir riesgos...\",\n  \"I_Sensibilidad\": \"Decatipo y análisis de su intuición, objetividad y pragmatismo...\",\n  \"L_Vigilancia\": \"Decatipo y análisis de su nivel de suspicacia, escepticismo y confianza...\",\n  \"M_Abstraccion\": \"Decatipo y análisis de su orientación hacia las ideas vs hechos prácticos...\",\n  \"N_Privacidad\": \"Decatipo y análisis de su discreción, diplomacia y transparencia...\",\n  \"O_Aprension\": \"Decatipo y análisis de su seguridad en sí mismo vs tendencia a la preocupación...\",\n  \"Q1_Apertura_Cambio\": \"Decatipo y análisis de su flexibilidad, innovación y resistencia a lo tradicional...\",\n  \"Q2_Autosuficiencia\": \"Decatipo y análisis de su dependencia del grupo vs capacidad de trabajo individual...\",\n  \"Q3_Perfeccionismo\": \"Decatipo y análisis de su organización, compulsión y control interno...\",\n  \"Q4_Tension\": \"Decatipo y análisis de su nivel de ansiedad somática e impaciencia...\",\n  \"Ext_Extraversion\": \"Análisis de su extraversión global frente a la introversión...\",\n  \"Ans_Ansiedad\": \"Análisis de su ansiedad global y gestión del estrés continuo...\",\n  \"Ten_Tenacidad\": \"Análisis de su tenacidad, dureza y determinación...\",\n  \"Ind_Independencia\": \"Análisis de su nivel de independencia y persuasión general...\",\n  \"Con_Autocontrol\": \"Análisis de su nivel de autocontrol y disciplina interna...\",\n  \"IM_Manipulacion_Imagen\": \"Nivel detectado (ej. Bajo, Medio, Alto) y si intentó falsear la prueba...\",\n  \"Perfil_Resumen\": \"Resumen ejecutivo integral de su estructura de personalidad y estilo de trabajo.\",\n  \"Adecuacion_Puesto\": \"Conclusión cualitativa (o porcentaje) sobre su encaje laboral general.\"\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1296,
-        112
+        -1136,
+        12
       ],
       "id": "f3402541-90a1-44dd-87bc-a42213b0f1ec",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -944,
-        112
+        -886,
+        12
       ],
       "id": "f97db38e-84c3-41a6-9dbc-38256a71429a"
     },
@@ -456,6 +456,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "9010db7c2258b6c6-55f47d23-9dc663d6-a185df8b-cf90b46c8e0cbaf4004c87c0",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ecdefa81bd789aab-b9e26d5d-25336b7d-7619aa91-a10aa60f037e1fd3930f72bd",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1336,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"A_Afabilidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"B_Razonamiento\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"C_Estabilidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"E_Dominancia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"F_Animacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"G_Atencion_Normas\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"H_Atrevimiento\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"I_Sensibilidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"L_Vigilancia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"M_Abstraccion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"N_Privacidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"O_Aprension\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Q1_Apertura_Cambio\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Q2_Autosuficiencia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Q3_Perfeccionismo\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Q4_Tension\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Ext_Extraversion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Ans_Ansiedad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Ten_Tenacidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Ind_Independencia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Con_Autocontrol\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"IM_Manipulacion_Imagen\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Perfil_Resumen\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Adecuacion_Puesto\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "e32b6c47c85be5f1-b9f5a7dd-03b0398c-5b369fb1-6beb0788703a6f92c4b1d12b",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        312
+      ]
     }
   ],
   "pinData": {},
@@ -464,7 +510,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -503,6 +549,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

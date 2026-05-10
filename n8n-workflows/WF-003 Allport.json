@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Valores de Allport. Evalúa los principios y motivadores del individuo (Teórico, Económico, Estético, Social, Político, Religioso).\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"valores_dominantes\": \"Ej. Económico y Político\",\n  \"motivador_principal\": \"Breve descripción del motivador\",\n  \"alineacion_cultural\": \"Breve descripción de su encaje cultural\"\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Valores de Allport. Evalúa principios y motivadores (Teórico, Económico, Estético, Social, Político, Religioso).\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"valores_dominantes\": \"Ej. Económico y Político\",\n  \"motivador_principal\": \"Breve descripción del motivador\",\n  \"alineacion_cultural\": \"Breve descripción de su encaje cultural\"\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1296,
-        128
+        -1136,
+        28
       ],
       "id": "671b8577-9287-442f-a76c-b86a6133eff4",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -944,
-        128
+        -886,
+        28
       ],
       "id": "d5b1283b-ea4e-44da-a5a8-3adc3af5d621"
     },
@@ -214,6 +214,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c794e05bb6d06c8c-fe5bc55a-82c72bf0-6a0d615a-ac5b94d8869501e56c839182",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2edd2142be1338d3-3427e129-6bfa817d-f1140003-6143797c68cce41ad0f33dc3",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1336,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"Valores Dominantes\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Motivador Principal\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Alineacion Cultural\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "ffb6e2f40a1ce788-fbf1c93d-83af2348-496f7400-70b0b0dc6040bc11d4f1ec46",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        328
+      ]
     }
   ],
   "pinData": {},
@@ -222,7 +268,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -261,6 +307,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

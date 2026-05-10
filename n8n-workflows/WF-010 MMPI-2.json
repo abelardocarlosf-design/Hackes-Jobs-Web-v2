@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del MMPI-2 (Inventario Multifásico de Personalidad de Minnesota). Esta es una prueba clínica profunda. Identifica escalas de validez (L, F, K) y escalas clínicas (Depresión, Paranoia, Esquizofrenia, etc.). Señala fuertemente inconsistencias o intentos de simular bienestar mental.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"L_Mentira\": \"Puntuación T y evaluación de intentos de dar buena impresión...\",\n  \"F_Incoherencia\": \"Puntuación T y evaluación de respuestas atípicas o exageración...\",\n  \"K_Correccion\": \"Puntuación T y evaluación de actitud defensiva y recursos de afrontamiento...\",\n  \"1_Hs\": \"Puntuación T y evaluación de Hipocondriasis (preocupación somática)...\",\n  \"2_D\": \"Puntuación T y evaluación de Depresión (insatisfacción, pesimismo)...\",\n  \"3_Hy\": \"Puntuación T y evaluación de Histeria (negación, somatización)...\",\n  \"4_Pd\": \"Puntuación T y evaluación de Desviación Psicopática (rebeldía, conflicto con autoridad)...\",\n  \"5_Mf\": \"Puntuación T y evaluación de Masculinidad/Feminidad (intereses y roles)...\",\n  \"6_Pa\": \"Puntuación T y evaluación de Paranoia (suspicacia, sensibilidad interpersonal)...\",\n  \"7_Pt\": \"Puntuación T y evaluación de Psicastenia (ansiedad, obsesividad)...\",\n  \"8_Sc\": \"Puntuación T y evaluación de Esquizofrenia (aislamiento, pensamiento inusual)...\",\n  \"9_Ma\": \"Puntuación T y evaluación de Hipomanía (energía, impulsividad)...\",\n  \"0_Si\": \"Puntuación T y evaluación de Introversión Social (aislamiento vs sociabilidad)...\",\n  \"Validez_Perfil\": \"Válido o Inválido con justificación técnica...\",\n  \"Interpretacion_Breve\": \"Resumen ejecutivo integral del perfil clínico y su impacto laboral...\",\n  \"Alerta_Riesgo\": \"Sí/No y descripción detallada del riesgo para la empresa en caso de patología...\"\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del MMPI-2. Prueba clínica profunda. Identifica escalas de validez (L, F, K) y clínicas. Señala fuertemente inconsistencias o intentos de simular bienestar mental.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"L_Mentira\": \"Puntuación T y evaluación de intentos de dar buena impresión...\",\n  \"F_Incoherencia\": \"Puntuación T y evaluación de respuestas atípicas o exageración...\",\n  \"K_Correccion\": \"Puntuación T y evaluación de actitud defensiva y recursos de afrontamiento...\",\n  \"1_Hs\": \"Puntuación T y evaluación de Hipocondriasis (preocupación somática)...\",\n  \"2_D\": \"Puntuación T y evaluación de Depresión (insatisfacción, pesimismo)...\",\n  \"3_Hy\": \"Puntuación T y evaluación de Histeria (negación, somatización)...\",\n  \"4_Pd\": \"Puntuación T y evaluación de Desviación Psicopática (rebeldía, conflicto con autoridad)...\",\n  \"5_Mf\": \"Puntuación T y evaluación de Masculinidad/Feminidad (intereses y roles)...\",\n  \"6_Pa\": \"Puntuación T y evaluación de Paranoia (suspicacia, sensibilidad interpersonal)...\",\n  \"7_Pt\": \"Puntuación T y evaluación de Psicastenia (ansiedad, obsesividad)...\",\n  \"8_Sc\": \"Puntuación T y evaluación de Esquizofrenia (aislamiento, pensamiento inusual)...\",\n  \"9_Ma\": \"Puntuación T y evaluación de Hipomanía (energía, impulsividad)...\",\n  \"0_Si\": \"Puntuación T y evaluación de Introversión Social (aislamiento vs sociabilidad)...\",\n  \"Validez_Perfil\": \"Válido o Inválido con justificación técnica...\",\n  \"Interpretacion_Breve\": \"Resumen ejecutivo integral del perfil clínico y su impacto laboral...\",\n  \"Alerta_Riesgo\": \"Sí/No y descripción detallada del riesgo para la empresa en caso de patología...\"\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1232,
-        80
+        -1072,
+        -20
       ],
       "id": "2d28f118-437f-4578-957e-a611c371444b",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -880,
-        80
+        -822,
+        -20
       ],
       "id": "0f15c253-a2f6-425c-b09e-6d90287910ca"
     },
@@ -368,6 +368,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "b6574334515d6024-5c9d36da-6ffe09a4-c55a2802-dc7e73bf47195da4cadd2f92",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c8bac276b6ac8ab3-f3e66870-f113ba65-2f279e5d-f387682062443ae745991fde",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1272,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"L_Mentira\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"F_Incoherencia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"K_Correccion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"1_Hs\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"2_D\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"3_Hy\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"4_Pd\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"5_Mf\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"6_Pa\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"7_Pt\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"8_Sc\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"9_Ma\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"0_Si\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Validez_Perfil\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Interpretacion_Breve\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Alerta_Riesgo\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "2ae18d72adf5c36c-83cc917a-9fdf40b3-d711b280-219acd7786e8ffeb6b78828d",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        280
+      ]
     }
   ],
   "pinData": {},
@@ -376,7 +422,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -415,6 +461,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

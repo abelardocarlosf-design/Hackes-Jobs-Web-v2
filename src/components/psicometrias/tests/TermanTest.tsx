@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
 import { Clock, AlertTriangle } from 'lucide-react';
 
-import { TERMAN_SERIES } from '@/data/termanQuestions';
+import { TERMAN_SERIES, TERMAN_QUESTIONS } from '@/data/termanQuestions';
 
 export default function TermanTest({ config }: { config: TestInfoProps }) {
   const [currentSeriesIndex, setCurrentSeriesIndex] = useState(0);
@@ -111,15 +111,15 @@ export default function TermanTest({ config }: { config: TestInfoProps }) {
             </div>
 
             <div className="grid grid-cols-1 gap-6 mt-8">
-              {Array.from({ length: currentSeries.questions }).map((_, i) => {
-                const qId = i + 1;
+              {TERMAN_QUESTIONS[`s${currentSeries.id}` as keyof typeof TERMAN_QUESTIONS]?.map((question: any, i: number) => {
+                const qId = question.id;
                 const key = `s${currentSeries.id}_q${qId}`;
                 const val = answers[key] || '';
                 return (
-                  <div key={qId} className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl">
+                  <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl">
                     <span className="text-brand-orange font-black w-8 shrink-0">{qId}.</span>
                     <span className="text-slate-300 flex-1">
-                      Pregunta de razonamiento/lógica {qId} para la serie {currentSeries.id}...
+                      {question.text}
                     </span>
                     <input 
                       type="text" 

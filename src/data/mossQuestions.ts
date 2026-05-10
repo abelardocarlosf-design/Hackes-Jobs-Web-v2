@@ -1,24 +1,32 @@
-import { ChoiceQuestion } from '@/components/psicometrias/tests/GenericChoiceTest';
-
-export const getMossQuestions = (): ChoiceQuestion[] => {
-  const questions: ChoiceQuestion[] = [
-    { id: 'm_1', question: 'Situación 1: Usted es el gerente de un departamento y nota que la moral del equipo está baja debido a exceso de trabajo. ¿Qué haría usted?', options: [{ id: 'a', text: 'Convocar una junta para escuchar quejas y reasignar tareas.' }, { id: 'b', text: 'Ofrecer bonos económicos a quienes trabajen horas extra.' }, { id: 'c', text: 'Ignorar la situación asumiendo que es temporal.' }, { id: 'd', text: 'Contratar más personal temporal de inmediato.' }] },
-    { id: 'm_2', question: 'Situación 2: Dos de sus mejores empleados tienen un conflicto personal que afecta su rendimiento. ¿Cómo procede?', options: [{ id: 'a', text: 'Hablar con cada uno por separado para entender el problema.' }, { id: 'b', text: 'Reunirlos a ambos y exigirles que actúen como profesionales.' }, { id: 'c', text: 'Separarlos de proyecto para que no interactúen.' }, { id: 'd', text: 'Advertirles que si no se arreglan, habrá sanciones.' }] },
-    { id: 'm_3', question: 'Situación 3: Un cliente clave está furioso por un retraso en la entrega. Usted debe:', options: [{ id: 'a', text: 'Culpar al departamento de envíos.' }, { id: 'b', text: 'Asumir la responsabilidad y ofrecer un descuento.' }, { id: 'c', text: 'Prometer que no volverá a ocurrir y pedir disculpas.' }, { id: 'd', text: 'Evitar sus llamadas hasta tener el producto listo.' }] }
-  ];
-
-  for (let i = 4; i <= 30; i++) {
-    questions.push({
-      id: `m_${i}`,
-      question: `Situación Moss ${i}: Se presenta un desafío gerencial inesperado. ¿Cuál es su curso de acción más probable?`,
-      options: [
-        { id: 'a', text: 'Delegar la responsabilidad a un subordinado competente.' },
-        { id: 'b', text: 'Tomar control total de la situación personalmente.' },
-        { id: 'c', text: 'Consultar el manual de procedimientos de la empresa.' },
-        { id: 'd', text: 'Pedir consejo a colegas de otras áreas.' }
-      ]
-    });
-  }
-
-  return questions;
-};
+export const MOSS_QUESTIONS = [
+  { id: 1, text: "Situación Moss 1...", options: [{"id":"moss_1_opt_1","text":"Opción 1"},{"id":"moss_1_opt_2","text":"Opción 2"},{"id":"moss_1_opt_3","text":"Opción 3"},{"id":"moss_1_opt_4","text":"Opción 4"}] },
+  { id: 2, text: "Situación Moss 2...", options: [{"id":"moss_2_opt_1","text":"Opción 1"},{"id":"moss_2_opt_2","text":"Opción 2"},{"id":"moss_2_opt_3","text":"Opción 3"},{"id":"moss_2_opt_4","text":"Opción 4"}] },
+  { id: 3, text: "Situación Moss 3...", options: [{"id":"moss_3_opt_1","text":"Opción 1"},{"id":"moss_3_opt_2","text":"Opción 2"},{"id":"moss_3_opt_3","text":"Opción 3"},{"id":"moss_3_opt_4","text":"Opción 4"}] },
+  { id: 4, text: "Situación Moss 4...", options: [{"id":"moss_4_opt_1","text":"Opción 1"},{"id":"moss_4_opt_2","text":"Opción 2"},{"id":"moss_4_opt_3","text":"Opción 3"},{"id":"moss_4_opt_4","text":"Opción 4"}] },
+  { id: 5, text: "Situación Moss 5...", options: [{"id":"moss_5_opt_1","text":"Opción 1"},{"id":"moss_5_opt_2","text":"Opción 2"},{"id":"moss_5_opt_3","text":"Opción 3"},{"id":"moss_5_opt_4","text":"Opción 4"}] },
+  { id: 6, text: "Situación Moss 6...", options: [{"id":"moss_6_opt_1","text":"Opción 1"},{"id":"moss_6_opt_2","text":"Opción 2"},{"id":"moss_6_opt_3","text":"Opción 3"},{"id":"moss_6_opt_4","text":"Opción 4"}] },
+  { id: 7, text: "Situación Moss 7...", options: [{"id":"moss_7_opt_1","text":"Opción 1"},{"id":"moss_7_opt_2","text":"Opción 2"},{"id":"moss_7_opt_3","text":"Opción 3"},{"id":"moss_7_opt_4","text":"Opción 4"}] },
+  { id: 8, text: "Situación Moss 8...", options: [{"id":"moss_8_opt_1","text":"Opción 1"},{"id":"moss_8_opt_2","text":"Opción 2"},{"id":"moss_8_opt_3","text":"Opción 3"},{"id":"moss_8_opt_4","text":"Opción 4"}] },
+  { id: 9, text: "Situación Moss 9...", options: [{"id":"moss_9_opt_1","text":"Opción 1"},{"id":"moss_9_opt_2","text":"Opción 2"},{"id":"moss_9_opt_3","text":"Opción 3"},{"id":"moss_9_opt_4","text":"Opción 4"}] },
+  { id: 10, text: "Situación Moss 10...", options: [{"id":"moss_10_opt_1","text":"Opción 1"},{"id":"moss_10_opt_2","text":"Opción 2"},{"id":"moss_10_opt_3","text":"Opción 3"},{"id":"moss_10_opt_4","text":"Opción 4"}] },
+  { id: 11, text: "Situación Moss 11...", options: [{"id":"moss_11_opt_1","text":"Opción 1"},{"id":"moss_11_opt_2","text":"Opción 2"},{"id":"moss_11_opt_3","text":"Opción 3"},{"id":"moss_11_opt_4","text":"Opción 4"}] },
+  { id: 12, text: "Situación Moss 12...", options: [{"id":"moss_12_opt_1","text":"Opción 1"},{"id":"moss_12_opt_2","text":"Opción 2"},{"id":"moss_12_opt_3","text":"Opción 3"},{"id":"moss_12_opt_4","text":"Opción 4"}] },
+  { id: 13, text: "Situación Moss 13...", options: [{"id":"moss_13_opt_1","text":"Opción 1"},{"id":"moss_13_opt_2","text":"Opción 2"},{"id":"moss_13_opt_3","text":"Opción 3"},{"id":"moss_13_opt_4","text":"Opción 4"}] },
+  { id: 14, text: "Situación Moss 14...", options: [{"id":"moss_14_opt_1","text":"Opción 1"},{"id":"moss_14_opt_2","text":"Opción 2"},{"id":"moss_14_opt_3","text":"Opción 3"},{"id":"moss_14_opt_4","text":"Opción 4"}] },
+  { id: 15, text: "Situación Moss 15...", options: [{"id":"moss_15_opt_1","text":"Opción 1"},{"id":"moss_15_opt_2","text":"Opción 2"},{"id":"moss_15_opt_3","text":"Opción 3"},{"id":"moss_15_opt_4","text":"Opción 4"}] },
+  { id: 16, text: "Situación Moss 16...", options: [{"id":"moss_16_opt_1","text":"Opción 1"},{"id":"moss_16_opt_2","text":"Opción 2"},{"id":"moss_16_opt_3","text":"Opción 3"},{"id":"moss_16_opt_4","text":"Opción 4"}] },
+  { id: 17, text: "Situación Moss 17...", options: [{"id":"moss_17_opt_1","text":"Opción 1"},{"id":"moss_17_opt_2","text":"Opción 2"},{"id":"moss_17_opt_3","text":"Opción 3"},{"id":"moss_17_opt_4","text":"Opción 4"}] },
+  { id: 18, text: "Situación Moss 18...", options: [{"id":"moss_18_opt_1","text":"Opción 1"},{"id":"moss_18_opt_2","text":"Opción 2"},{"id":"moss_18_opt_3","text":"Opción 3"},{"id":"moss_18_opt_4","text":"Opción 4"}] },
+  { id: 19, text: "Situación Moss 19...", options: [{"id":"moss_19_opt_1","text":"Opción 1"},{"id":"moss_19_opt_2","text":"Opción 2"},{"id":"moss_19_opt_3","text":"Opción 3"},{"id":"moss_19_opt_4","text":"Opción 4"}] },
+  { id: 20, text: "Situación Moss 20...", options: [{"id":"moss_20_opt_1","text":"Opción 1"},{"id":"moss_20_opt_2","text":"Opción 2"},{"id":"moss_20_opt_3","text":"Opción 3"},{"id":"moss_20_opt_4","text":"Opción 4"}] },
+  { id: 21, text: "Situación Moss 21...", options: [{"id":"moss_21_opt_1","text":"Opción 1"},{"id":"moss_21_opt_2","text":"Opción 2"},{"id":"moss_21_opt_3","text":"Opción 3"},{"id":"moss_21_opt_4","text":"Opción 4"}] },
+  { id: 22, text: "Situación Moss 22...", options: [{"id":"moss_22_opt_1","text":"Opción 1"},{"id":"moss_22_opt_2","text":"Opción 2"},{"id":"moss_22_opt_3","text":"Opción 3"},{"id":"moss_22_opt_4","text":"Opción 4"}] },
+  { id: 23, text: "Situación Moss 23...", options: [{"id":"moss_23_opt_1","text":"Opción 1"},{"id":"moss_23_opt_2","text":"Opción 2"},{"id":"moss_23_opt_3","text":"Opción 3"},{"id":"moss_23_opt_4","text":"Opción 4"}] },
+  { id: 24, text: "Situación Moss 24...", options: [{"id":"moss_24_opt_1","text":"Opción 1"},{"id":"moss_24_opt_2","text":"Opción 2"},{"id":"moss_24_opt_3","text":"Opción 3"},{"id":"moss_24_opt_4","text":"Opción 4"}] },
+  { id: 25, text: "Situación Moss 25...", options: [{"id":"moss_25_opt_1","text":"Opción 1"},{"id":"moss_25_opt_2","text":"Opción 2"},{"id":"moss_25_opt_3","text":"Opción 3"},{"id":"moss_25_opt_4","text":"Opción 4"}] },
+  { id: 26, text: "Situación Moss 26...", options: [{"id":"moss_26_opt_1","text":"Opción 1"},{"id":"moss_26_opt_2","text":"Opción 2"},{"id":"moss_26_opt_3","text":"Opción 3"},{"id":"moss_26_opt_4","text":"Opción 4"}] },
+  { id: 27, text: "Situación Moss 27...", options: [{"id":"moss_27_opt_1","text":"Opción 1"},{"id":"moss_27_opt_2","text":"Opción 2"},{"id":"moss_27_opt_3","text":"Opción 3"},{"id":"moss_27_opt_4","text":"Opción 4"}] },
+  { id: 28, text: "Situación Moss 28...", options: [{"id":"moss_28_opt_1","text":"Opción 1"},{"id":"moss_28_opt_2","text":"Opción 2"},{"id":"moss_28_opt_3","text":"Opción 3"},{"id":"moss_28_opt_4","text":"Opción 4"}] },
+  { id: 29, text: "Situación Moss 29...", options: [{"id":"moss_29_opt_1","text":"Opción 1"},{"id":"moss_29_opt_2","text":"Opción 2"},{"id":"moss_29_opt_3","text":"Opción 3"},{"id":"moss_29_opt_4","text":"Opción 4"}] },
+  { id: 30, text: "Situación Moss 30...", options: [{"id":"moss_30_opt_1","text":"Opción 1"},{"id":"moss_30_opt_2","text":"Opción 2"},{"id":"moss_30_opt_3","text":"Opción 3"},{"id":"moss_30_opt_4","text":"Opción 4"}] }
+];

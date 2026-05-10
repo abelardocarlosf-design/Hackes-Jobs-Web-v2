@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Kostick (PAPI). Evalúa comportamiento en el trabajo en 20 dimensiones y 9 factores. Enfócate en roles de liderazgo y subordinación.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"Grado_Energia\": \"Análisis de su ritmo de trabajo y vitalidad...\",\n  \"Score_Energia\": 85,\n  \"Liderazgo\": \"Análisis de su capacidad para guiar y tomar la iniciativa...\",\n  \"Score_Liderazgo\": 78,\n  \"Modo_Vida\": \"Análisis de su tenacidad y constancia en el trabajo...\",\n  \"Score_Modo_Vida\": 90,\n  \"Naturaleza_Social\": \"Análisis de sus relaciones interpersonales y sociabilidad...\",\n  \"Score_Social\": 88,\n  \"Adaptacion_Trabajo\": \"Análisis de su estructura, organización y atención al detalle...\",\n  \"Score_Adaptacion\": 92,\n  \"Naturaleza_Emocional\": \"Análisis de su manejo de estrés y estabilidad...\",\n  \"Score_Emocional\": 80,\n  \"Subordinacion\": \"Análisis de su respuesta a la autoridad y reglas...\",\n  \"Score_Subordinacion\": 75,\n  \"Fortalezas\": \"Enumera en texto plano 3 fortalezas principales orientadas al entorno laboral.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos de mejora o riesgos de desempeño.\",\n  \"Indice_Compatibilidad_Rol\": 85\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Kostick (PAPI). Evalúa comportamiento en el trabajo en 20 dimensiones y 9 factores.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"Grado_Energia\": \"Análisis de su ritmo de trabajo y vitalidad...\",\n  \"Score_Energia\": 85,\n  \"Liderazgo\": \"Análisis de su capacidad para guiar y tomar la iniciativa...\",\n  \"Score_Liderazgo\": 78,\n  \"Modo_Vida\": \"Análisis de su tenacidad y constancia en el trabajo...\",\n  \"Score_Modo_Vida\": 90,\n  \"Naturaleza_Social\": \"Análisis de sus relaciones interpersonales y sociabilidad...\",\n  \"Score_Social\": 88,\n  \"Adaptacion_Trabajo\": \"Análisis de su estructura, organización y atención al detalle...\",\n  \"Score_Adaptacion\": 92,\n  \"Naturaleza_Emocional\": \"Análisis de su manejo de estrés y estabilidad...\",\n  \"Score_Emocional\": 80,\n  \"Subordinacion\": \"Análisis de su respuesta a la autoridad y reglas...\",\n  \"Score_Subordinacion\": 75,\n  \"Fortalezas\": \"Enumera en texto plano 3 fortalezas principales orientadas al entorno laboral.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos de mejora o riesgos de desempeño.\",\n  \"Indice_Compatibilidad_Rol\": 85\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -4992,
-        352
+        -4832,
+        252
       ],
       "id": "f4ac1443-9ae2-4ee3-ba7c-1763d2cb9dfe",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4640,
-        352
+        -4582,
+        252
       ],
       "id": "c8b8089a-e01d-477c-9e21-3588605b12ed"
     },
@@ -269,6 +269,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "9b526cac76035250-80a21e63-f283df09-add2082c-8531c7cc4df0eea308d9ba24",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8e789c1d1d69bf8b-3458c796-8ca56fe9-be96e075-d34e4b7451bede5b3f2d4e12",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -5032,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"Grado_Energia\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Liderazgo\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Modo_Vida\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Naturaleza_Social\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Adaptacion_Trabajo\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Naturaleza_Emocional\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Subordinacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "d9bba0936cf656cf-0092ec66-bc473e72-0a307c7a-1004fb1b8e33dad83fb48cca",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4832,
+        552
+      ]
     }
   ],
   "pinData": {},
@@ -277,7 +323,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -316,6 +362,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

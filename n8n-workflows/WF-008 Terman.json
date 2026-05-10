@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Terman-Merrill. Evalúa el coeficiente intelectual (CI), aprendizaje, juicio, vocabulario y razonamiento lógico-matemático.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"S1_Informacion\": \"Análisis de su nivel de conocimientos generales y memoria a largo plazo...\",\n  \"S2_Juicio\": \"Análisis de su sentido común y evaluación de situaciones prácticas...\",\n  \"S3_Vocabulario\": \"Análisis de su riqueza de lenguaje y comprensión de conceptos...\",\n  \"S4_Sintesis\": \"Análisis de su capacidad para resumir, deducir y clasificar lógica...\",\n  \"S5_Concentracion\": \"Análisis de su razonamiento aritmético y atención bajo presión...\",\n  \"S6_Analisis\": \"Análisis de su capacidad de desglosar información y comprensión...\",\n  \"S7_Abstraccion\": \"Análisis de su habilidad para encontrar analogías y pensamiento abstracto...\",\n  \"S8_Planeacion\": \"Análisis de su organización lógica y estructuración de tareas...\",\n  \"S9_Organizacion\": \"Análisis de su rapidez conceptual y clasificación de elementos...\",\n  \"S10_Anticipacion\": \"Análisis de su atención, concentración y previsión lógica...\",\n  \"CI_Total\": 115,\n  \"Percentil\": 85,\n  \"Rango\": \"II\",\n  \"Diagnostico\": \"Superior al Término Medio\",\n  \"Fortalezas\": \"Enumera en texto plano 3 fortalezas cognitivas destacadas.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos de mejora intelectual o puntos de atención.\"\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Terman-Merrill. Evalúa coeficiente intelectual, juicio y razonamiento.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"S1_Informacion\": \"Análisis de su nivel de conocimientos generales y memoria a largo plazo...\",\n  \"S2_Juicio\": \"Análisis de su sentido común y evaluación de situaciones prácticas...\",\n  \"S3_Vocabulario\": \"Análisis de su riqueza de lenguaje y comprensión de conceptos...\",\n  \"S4_Sintesis\": \"Análisis de su capacidad para resumir, deducir y clasificar lógica...\",\n  \"S5_Concentracion\": \"Análisis de su razonamiento aritmético y atención bajo presión...\",\n  \"S6_Analisis\": \"Análisis de su capacidad de desglosar información y comprensión...\",\n  \"S7_Abstraccion\": \"Análisis de su habilidad para encontrar analogías y pensamiento abstracto...\",\n  \"S8_Planeacion\": \"Análisis de su organización lógica y estructuración de tareas...\",\n  \"S9_Organizacion\": \"Análisis de su rapidez conceptual y clasificación de elementos...\",\n  \"S10_Anticipacion\": \"Análisis de su atención, concentración y previsión lógica...\",\n  \"CI_Total\": 115,\n  \"Percentil\": 85,\n  \"Rango\": \"II\",\n  \"Diagnostico\": \"Superior al Término Medio\",\n  \"Fortalezas\": \"Enumera en texto plano 3 fortalezas cognitivas destacadas.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos de mejora intelectual o puntos de atención.\"\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1328,
-        112
+        -1168,
+        12
       ],
       "id": "4223f358-88ec-47a3-875d-ef4bb5c84100",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -976,
-        112
+        -918,
+        12
       ],
       "id": "6dcc91a7-3706-446d-9191-cd95ada8d16c"
     },
@@ -346,6 +346,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "a298b0eb28879506-1c2b3cb7-c5b0eec3-277c6110-5c834ead0f7256488b589aaa",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "85e8e41960d53907-a5f91708-a41f58ea-e5969989-ff0f001c1f5d0d66fea42638",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1368,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"S1_Informacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S2_Juicio\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S3_Vocabulario\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S4_Sintesis\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S5_Concentracion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S6_Analisis\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S7_Abstraccion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S8_Planeacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S9_Organizacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"S10_Anticipacion\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"CI_Total\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Percentil\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Rango\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Diagnostico\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "7d32d226ec96aa33-d59a402f-aa08b471-00ebd3ae-335528d056c53215ce0f7525",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        312
+      ]
     }
   ],
   "pinData": {},
@@ -354,7 +400,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -393,6 +439,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

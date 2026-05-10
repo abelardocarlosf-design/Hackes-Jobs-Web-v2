@@ -28,7 +28,7 @@
         "messages": {
           "values": [
             {
-              "content": "=Actúa como Psicólogo Clínico y Analista B2B Crítico experto en psicometría. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. Está ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). Debes señalar áreas de oportunidad, riesgos, incongruencias y debilidades reales. Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nINSTRUCCIÓN DE COMPLETITUD CRÍTICA:\nSi las Preguntas Contestadas son MENORES al Total de Preguntas, DEBES obligatoriamente iniciar tu reporte (en cualquier campo de resumen o evaluación general) con la frase exacta: \"Prueba incompleta ({{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }} de {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }} preguntas respondidas). Los resultados carecen de validez estadística completa.\" y evaluar ÚNICAMENTE lo respondido, penalizando en el reporte la falta de compromiso o el abandono.\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Moss. Evalúa grado de adaptabilidad social y habilidades de supervisión/gerenciales. Enfócate en su capacidad de mando y manejo de conflictos.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"Habilidad_Supervision\": \"Análisis detallado de cómo el candidato maneja equipos y autoridad...\",\n  \"Score_Supervision\": 85,\n  \"Capacidad_Decision\": \"Análisis sobre su toma de decisiones en conflictos humanos...\",\n  \"Score_Decision\": 78,\n  \"Evaluacion_Problemas\": \"Análisis de su capacidad para detectar y resolver roces interpersonales...\",\n  \"Score_Evaluacion_Problemas\": 90,\n  \"Relaciones_Interpersonales\": \"Análisis sobre cómo construye y mantiene vínculos profesionales...\",\n  \"Score_Relaciones\": 88,\n  \"Sentido_Comun_y_Tacto\": \"Análisis de su prudencia y tacto al comunicarse...\",\n  \"Score_Tacto\": 92,\n  \"Nivel_Adaptabilidad\": \"Porcentaje o resumen de su adaptabilidad general\",\n  \"Fortalezas\": \"Enumera en texto plano las 3 principales competencias detectadas.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos que el candidato debe desarrollar.\",\n  \"Compatibilidad_Gerencial\": 85\n}"
+              "content": "=Actúa como Evaluador Psicométrico Implacable y Analítico B2B. Tu objetivo es analizar las respuestas del candidato y generar un reporte ejecutivo profundo y detallado. \nEstá ESTRICTAMENTE PROHIBIDO el sesgo de complacencia (sycophancy). TIENES PROHIBIDO usar adjetivos como 'excepcional', 'sobresaliente' o 'excelente' a menos que el puntaje matemático exacto esté en el percentil 95+. Si detectas inconsistencias o respuestas planas, debes reportarlo como un riesgo o bandera roja (red flag). Cero reportes \"perfectos\" a menos que la data lo justifique matemáticamente.\n\nDATOS DUROS:\n- Total de Preguntas de la Prueba: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n- Preguntas Contestadas por el Candidato: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n- Respuestas del Candidato: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\nCONTEXTO DE LA PRUEBA ACTUAL:\nAnálisis del Test de Moss. Evalúa grado de adaptabilidad social y habilidades de supervisión/gerenciales.\n\nIMPORTANTE: Devuelve ÚNICAMENTE un objeto JSON válido. Genera puntajes del 0 al 100 para los \"Scores\". Sin saludos, sin formato markdown, sin bloques de código.\n{\n  \"Habilidad_Supervision\": \"Análisis detallado de cómo el candidato maneja equipos y autoridad...\",\n  \"Score_Supervision\": 85,\n  \"Capacidad_Decision\": \"Análisis sobre su toma de decisiones en conflictos humanos...\",\n  \"Score_Decision\": 78,\n  \"Evaluacion_Problemas\": \"Análisis de su capacidad para detectar y resolver roces interpersonales...\",\n  \"Score_Evaluacion_Problemas\": 90,\n  \"Relaciones_Interpersonales\": \"Análisis sobre cómo construye y mantiene vínculos profesionales...\",\n  \"Score_Relaciones\": 88,\n  \"Sentido_Comun_y_Tacto\": \"Análisis de su prudencia y tacto al comunicarse...\",\n  \"Score_Tacto\": 92,\n  \"Nivel_Adaptabilidad\": \"Porcentaje o resumen de su adaptabilidad general\",\n  \"Fortalezas\": \"Enumera en texto plano las 3 principales competencias detectadas.\",\n  \"Areas_Oportunidad\": \"Enumera en texto plano 2 aspectos que el candidato debe desarrollar.\",\n  \"Compatibilidad_Gerencial\": 85\n}"
             }
           ]
         },
@@ -40,8 +40,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        -1424,
-        32
+        -1264,
+        -68
       ],
       "id": "5b5f2b12-8feb-4938-b3d5-9f234c0be314",
       "credentials": {
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1072,
-        32
+        -1014,
+        -68
       ],
       "id": "c93134d4-1dce-4856-9ca9-0dfe10c17146"
     },
@@ -258,6 +258,52 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "64970706fbda1a4e-4f8307e1-2329170f-6e635f42-7b3031a2b4926fd243ba8c6a",
+              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
+              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0527e17cfa821870-9a7b48a0-7b07ed6e-25984d4b-1e8bb4360c4ed12bf0fe65d9",
+      "name": "Validar Completitud",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1464,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: {\n  \"Habilidad_Supervision\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Capacidad_Decision\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Evaluacion_Problemas\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Relaciones_Interpersonales\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Sentido_Comun_y_Tacto\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\",\n  \"Nivel_Adaptabilidad\": \"PRUEBA ANULADA: El candidato no completó el mínimo requerido de reactivos para una evaluación estadísticamente válida.\"\n} };"
+      },
+      "id": "850e08efe2faf9fa-ba68ca07-636c9baf-29c8abd0-6f8178f5f1a18a109877710b",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1264,
+        232
+      ]
     }
   ],
   "pinData": {},
@@ -266,7 +312,7 @@
       "main": [
         [
           {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Validar Completitud",
             "type": "main",
             "index": 0
           }
@@ -305,6 +351,35 @@
           },
           {
             "node": "Gmail Confirmación Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Completitud": {
+      "main": [
+        [
+          {
+            "node": "Análisis Psicométrico Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reporte Anulado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporte Anulado": {
+      "main": [
+        [
+          {
+            "node": "Respaldar en Google Sheets",
             "type": "main",
             "index": 0
           }

@@ -1,24 +1,62 @@
-import { ChoiceQuestion } from '@/components/psicometrias/tests/GenericChoiceTest';
-
-export const getZavicQuestions = (): ChoiceQuestion[] => {
-  const questions: ChoiceQuestion[] = [
-    { id: 'z_1', question: 'Situación 1: Encuentra dinero en el pasillo de la oficina. Usted:', options: [{ id: 'a', text: 'Lo reporta a Recursos Humanos o seguridad.' }, { id: 'b', text: 'Lo guarda hasta que alguien pregunte por él.' }, { id: 'c', text: 'Lo dona a una causa benéfica de la empresa.' }, { id: 'd', text: 'Se lo queda pensando que es su día de suerte.' }] },
-    { id: 'z_2', question: 'Situación 2: Descubre que un compañero está llevándose material de oficina a su casa. Usted:', options: [{ id: 'a', text: 'Lo confronta directamente.' }, { id: 'b', text: 'Lo reporta anónimamente a su supervisor.' }, { id: 'c', text: 'No hace nada, no es su problema.' }, { id: 'd', text: 'Le comenta a otros compañeros para ver qué piensan.' }] },
-    { id: 'z_3', question: 'Situación 3: Su jefe directo le pide modificar un reporte de ventas para que se vea mejor. Usted:', options: [{ id: 'a', text: 'Se niega rotundamente por ética.' }, { id: 'b', text: 'Lo hace, pero guarda una copia del original.' }, { id: 'c', text: 'Lo reporta al área de cumplimiento (compliance).' }, { id: 'd', text: 'Accede sin cuestionar porque es su superior.' }] }
-  ];
-
-  for (let i = 4; i <= 60; i++) {
-    questions.push({
-      id: `z_${i}`,
-      question: `Situación Zavic ${i}: Se le presenta un dilema ético o moral en el trabajo. ¿Cómo reacciona?`,
-      options: [
-        { id: 'a', text: 'Priorizo la legalidad y las reglas de la empresa.' },
-        { id: 'b', text: 'Busco un punto medio que no afecte a nadie.' },
-        { id: 'c', text: 'Protejo a mis compañeros de equipo por encima de todo.' },
-        { id: 'd', text: 'Busco el beneficio económico personal o del departamento.' }
-      ]
-    });
-  }
-
-  return questions;
-};
+export const ZAVIC_QUESTIONS = [
+  { id: 1, text: "Situación Zavic 1...", options: [{"id":"zavic_1_opt_1","text":"Opción 1"},{"id":"zavic_1_opt_2","text":"Opción 2"},{"id":"zavic_1_opt_3","text":"Opción 3"},{"id":"zavic_1_opt_4","text":"Opción 4"}] },
+  { id: 2, text: "Situación Zavic 2...", options: [{"id":"zavic_2_opt_1","text":"Opción 1"},{"id":"zavic_2_opt_2","text":"Opción 2"},{"id":"zavic_2_opt_3","text":"Opción 3"},{"id":"zavic_2_opt_4","text":"Opción 4"}] },
+  { id: 3, text: "Situación Zavic 3...", options: [{"id":"zavic_3_opt_1","text":"Opción 1"},{"id":"zavic_3_opt_2","text":"Opción 2"},{"id":"zavic_3_opt_3","text":"Opción 3"},{"id":"zavic_3_opt_4","text":"Opción 4"}] },
+  { id: 4, text: "Situación Zavic 4...", options: [{"id":"zavic_4_opt_1","text":"Opción 1"},{"id":"zavic_4_opt_2","text":"Opción 2"},{"id":"zavic_4_opt_3","text":"Opción 3"},{"id":"zavic_4_opt_4","text":"Opción 4"}] },
+  { id: 5, text: "Situación Zavic 5...", options: [{"id":"zavic_5_opt_1","text":"Opción 1"},{"id":"zavic_5_opt_2","text":"Opción 2"},{"id":"zavic_5_opt_3","text":"Opción 3"},{"id":"zavic_5_opt_4","text":"Opción 4"}] },
+  { id: 6, text: "Situación Zavic 6...", options: [{"id":"zavic_6_opt_1","text":"Opción 1"},{"id":"zavic_6_opt_2","text":"Opción 2"},{"id":"zavic_6_opt_3","text":"Opción 3"},{"id":"zavic_6_opt_4","text":"Opción 4"}] },
+  { id: 7, text: "Situación Zavic 7...", options: [{"id":"zavic_7_opt_1","text":"Opción 1"},{"id":"zavic_7_opt_2","text":"Opción 2"},{"id":"zavic_7_opt_3","text":"Opción 3"},{"id":"zavic_7_opt_4","text":"Opción 4"}] },
+  { id: 8, text: "Situación Zavic 8...", options: [{"id":"zavic_8_opt_1","text":"Opción 1"},{"id":"zavic_8_opt_2","text":"Opción 2"},{"id":"zavic_8_opt_3","text":"Opción 3"},{"id":"zavic_8_opt_4","text":"Opción 4"}] },
+  { id: 9, text: "Situación Zavic 9...", options: [{"id":"zavic_9_opt_1","text":"Opción 1"},{"id":"zavic_9_opt_2","text":"Opción 2"},{"id":"zavic_9_opt_3","text":"Opción 3"},{"id":"zavic_9_opt_4","text":"Opción 4"}] },
+  { id: 10, text: "Situación Zavic 10...", options: [{"id":"zavic_10_opt_1","text":"Opción 1"},{"id":"zavic_10_opt_2","text":"Opción 2"},{"id":"zavic_10_opt_3","text":"Opción 3"},{"id":"zavic_10_opt_4","text":"Opción 4"}] },
+  { id: 11, text: "Situación Zavic 11...", options: [{"id":"zavic_11_opt_1","text":"Opción 1"},{"id":"zavic_11_opt_2","text":"Opción 2"},{"id":"zavic_11_opt_3","text":"Opción 3"},{"id":"zavic_11_opt_4","text":"Opción 4"}] },
+  { id: 12, text: "Situación Zavic 12...", options: [{"id":"zavic_12_opt_1","text":"Opción 1"},{"id":"zavic_12_opt_2","text":"Opción 2"},{"id":"zavic_12_opt_3","text":"Opción 3"},{"id":"zavic_12_opt_4","text":"Opción 4"}] },
+  { id: 13, text: "Situación Zavic 13...", options: [{"id":"zavic_13_opt_1","text":"Opción 1"},{"id":"zavic_13_opt_2","text":"Opción 2"},{"id":"zavic_13_opt_3","text":"Opción 3"},{"id":"zavic_13_opt_4","text":"Opción 4"}] },
+  { id: 14, text: "Situación Zavic 14...", options: [{"id":"zavic_14_opt_1","text":"Opción 1"},{"id":"zavic_14_opt_2","text":"Opción 2"},{"id":"zavic_14_opt_3","text":"Opción 3"},{"id":"zavic_14_opt_4","text":"Opción 4"}] },
+  { id: 15, text: "Situación Zavic 15...", options: [{"id":"zavic_15_opt_1","text":"Opción 1"},{"id":"zavic_15_opt_2","text":"Opción 2"},{"id":"zavic_15_opt_3","text":"Opción 3"},{"id":"zavic_15_opt_4","text":"Opción 4"}] },
+  { id: 16, text: "Situación Zavic 16...", options: [{"id":"zavic_16_opt_1","text":"Opción 1"},{"id":"zavic_16_opt_2","text":"Opción 2"},{"id":"zavic_16_opt_3","text":"Opción 3"},{"id":"zavic_16_opt_4","text":"Opción 4"}] },
+  { id: 17, text: "Situación Zavic 17...", options: [{"id":"zavic_17_opt_1","text":"Opción 1"},{"id":"zavic_17_opt_2","text":"Opción 2"},{"id":"zavic_17_opt_3","text":"Opción 3"},{"id":"zavic_17_opt_4","text":"Opción 4"}] },
+  { id: 18, text: "Situación Zavic 18...", options: [{"id":"zavic_18_opt_1","text":"Opción 1"},{"id":"zavic_18_opt_2","text":"Opción 2"},{"id":"zavic_18_opt_3","text":"Opción 3"},{"id":"zavic_18_opt_4","text":"Opción 4"}] },
+  { id: 19, text: "Situación Zavic 19...", options: [{"id":"zavic_19_opt_1","text":"Opción 1"},{"id":"zavic_19_opt_2","text":"Opción 2"},{"id":"zavic_19_opt_3","text":"Opción 3"},{"id":"zavic_19_opt_4","text":"Opción 4"}] },
+  { id: 20, text: "Situación Zavic 20...", options: [{"id":"zavic_20_opt_1","text":"Opción 1"},{"id":"zavic_20_opt_2","text":"Opción 2"},{"id":"zavic_20_opt_3","text":"Opción 3"},{"id":"zavic_20_opt_4","text":"Opción 4"}] },
+  { id: 21, text: "Situación Zavic 21...", options: [{"id":"zavic_21_opt_1","text":"Opción 1"},{"id":"zavic_21_opt_2","text":"Opción 2"},{"id":"zavic_21_opt_3","text":"Opción 3"},{"id":"zavic_21_opt_4","text":"Opción 4"}] },
+  { id: 22, text: "Situación Zavic 22...", options: [{"id":"zavic_22_opt_1","text":"Opción 1"},{"id":"zavic_22_opt_2","text":"Opción 2"},{"id":"zavic_22_opt_3","text":"Opción 3"},{"id":"zavic_22_opt_4","text":"Opción 4"}] },
+  { id: 23, text: "Situación Zavic 23...", options: [{"id":"zavic_23_opt_1","text":"Opción 1"},{"id":"zavic_23_opt_2","text":"Opción 2"},{"id":"zavic_23_opt_3","text":"Opción 3"},{"id":"zavic_23_opt_4","text":"Opción 4"}] },
+  { id: 24, text: "Situación Zavic 24...", options: [{"id":"zavic_24_opt_1","text":"Opción 1"},{"id":"zavic_24_opt_2","text":"Opción 2"},{"id":"zavic_24_opt_3","text":"Opción 3"},{"id":"zavic_24_opt_4","text":"Opción 4"}] },
+  { id: 25, text: "Situación Zavic 25...", options: [{"id":"zavic_25_opt_1","text":"Opción 1"},{"id":"zavic_25_opt_2","text":"Opción 2"},{"id":"zavic_25_opt_3","text":"Opción 3"},{"id":"zavic_25_opt_4","text":"Opción 4"}] },
+  { id: 26, text: "Situación Zavic 26...", options: [{"id":"zavic_26_opt_1","text":"Opción 1"},{"id":"zavic_26_opt_2","text":"Opción 2"},{"id":"zavic_26_opt_3","text":"Opción 3"},{"id":"zavic_26_opt_4","text":"Opción 4"}] },
+  { id: 27, text: "Situación Zavic 27...", options: [{"id":"zavic_27_opt_1","text":"Opción 1"},{"id":"zavic_27_opt_2","text":"Opción 2"},{"id":"zavic_27_opt_3","text":"Opción 3"},{"id":"zavic_27_opt_4","text":"Opción 4"}] },
+  { id: 28, text: "Situación Zavic 28...", options: [{"id":"zavic_28_opt_1","text":"Opción 1"},{"id":"zavic_28_opt_2","text":"Opción 2"},{"id":"zavic_28_opt_3","text":"Opción 3"},{"id":"zavic_28_opt_4","text":"Opción 4"}] },
+  { id: 29, text: "Situación Zavic 29...", options: [{"id":"zavic_29_opt_1","text":"Opción 1"},{"id":"zavic_29_opt_2","text":"Opción 2"},{"id":"zavic_29_opt_3","text":"Opción 3"},{"id":"zavic_29_opt_4","text":"Opción 4"}] },
+  { id: 30, text: "Situación Zavic 30...", options: [{"id":"zavic_30_opt_1","text":"Opción 1"},{"id":"zavic_30_opt_2","text":"Opción 2"},{"id":"zavic_30_opt_3","text":"Opción 3"},{"id":"zavic_30_opt_4","text":"Opción 4"}] },
+  { id: 31, text: "Situación Zavic 31...", options: [{"id":"zavic_31_opt_1","text":"Opción 1"},{"id":"zavic_31_opt_2","text":"Opción 2"},{"id":"zavic_31_opt_3","text":"Opción 3"},{"id":"zavic_31_opt_4","text":"Opción 4"}] },
+  { id: 32, text: "Situación Zavic 32...", options: [{"id":"zavic_32_opt_1","text":"Opción 1"},{"id":"zavic_32_opt_2","text":"Opción 2"},{"id":"zavic_32_opt_3","text":"Opción 3"},{"id":"zavic_32_opt_4","text":"Opción 4"}] },
+  { id: 33, text: "Situación Zavic 33...", options: [{"id":"zavic_33_opt_1","text":"Opción 1"},{"id":"zavic_33_opt_2","text":"Opción 2"},{"id":"zavic_33_opt_3","text":"Opción 3"},{"id":"zavic_33_opt_4","text":"Opción 4"}] },
+  { id: 34, text: "Situación Zavic 34...", options: [{"id":"zavic_34_opt_1","text":"Opción 1"},{"id":"zavic_34_opt_2","text":"Opción 2"},{"id":"zavic_34_opt_3","text":"Opción 3"},{"id":"zavic_34_opt_4","text":"Opción 4"}] },
+  { id: 35, text: "Situación Zavic 35...", options: [{"id":"zavic_35_opt_1","text":"Opción 1"},{"id":"zavic_35_opt_2","text":"Opción 2"},{"id":"zavic_35_opt_3","text":"Opción 3"},{"id":"zavic_35_opt_4","text":"Opción 4"}] },
+  { id: 36, text: "Situación Zavic 36...", options: [{"id":"zavic_36_opt_1","text":"Opción 1"},{"id":"zavic_36_opt_2","text":"Opción 2"},{"id":"zavic_36_opt_3","text":"Opción 3"},{"id":"zavic_36_opt_4","text":"Opción 4"}] },
+  { id: 37, text: "Situación Zavic 37...", options: [{"id":"zavic_37_opt_1","text":"Opción 1"},{"id":"zavic_37_opt_2","text":"Opción 2"},{"id":"zavic_37_opt_3","text":"Opción 3"},{"id":"zavic_37_opt_4","text":"Opción 4"}] },
+  { id: 38, text: "Situación Zavic 38...", options: [{"id":"zavic_38_opt_1","text":"Opción 1"},{"id":"zavic_38_opt_2","text":"Opción 2"},{"id":"zavic_38_opt_3","text":"Opción 3"},{"id":"zavic_38_opt_4","text":"Opción 4"}] },
+  { id: 39, text: "Situación Zavic 39...", options: [{"id":"zavic_39_opt_1","text":"Opción 1"},{"id":"zavic_39_opt_2","text":"Opción 2"},{"id":"zavic_39_opt_3","text":"Opción 3"},{"id":"zavic_39_opt_4","text":"Opción 4"}] },
+  { id: 40, text: "Situación Zavic 40...", options: [{"id":"zavic_40_opt_1","text":"Opción 1"},{"id":"zavic_40_opt_2","text":"Opción 2"},{"id":"zavic_40_opt_3","text":"Opción 3"},{"id":"zavic_40_opt_4","text":"Opción 4"}] },
+  { id: 41, text: "Situación Zavic 41...", options: [{"id":"zavic_41_opt_1","text":"Opción 1"},{"id":"zavic_41_opt_2","text":"Opción 2"},{"id":"zavic_41_opt_3","text":"Opción 3"},{"id":"zavic_41_opt_4","text":"Opción 4"}] },
+  { id: 42, text: "Situación Zavic 42...", options: [{"id":"zavic_42_opt_1","text":"Opción 1"},{"id":"zavic_42_opt_2","text":"Opción 2"},{"id":"zavic_42_opt_3","text":"Opción 3"},{"id":"zavic_42_opt_4","text":"Opción 4"}] },
+  { id: 43, text: "Situación Zavic 43...", options: [{"id":"zavic_43_opt_1","text":"Opción 1"},{"id":"zavic_43_opt_2","text":"Opción 2"},{"id":"zavic_43_opt_3","text":"Opción 3"},{"id":"zavic_43_opt_4","text":"Opción 4"}] },
+  { id: 44, text: "Situación Zavic 44...", options: [{"id":"zavic_44_opt_1","text":"Opción 1"},{"id":"zavic_44_opt_2","text":"Opción 2"},{"id":"zavic_44_opt_3","text":"Opción 3"},{"id":"zavic_44_opt_4","text":"Opción 4"}] },
+  { id: 45, text: "Situación Zavic 45...", options: [{"id":"zavic_45_opt_1","text":"Opción 1"},{"id":"zavic_45_opt_2","text":"Opción 2"},{"id":"zavic_45_opt_3","text":"Opción 3"},{"id":"zavic_45_opt_4","text":"Opción 4"}] },
+  { id: 46, text: "Situación Zavic 46...", options: [{"id":"zavic_46_opt_1","text":"Opción 1"},{"id":"zavic_46_opt_2","text":"Opción 2"},{"id":"zavic_46_opt_3","text":"Opción 3"},{"id":"zavic_46_opt_4","text":"Opción 4"}] },
+  { id: 47, text: "Situación Zavic 47...", options: [{"id":"zavic_47_opt_1","text":"Opción 1"},{"id":"zavic_47_opt_2","text":"Opción 2"},{"id":"zavic_47_opt_3","text":"Opción 3"},{"id":"zavic_47_opt_4","text":"Opción 4"}] },
+  { id: 48, text: "Situación Zavic 48...", options: [{"id":"zavic_48_opt_1","text":"Opción 1"},{"id":"zavic_48_opt_2","text":"Opción 2"},{"id":"zavic_48_opt_3","text":"Opción 3"},{"id":"zavic_48_opt_4","text":"Opción 4"}] },
+  { id: 49, text: "Situación Zavic 49...", options: [{"id":"zavic_49_opt_1","text":"Opción 1"},{"id":"zavic_49_opt_2","text":"Opción 2"},{"id":"zavic_49_opt_3","text":"Opción 3"},{"id":"zavic_49_opt_4","text":"Opción 4"}] },
+  { id: 50, text: "Situación Zavic 50...", options: [{"id":"zavic_50_opt_1","text":"Opción 1"},{"id":"zavic_50_opt_2","text":"Opción 2"},{"id":"zavic_50_opt_3","text":"Opción 3"},{"id":"zavic_50_opt_4","text":"Opción 4"}] },
+  { id: 51, text: "Situación Zavic 51...", options: [{"id":"zavic_51_opt_1","text":"Opción 1"},{"id":"zavic_51_opt_2","text":"Opción 2"},{"id":"zavic_51_opt_3","text":"Opción 3"},{"id":"zavic_51_opt_4","text":"Opción 4"}] },
+  { id: 52, text: "Situación Zavic 52...", options: [{"id":"zavic_52_opt_1","text":"Opción 1"},{"id":"zavic_52_opt_2","text":"Opción 2"},{"id":"zavic_52_opt_3","text":"Opción 3"},{"id":"zavic_52_opt_4","text":"Opción 4"}] },
+  { id: 53, text: "Situación Zavic 53...", options: [{"id":"zavic_53_opt_1","text":"Opción 1"},{"id":"zavic_53_opt_2","text":"Opción 2"},{"id":"zavic_53_opt_3","text":"Opción 3"},{"id":"zavic_53_opt_4","text":"Opción 4"}] },
+  { id: 54, text: "Situación Zavic 54...", options: [{"id":"zavic_54_opt_1","text":"Opción 1"},{"id":"zavic_54_opt_2","text":"Opción 2"},{"id":"zavic_54_opt_3","text":"Opción 3"},{"id":"zavic_54_opt_4","text":"Opción 4"}] },
+  { id: 55, text: "Situación Zavic 55...", options: [{"id":"zavic_55_opt_1","text":"Opción 1"},{"id":"zavic_55_opt_2","text":"Opción 2"},{"id":"zavic_55_opt_3","text":"Opción 3"},{"id":"zavic_55_opt_4","text":"Opción 4"}] },
+  { id: 56, text: "Situación Zavic 56...", options: [{"id":"zavic_56_opt_1","text":"Opción 1"},{"id":"zavic_56_opt_2","text":"Opción 2"},{"id":"zavic_56_opt_3","text":"Opción 3"},{"id":"zavic_56_opt_4","text":"Opción 4"}] },
+  { id: 57, text: "Situación Zavic 57...", options: [{"id":"zavic_57_opt_1","text":"Opción 1"},{"id":"zavic_57_opt_2","text":"Opción 2"},{"id":"zavic_57_opt_3","text":"Opción 3"},{"id":"zavic_57_opt_4","text":"Opción 4"}] },
+  { id: 58, text: "Situación Zavic 58...", options: [{"id":"zavic_58_opt_1","text":"Opción 1"},{"id":"zavic_58_opt_2","text":"Opción 2"},{"id":"zavic_58_opt_3","text":"Opción 3"},{"id":"zavic_58_opt_4","text":"Opción 4"}] },
+  { id: 59, text: "Situación Zavic 59...", options: [{"id":"zavic_59_opt_1","text":"Opción 1"},{"id":"zavic_59_opt_2","text":"Opción 2"},{"id":"zavic_59_opt_3","text":"Opción 3"},{"id":"zavic_59_opt_4","text":"Opción 4"}] },
+  { id: 60, text: "Situación Zavic 60...", options: [{"id":"zavic_60_opt_1","text":"Opción 1"},{"id":"zavic_60_opt_2","text":"Opción 2"},{"id":"zavic_60_opt_3","text":"Opción 3"},{"id":"zavic_60_opt_4","text":"Opción 4"}] }
+];
