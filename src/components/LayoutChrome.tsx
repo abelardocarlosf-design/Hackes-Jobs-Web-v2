@@ -17,6 +17,12 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      {/* Global animated mesh background — glassmorphism foundation */}
+      <div className="mesh-canvas" aria-hidden="true">
+        <div className="mesh-orb mesh-orb-1" />
+        <div className="mesh-orb mesh-orb-2" />
+        <div className="mesh-orb mesh-orb-3" />
+      </div>
       <Navbar />
       <main className="min-h-screen">
         {children}

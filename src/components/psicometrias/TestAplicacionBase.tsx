@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Clock, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
+import { testsConfig } from '@/lib/psicometriasConfig';
 
 interface TestAplicacionBaseProps {
   slug: string;
@@ -90,20 +91,49 @@ export function TestAplicacionBase({
       const safeName = leadData.nombre_completo ? leadData.nombre_completo.trim() : 'Candidato Anónimo';
       const safePhone = leadData.telefono ? leadData.telefono.trim() : 'Sin teléfono';
 
-      // Payload JSON estricto requerido por n8n
+      // Datos del test desde el catálogo central
+      const testInfo = testsConfig[slug];
+      const testNombre = testInfo?.nombre || slug;
+      const completitudPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+      const pruebaIncompleta = answeredQuestions < totalQuestions;
+
+      // Payload JSON estricto requerido por n8n (campos normalizados)
+      // Asunto de correo esperado en n8n:
+      //   Alerta Hackes Jobs Technologies: Nuevo Reporte {{test_nombre}} Procesado [ {{nombre_paciente}} | {{email_paciente}} ]
       const payload = {
         body: {
+          // Identificadores top-level para que n8n arme el asunto sin entrar a sub-objetos
+          test_slug: slug,
+          test_nombre: testNombre,
+          nombre_paciente: safeName,
+          email_paciente: safeEmail,
+          telefono_paciente: safePhone,
+
+          // Conteos top-level para validar completitud sin entrar a sub-objetos
+          total_preguntas_test: totalQuestions,
+          total_preguntas_respondidas: answeredQuestions,
+          porcentaje_completitud: completitudPct,
+          prueba_incompleta: pruebaIncompleta,
+          time_out_agotado: timeOut,
+
+          // Sub-objetos legacy mantenidos para compatibilidad con flujos n8n anteriores
           datos_paciente: {
             nombre_completo: safeName,
             email: safeEmail,
             telefono: safePhone
           },
           datos_prueba: {
+            test_slug: slug,
+            test_nombre: testNombre,
             fecha_aplicacion: fechaAplicacion,
             tiempo_completado_minutos: timeSpentMinutes,
             time_out_agotado: timeOut,
             total_preguntas: totalQuestions,
-            preguntas_contestadas: answeredQuestions
+            total_preguntas_test: totalQuestions,
+            preguntas_contestadas: answeredQuestions,
+            total_preguntas_respondidas: answeredQuestions,
+            porcentaje_completitud: completitudPct,
+            prueba_incompleta: pruebaIncompleta
           },
           respuestas: testPayload
         }

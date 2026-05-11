@@ -12,28 +12,29 @@ export default function Footer() {
           <Link href="/" className="flex items-center gap-3">
              <img src="/logo.png" alt="Hacke's Jobs" className="h-12 w-auto drop-shadow-2xl brightness-0 invert" />
           </Link>
-          <p className="text-slate-400 text-lg leading-relaxed max-w-xs font-medium">
-            Redefiniendo el futuro del trabajo con Inteligencia Artificial y un enfoque humano inquebrantable.
+          <p className="text-slate-400 text-base leading-relaxed max-w-xs font-medium">
+            Infraestructura tecnológica de RRHH y ventas B2B para empresas industriales en México.
           </p>
         </div>
-        
+
         <div>
-          <h4 className="font-black uppercase tracking-[0.4em] text-[10px] text-brand-orange mb-10">Soluciones</h4>
-          <ul className="space-y-5 text-[14px] font-black uppercase tracking-widest text-slate-300">
-            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Para Empresas</Link></li>
-            <li><Link href="/candidatos" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Para Candidatos</Link></li>
-            <li><Link href="/psicometrias" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Psicometrías</Link></li>
-            <li><Link href="/vacantes" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Bolsa de Trabajo</Link></li>
+          <h4 className="font-bold uppercase tracking-[0.3em] text-[10px] text-brand-orange mb-8">Productos</h4>
+          <ul className="space-y-4 text-[13px] font-bold uppercase tracking-widest text-slate-300">
+            <li><Link href="/psicometrias" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Suite Psicométrica</Link></li>
+            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Automatización B2B</Link></li>
+            <li><Link href="/precios" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Precios</Link></li>
+            <li><Link href="/vacantes" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Bolsa de Trabajo</Link></li>
           </ul>
         </div>
-        
+
         <div>
-          <h4 className="font-black uppercase tracking-[0.4em] text-[10px] text-brand-orange mb-10">Compañía</h4>
-          <ul className="space-y-5 text-[14px] font-black uppercase tracking-widest text-slate-300">
-            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Sobre Nosotros</Link></li>
-            <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Contacto</Link></li>
-            <li><Link href="/privacidad" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Privacidad</Link></li>
-            <li><Link href="/terminos" className="hover:text-brand-orange transition-all hover:translate-x-2 inline-block">Términos</Link></li>
+          <h4 className="font-bold uppercase tracking-[0.3em] text-[10px] text-brand-orange mb-8">Compañía</h4>
+          <ul className="space-y-4 text-[13px] font-bold uppercase tracking-widest text-slate-300">
+            <li><Link href="/nosotros" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Nosotros</Link></li>
+            <li><Link href="/contacto" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Contacto</Link></li>
+            <li><Link href="/blog" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Blog</Link></li>
+            <li><Link href="/privacidad" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Privacidad</Link></li>
+            <li><Link href="/terminos" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Términos</Link></li>
           </ul>
         </div>
         
@@ -70,12 +71,12 @@ export default function Footer() {
         </div>
       </div>
       
-      <div className="container relative mx-auto px-4 mt-32 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] text-slate-500 font-black uppercase tracking-[0.2em]">
-        <p>&copy; {new Date().getFullYear()} Hacke&apos;s Jobs Platform. All Rights Reserved.</p>
-        <div className="flex gap-8 items-center">
-           <span className="hidden sm:inline">Ciudad de México, MX</span>
+      <div className="container relative mx-auto px-4 mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] text-slate-500 font-bold uppercase tracking-[0.2em]">
+        <p>&copy; {new Date().getFullYear()} Hacke&apos;s Jobs Technologies. Todos los derechos reservados.</p>
+        <div className="flex gap-6 items-center flex-wrap justify-center">
+           <span>Toluca · Lerma · Metepec · CDMX</span>
            <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
-           <span className="text-brand-orange">Engineering Excellence</span>
+           <span className="text-brand-orange">Cumplimiento LFPDPPP</span>
         </div>
       </div>
     </footer>

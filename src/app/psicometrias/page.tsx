@@ -2,13 +2,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Typewriter } from '@/components/Typewriter';
 import { Brain, Briefcase, Activity, ShieldCheck, ArrowRight } from 'lucide-react';
 import { testsByLevel } from '@/lib/psicometriasConfig';
 
 export const metadata: Metadata = {
-  title: 'Catálogo de Evaluaciones Psicométricas | Hacke\'s Jobs',
-  description: 'Descubre el potencial de tu talento con nuestras pruebas psicométricas validadas.',
+  title: 'Suite Psicométrica · Catálogo de Tests',
+  description: 'Catálogo de evaluaciones psicométricas validadas con scoring automático. Pago por test en MXN ($349, $519, $867) vía Stripe. Reportes PDF entregables.',
 };
 
 const levelConfig: Record<string, { color: string; label: string; icon: any; border: string }> = {
@@ -23,32 +22,22 @@ export default function PsicometriasPage() {
   
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white pb-32 relative">
-      {/* Full page dynamic background - City Theme */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img 
-          src="/images/hero-bg.gif" 
-          alt="" 
-          className="w-full h-full object-cover opacity-[0.2]"
-        />
-        <div className="absolute inset-0 bg-brand-black/20"></div>
-      </div>
-      
-      {/* Header Section */}
-      <section className="pt-32 pb-20 md:pt-40 md:pb-28 text-white relative overflow-hidden z-10">
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10 text-center">
-          <div className="flex flex-col items-center justify-center max-w-5xl mx-auto">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-brand-orange text-xs sm:text-sm font-black tracking-[0.2em] uppercase mb-8 shadow-sm backdrop-blur-xl">
-              <span className="flex h-2 w-2 rounded-full bg-brand-orange animate-pulse" aria-hidden="true"></span>
-              Evaluación Científica 4.0
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
+
+      {/* Header */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-20 text-white relative z-10">
+        <div className="container relative mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-bold tracking-[0.25em] uppercase">
+              <span className="flex h-2 w-2 rounded-full bg-brand-orange"></span>
+              Suite Psicométrica
             </div>
-            <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter text-white leading-none uppercase flex flex-col items-center gap-2 mb-8">
-              <span className="leading-none"><Typewriter text="Catálogo de" speed={70} delay={400} /></span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
-                Psicometrías IA.
-              </span>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white leading-[1.05]">
+              Catálogo de evaluaciones <span className="text-brand-orange">validadas</span>.
             </h1>
-            <p className="text-xl md:text-2xl text-slate-300 max-w-3xl leading-relaxed font-medium drop-shadow-lg">
-              Descubre el potencial oculto de tu talento con evaluaciones validadas científicamente y potenciadas por algoritmos adaptativos.
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
+              Pruebas con scoring automático y reporte PDF profesional. Pago por test en MXN vía Stripe — $349, $519 y $867 según nivel.
             </p>
           </div>
         </div>
@@ -80,8 +69,18 @@ export default function PsicometriasPage() {
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {levelTests.map(test => {
+                  const isComingSoon = test.comingSoon === true;
                   return (
-                    <Card key={test.slug} className={`glass-card p-0 rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:bg-white/10 border-white/10 group relative flex flex-col`}>
+                    <Card
+                      key={test.slug}
+                      className={`card-premium p-0 rounded-3xl overflow-hidden group relative flex flex-col ${isComingSoon ? 'opacity-90' : ''}`}
+                    >
+                      {isComingSoon && (
+                        <div className="absolute top-4 right-4 z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-[9px] font-black uppercase tracking-[0.25em]">
+                          <span className="flex h-1.5 w-1.5 rounded-full bg-brand-orange"></span>
+                          Próximamente
+                        </div>
+                      )}
                       <div className="p-8 pb-2">
                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg self-start inline-block ${config.color} bg-white/5 border border-white/10 mb-4`}>
                           {test.categoria}
@@ -90,12 +89,12 @@ export default function PsicometriasPage() {
                           {test.nombre}
                         </h3>
                       </div>
-                      
+
                       <div className="p-8 pt-2 flex-1 flex flex-col">
                         <p className="text-sm text-slate-400 font-medium mb-6 flex-1 leading-relaxed">
                           {test.descripcion}
                         </p>
-                        
+
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex gap-2">
                             <div className="text-[10px] font-black text-slate-300 flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 uppercase tracking-widest">
@@ -105,12 +104,22 @@ export default function PsicometriasPage() {
                               {test.precioFormateado}
                             </div>
                           </div>
-                          
-                          <Link href={`/psicometrias/${test.slug}`}>
-                            <Button variant="secondary" className="h-10 px-5 text-[10px] font-black rounded-xl uppercase tracking-widest shadow-orange/40">
-                              Iniciar <ArrowRight size={14} className="ml-1" />
+
+                          {isComingSoon ? (
+                            <Button
+                              variant="outline"
+                              disabled
+                              className="h-10 px-5 text-[10px] font-black rounded-xl uppercase tracking-widest border-white/15 text-slate-500 bg-white/[0.02]"
+                            >
+                              Próximamente
                             </Button>
-                          </Link>
+                          ) : (
+                            <Link href={`/psicometrias/${test.slug}`}>
+                              <Button variant="secondary" className="h-10 px-5 text-[10px] font-black rounded-xl uppercase tracking-widest btn-elev">
+                                Iniciar <ArrowRight size={14} className="ml-1" />
+                              </Button>
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </Card>

@@ -3,62 +3,48 @@
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Illustration } from '@/components/Illustration';
-import { 
-  CheckCircle2, 
-  ArrowRight, 
-  Users, 
-  Zap, 
-  ShieldCheck, 
-  Clock, 
-  TrendingUp, 
-  Target 
+import {
+  ArrowRight,
+  Workflow,
+  Brain,
+  Database,
+  Plug,
+  ShieldCheck,
+  Factory,
+  Clock,
+  LineChart,
 } from 'lucide-react';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
-import { Typewriter } from '@/components/Typewriter';
-import { TypewriterHeading } from '@/components/TypewriterHeading';
-
-// metadata moved to layout or generateMetadata
 
 export default function EmpresasPage() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
-      {/* Full page dynamic background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img 
-          src="/images/empresas-bg.gif" 
-          alt="" 
-          className="w-full h-full object-cover opacity-[0.2]"
-        />
-        <div className="absolute inset-0 bg-brand-black/20"></div>
-      </div>
-      
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
+
       <main className="flex-grow relative z-10">
-        {/* 1. HERO SECTION */}
-        <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden text-white">
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-5xl mx-auto text-center space-y-10">
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-brand-black/80 backdrop-blur-md text-white text-[10px] font-black tracking-[0.3em] uppercase shadow-2xl animate-in fade-in slide-in-from-top-4 duration-700">
-                <span className="flex h-2 w-2 rounded-full bg-brand-blue animate-pulse"></span>
-                Headhunting de Nueva Generación
+        {/* 1. HERO */}
+        <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center space-y-8">
+              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-bold tracking-[0.25em] uppercase">
+                <span className="flex h-2 w-2 rounded-full bg-brand-blue"></span>
+                Para empresas industriales
               </div>
-              
-              <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter text-white leading-[1.1] drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)] flex flex-col items-center gap-2">
-                <span className="leading-none"><Typewriter text="Automatización y" speed={70} delay={400} /></span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
-                  Equipos de Alto Rendimiento.
-                </span>
+
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05]">
+                Conecta tu operación de RRHH y ventas a una <span className="text-brand-orange">plataforma única</span>.
               </h1>
-              
-              <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                Deja atrás los procesos manuales. Hacke's Jobs centraliza todo tu embudo de contratación en un solo dashboard. Desde la redacción de la vacante hasta la oferta final, nuestra <span className="text-brand-orange font-bold italic">IA trabaja para ti.</span>
+
+              <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
+                Hacke's Jobs Technologies es la infraestructura que centraliza evaluación de candidatos, prospección B2B y reporting en un solo sistema. Desplegamos workflows n8n personalizados sobre tus procesos actuales en menos de 7 días.
               </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-400">
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link href="/empresas/requisicion">
-                  <Button variant="secondary" size="xl" className="w-full sm:w-auto shadow-orange/60">
-                    Transforma tu Reclutamiento Hoy
-                    <ArrowRight className="ml-3" size={20} />
+                  <Button variant="secondary" size="xl" className="w-full sm:w-auto">
+                    Solicitar demo técnica
+                    <ArrowRight className="ml-2" size={18} />
                   </Button>
                 </Link>
                 <WhatsAppButton className="w-full sm:w-auto" />
@@ -67,143 +53,168 @@ export default function EmpresasPage() {
           </div>
         </section>
 
-        {/* 2. EL PROBLEMA */}
-        <section className="relative py-32 text-white overflow-hidden">
-          <div className="container relative mx-auto px-4 z-10">
-            <div className="max-w-4xl mx-auto text-center mb-20 space-y-6">
-              <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">La realidad del mercado</span>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter">¿Por qué contratar es hoy más difícil que nunca?</h2>
+        {/* 2. PROBLEMA */}
+        <section className="relative py-24 text-white">
+          <div className="container relative mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
+              <span className="text-brand-blue font-bold tracking-[0.3em] uppercase text-[11px]">El problema operativo</span>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">Tu operación está fragmentada entre 6 herramientas.</h2>
+              <p className="text-slate-400 text-lg font-medium max-w-2xl mx-auto">
+                LinkedIn, hojas de cálculo, formularios, correo, WhatsApp, CRM. Los datos viven en silos y nadie ve el panorama completo.
+              </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {[
-                { 
-                  title: "Saturación de Perfiles", 
-                  desc: "Las plataformas tradicionales te inundan con candidatos que no cumplen con los requisitos mínimos.",
-                  icon: Users
+                {
+                  title: "Sin trazabilidad",
+                  desc: "No sabes qué candidato pasó por qué evaluación, ni qué cuenta B2B fue contactada y cuándo.",
+                  icon: Database
                 },
-                { 
-                  title: "Costos de Oportunidad", 
-                  desc: "Cada día que una posición clave está vacante, tu empresa pierde dinero y velocidad operativa.",
-                  icon: TrendingUp
+                {
+                  title: "Sin escala",
+                  desc: "Cada proceso manual te cuesta horas de un analista que podría estar tomando decisiones.",
+                  icon: Clock
                 },
-                { 
-                  title: "Falta de Validación", 
-                  desc: "El 70% de los CVs mienten sobre habilidades técnicas o competencias blandas.",
-                  icon: ShieldCheck
+                {
+                  title: "Sin medición",
+                  desc: "El ROI de cada vacante o flujo de prospección se calcula a posteriori, no en tiempo real.",
+                  icon: LineChart
                 }
               ].map((item, i) => (
-                <div key={i} className="glass-card space-y-6 p-10 group hover:bg-white/10 transition-all duration-500">
-                  <item.icon className="mx-auto text-brand-orange group-hover:scale-110 transition-transform duration-500" size={40} />
-                  <h3 className="text-2xl font-black uppercase tracking-tight text-white">{item.title}</h3>
-                  <p className="text-slate-400 font-medium leading-relaxed">{item.desc}</p>
+                <div key={i} className="card-premium p-8 space-y-4">
+                  <item.icon className="text-brand-orange" size={28} />
+                  <h3 className="text-xl font-black text-white tracking-tight">{item.title}</h3>
+                  <p className="text-slate-400 font-medium leading-relaxed text-sm">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 3. LA SOLUCIÓN - PROCESO */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="container relative mx-auto px-4 z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-20">
-              <div className="lg:w-1/2 space-y-10">
-                <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Metodología HJ</span>
-                <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none">
-                  Un proceso estructurado para <span className="italic text-brand-blue">resultados garantizados.</span>
+        {/* 3. SOLUCIÓN - PROCESO */}
+        <section className="relative py-24">
+          <div className="container relative mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
+              <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">Cómo funciona</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                Despliegue en 4 fases. <span className="text-brand-blue">Sin reinstalar tu stack.</span>
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {[
+                { step: "01", title: "Diagnóstico", desc: "Revisamos tus flujos actuales de RRHH y ventas. Identificamos qué se automatiza primero." },
+                { step: "02", title: "Diseño", desc: "Especificamos los workflows n8n y las evaluaciones psicométricas relevantes para tus puestos." },
+                { step: "03", title: "Conexión", desc: "Integramos con tu CRM, ATS, LinkedIn, correo y WhatsApp mediante credenciales seguras." },
+                { step: "04", title: "Operación", desc: "La plataforma queda activa con monitoreo continuo, alertas y reporting ejecutivo." }
+              ].map((p, i) => (
+                <div key={i} className="card-premium p-6 space-y-3">
+                  <div className="text-3xl font-black text-brand-blue tracking-tight">{p.step}</div>
+                  <h4 className="text-lg font-black text-white tracking-tight">{p.title}</h4>
+                  <p className="text-slate-400 font-medium text-sm leading-relaxed">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. PRODUCTOS */}
+        <section className="relative py-24">
+          <div className="container relative mx-auto px-4">
+            <div className="text-center mb-16 space-y-4">
+              <span className="text-brand-blue font-bold tracking-[0.3em] uppercase text-[11px]">Qué desplegamos</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">Dos módulos. Una sola plataforma.</h2>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              <Card className="card-premium p-10">
+                <div className="space-y-6">
+                  <div className="w-14 h-14 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center">
+                    <Brain size={26} />
+                  </div>
+                  <h3 className="text-2xl font-black text-white tracking-tight">Suite Psicométrica Integrada</h3>
+                  <p className="text-slate-400 font-medium leading-relaxed">
+                    Catálogo de pruebas validadas con scoring automático, motor CAT (Pruebas Adaptativas) basado en IRT, y entrega de reportes PDF firmados digitalmente. Cobro en MXN vía Stripe.
+                  </p>
+                  <Link href="/psicometrias" className="inline-flex items-center text-brand-orange font-bold text-sm hover:translate-x-1 transition-transform">
+                    Ver catálogo <ArrowRight className="ml-2" size={16} />
+                  </Link>
+                </div>
+              </Card>
+
+              <Card className="card-premium card-premium-blue p-10">
+                <div className="space-y-6">
+                  <div className="w-14 h-14 rounded-xl bg-brand-blue/10 border border-brand-blue/20 text-brand-blue flex items-center justify-center">
+                    <Workflow size={26} />
+                  </div>
+                  <h3 className="text-2xl font-black text-white tracking-tight">Workflows B2B con n8n</h3>
+                  <p className="text-slate-400 font-medium leading-relaxed">
+                    Flujos de prospección, calificación de leads, nurturing por correo y secuencias de WhatsApp, todos orquestados sobre n8n autoalojado. Métricas en tiempo real desde tu dashboard.
+                  </p>
+                  <Link href="/precios" className="inline-flex items-center text-brand-blue font-bold text-sm hover:translate-x-1 transition-transform">
+                    Ver planes <ArrowRight className="ml-2" size={16} />
+                  </Link>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. FOCO INDUSTRIAL */}
+        <section className="relative py-24">
+          <div className="container relative mx-auto px-4 max-w-6xl">
+            <div className="card-premium p-10 md:p-16 grid md:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <Factory className="text-brand-orange" size={36} />
+                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
+                  Diseñado para plantas <span className="text-brand-orange">Tier 1 y Tier 2</span>.
                 </h2>
-                
-                <div className="space-y-8">
-                  {[
-                    { step: "01", title: "Llenas el perfilador", desc: "Nuestro wizard inteligente captura los detalles técnicos y culturales de la vacante." },
-                    { step: "02", title: "Analizamos con IA", desc: "Cruzamos tu necesidad con nuestra base de datos y algoritmos de evaluación profunda." },
-                    { step: "03", title: "Recibes candidatos", desc: "Te presentamos una terna calificada lista para la entrevista final en menos de 7 días." }
-                  ].map((p, i) => (
-                    <div key={i} className="flex gap-6 group glass-card p-6 border-none bg-white/5">
-                      <div className="text-4xl font-black text-brand-blue group-hover:scale-110 transition-transform duration-500">{p.step}</div>
-                      <div className="space-y-2">
-                        <h4 className="text-2xl font-black text-white uppercase tracking-tight">{p.title}</h4>
-                        <p className="text-slate-300 font-medium">{p.desc}</p>
-                      </div>
-                    </div>
+                <p className="text-slate-300 text-lg font-medium leading-relaxed">
+                  Nuestros flujos se ajustan a la realidad operativa del corredor industrial Toluca–Lerma–Metepec–CDMX: volúmenes altos, rotación operativa, evaluaciones en piso y compliance LFPDPPP.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Toluca', 'Lerma', 'Metepec', 'CDMX'].map((z) => (
+                    <span key={z} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-xs font-bold">{z}</span>
                   ))}
                 </div>
               </div>
-              
-              <div className="lg:w-1/2">
-                <Illustration 
-                  src="/images/empresas-illustration.png"
-                  alt="Proceso de Reclutamiento HJ"
-                  width={600}
-                  height={600}
-                  className="rounded-[4rem] shadow-2xl border border-white/10"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. BENEFICIOS */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="container relative mx-auto px-4 z-10">
-            <div className="text-center mb-24 space-y-6">
-              <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">Ventajas Competitivas</span>
-              <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter">Más que reclutamiento, <br className="hidden md:block" /> somos tu socio de crecimiento.</h2>
-            </div>
-            
-            <div className="grid lg:grid-cols-3 gap-10">
-              {[
-                { 
-                  t: "Cribado con Inteligencia Artificial", 
-                  d: "Algoritmos avanzados de procesamiento de lenguaje natural (NLP) que analizan miles de CVs en segundos, identificando el talento oculto con un match semántico perfecto.",
-                  icon: Target
-                },
-                { 
-                  t: "Evaluaciones CAT (Pruebas Adaptativas)", 
-                  d: "Evaluaciones psicométricas y técnicas que se adaptan en tiempo real al nivel del candidato. Máxima precisión clínica en una fracción del tiempo tradicional.",
-                  icon: ShieldCheck
-                },
-                { 
-                  t: "HR Analytics y Reducción de Rotación", 
-                  d: "Toma decisiones basadas en datos. Mide el desempeño, los tiempos de respuesta y el ROI de tus contrataciones con reportes ejecutivos automatizados.",
-                  icon: TrendingUp
-                }
-              ].map((b, i) => (
-                <Card key={i} className="glass-card p-10 border-b-8 border-brand-orange/40 hover:border-brand-orange hover:bg-white/10 transition-all duration-500">
-                  <div className="space-y-6">
-                    <div className="w-16 h-16 rounded-2xl bg-brand-orange/20 text-brand-orange flex items-center justify-center">
-                      <b.icon size={32} />
-                    </div>
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">{b.t}</h3>
-                    <p className="text-slate-400 font-medium leading-relaxed">{b.d}</p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. TESTIMONIOS (SIMULADOS) */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="container relative mx-auto px-4 z-10">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-20">
-              <div className="md:w-1/3">
-                <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none mb-8">Lo que dicen <br/> los líderes.</h2>
-                <div className="flex gap-2">
-                  {[1,2,3,4,5].map(i => <Zap key={i} className="fill-brand-orange text-brand-orange" size={20} />)}
-                </div>
-              </div>
-              
-              <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-4">
                 {[
-                  { q: "Hacke's Jobs redujo nuestro tiempo de contratación de 45 a 12 días para perfiles críticos de ingeniería.", n: "Fernando Gomez", p: "CTO @ Goncalves Mexico" },
-                  { q: "La calidad de los candidatos es excepcional. Entienden perfectamente la cultura de mi empresa.", n: "Norma Rosas", p: "HR Manager @ Grupo Prisma" }
+                  { icon: ShieldCheck, t: 'Compliance', d: 'LFPDPPP · AES-256' },
+                  { icon: Plug, t: 'Integración', d: 'CRM · ATS · Nómina' },
+                  { icon: Database, t: 'Multi-tenant', d: 'Aislamiento por cliente' },
+                  { icon: Clock, t: 'SLA', d: '7 días de despliegue' },
+                ].map((b, i) => (
+                  <div key={i} className="card-premium p-5 space-y-2">
+                    <b.icon className="text-brand-blue" size={20} />
+                    <div className="text-white font-bold text-sm">{b.t}</div>
+                    <div className="text-slate-500 text-xs font-medium">{b.d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. CASOS REALES */}
+        <section className="relative py-24">
+          <div className="container relative mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12 space-y-4">
+                <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">Casos de uso</span>
+                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">Resultados medibles, no aspiracionales.</h2>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  { q: "Reducimos el ciclo de evaluación de candidatos operativos de 5 días a 24 horas con la Suite Psicométrica automatizada.", n: "Operación industrial · Toluca", p: "Manufactura Tier 2" },
+                  { q: "El flujo n8n de prospección B2B nos generó pipeline calificado sin sumar headcount al equipo comercial.", n: "Equipo de ventas · CDMX", p: "Servicios industriales" }
                 ].map((t, i) => (
-                  <div key={i} className="glass-card p-10 space-y-6">
-                    <p className="text-lg text-slate-300 italic font-medium">"{t.q}"</p>
+                  <div key={i} className="card-premium p-8 space-y-6">
+                    <p className="text-lg text-slate-200 font-medium leading-relaxed">"{t.q}"</p>
                     <div>
-                      <div className="font-black text-white uppercase text-xs tracking-widest">{t.n}</div>
-                      <div className="text-brand-blue text-[10px] font-bold uppercase tracking-widest">{t.p}</div>
+                      <div className="font-bold text-white text-sm">{t.n}</div>
+                      <div className="text-brand-blue text-[10px] font-bold uppercase tracking-[0.25em] mt-1">{t.p}</div>
                     </div>
                   </div>
                 ))}
@@ -212,24 +223,29 @@ export default function EmpresasPage() {
           </div>
         </section>
 
-        {/* 6. FINAL CTA */}
-        <section className="relative py-40 overflow-hidden text-white">
-          <div className="container relative mx-auto px-4 z-10 text-center space-y-12">
-            <h2 className="text-5xl md:text-[6.5rem] font-black tracking-tighter leading-none text-white">
-              ¿Listo para armar <br/> el equipo de tus sueños?
+        {/* 7. CTA */}
+        <section className="relative py-28">
+          <div className="container relative mx-auto px-4 max-w-4xl text-center space-y-8">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-white">
+              30 minutos para mapear tu operación.
             </h2>
-            <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto font-medium">
-              Empieza hoy mismo creando tu primer perfil de vacante sin costo inicial.
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-medium">
+              Te decimos qué se puede automatizar, en qué orden y con qué retorno esperado. Sin compromiso.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <Link href="/empresas/requisicion">
-                <Button variant="secondary" size="xl" className="px-12 shadow-orange/60">
-                  Crear perfil de vacante
+                <Button variant="secondary" size="xl" className="px-10">
+                  Agendar diagnóstico
+                </Button>
+              </Link>
+              <Link href="/contacto">
+                <Button variant="outline" size="xl" className="border-white/20 text-white hover:bg-white/5">
+                  Hablar con un consultor
                 </Button>
               </Link>
             </div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">
-              Sin compromisos • Respuesta en 24h • Top 1% Talento
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">
+              Cumplimiento LFPDPPP · Datos cifrados · Multi-tenant
             </p>
           </div>
         </section>

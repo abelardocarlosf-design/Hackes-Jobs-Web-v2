@@ -1,94 +1,1265 @@
+// Auto-generado — Kostick 90 pares de afirmaciones (forced choice A/B).
 export const KOSTICK_QUESTIONS = [
-  { id: "1", question: "Afirmación Kostick 1...", options: [{"id":"kostick_1_opt_1","text":"Opción 1"},{"id":"kostick_1_opt_2","text":"Opción 2"},{"id":"kostick_1_opt_3","text":"Opción 3"},{"id":"kostick_1_opt_4","text":"Opción 4"}] },
-  { id: "2", question: "Afirmación Kostick 2...", options: [{"id":"kostick_2_opt_1","text":"Opción 1"},{"id":"kostick_2_opt_2","text":"Opción 2"},{"id":"kostick_2_opt_3","text":"Opción 3"},{"id":"kostick_2_opt_4","text":"Opción 4"}] },
-  { id: "3", question: "Afirmación Kostick 3...", options: [{"id":"kostick_3_opt_1","text":"Opción 1"},{"id":"kostick_3_opt_2","text":"Opción 2"},{"id":"kostick_3_opt_3","text":"Opción 3"},{"id":"kostick_3_opt_4","text":"Opción 4"}] },
-  { id: "4", question: "Afirmación Kostick 4...", options: [{"id":"kostick_4_opt_1","text":"Opción 1"},{"id":"kostick_4_opt_2","text":"Opción 2"},{"id":"kostick_4_opt_3","text":"Opción 3"},{"id":"kostick_4_opt_4","text":"Opción 4"}] },
-  { id: "5", question: "Afirmación Kostick 5...", options: [{"id":"kostick_5_opt_1","text":"Opción 1"},{"id":"kostick_5_opt_2","text":"Opción 2"},{"id":"kostick_5_opt_3","text":"Opción 3"},{"id":"kostick_5_opt_4","text":"Opción 4"}] },
-  { id: "6", question: "Afirmación Kostick 6...", options: [{"id":"kostick_6_opt_1","text":"Opción 1"},{"id":"kostick_6_opt_2","text":"Opción 2"},{"id":"kostick_6_opt_3","text":"Opción 3"},{"id":"kostick_6_opt_4","text":"Opción 4"}] },
-  { id: "7", question: "Afirmación Kostick 7...", options: [{"id":"kostick_7_opt_1","text":"Opción 1"},{"id":"kostick_7_opt_2","text":"Opción 2"},{"id":"kostick_7_opt_3","text":"Opción 3"},{"id":"kostick_7_opt_4","text":"Opción 4"}] },
-  { id: "8", question: "Afirmación Kostick 8...", options: [{"id":"kostick_8_opt_1","text":"Opción 1"},{"id":"kostick_8_opt_2","text":"Opción 2"},{"id":"kostick_8_opt_3","text":"Opción 3"},{"id":"kostick_8_opt_4","text":"Opción 4"}] },
-  { id: "9", question: "Afirmación Kostick 9...", options: [{"id":"kostick_9_opt_1","text":"Opción 1"},{"id":"kostick_9_opt_2","text":"Opción 2"},{"id":"kostick_9_opt_3","text":"Opción 3"},{"id":"kostick_9_opt_4","text":"Opción 4"}] },
-  { id: "10", question: "Afirmación Kostick 10...", options: [{"id":"kostick_10_opt_1","text":"Opción 1"},{"id":"kostick_10_opt_2","text":"Opción 2"},{"id":"kostick_10_opt_3","text":"Opción 3"},{"id":"kostick_10_opt_4","text":"Opción 4"}] },
-  { id: "11", question: "Afirmación Kostick 11...", options: [{"id":"kostick_11_opt_1","text":"Opción 1"},{"id":"kostick_11_opt_2","text":"Opción 2"},{"id":"kostick_11_opt_3","text":"Opción 3"},{"id":"kostick_11_opt_4","text":"Opción 4"}] },
-  { id: "12", question: "Afirmación Kostick 12...", options: [{"id":"kostick_12_opt_1","text":"Opción 1"},{"id":"kostick_12_opt_2","text":"Opción 2"},{"id":"kostick_12_opt_3","text":"Opción 3"},{"id":"kostick_12_opt_4","text":"Opción 4"}] },
-  { id: "13", question: "Afirmación Kostick 13...", options: [{"id":"kostick_13_opt_1","text":"Opción 1"},{"id":"kostick_13_opt_2","text":"Opción 2"},{"id":"kostick_13_opt_3","text":"Opción 3"},{"id":"kostick_13_opt_4","text":"Opción 4"}] },
-  { id: "14", question: "Afirmación Kostick 14...", options: [{"id":"kostick_14_opt_1","text":"Opción 1"},{"id":"kostick_14_opt_2","text":"Opción 2"},{"id":"kostick_14_opt_3","text":"Opción 3"},{"id":"kostick_14_opt_4","text":"Opción 4"}] },
-  { id: "15", question: "Afirmación Kostick 15...", options: [{"id":"kostick_15_opt_1","text":"Opción 1"},{"id":"kostick_15_opt_2","text":"Opción 2"},{"id":"kostick_15_opt_3","text":"Opción 3"},{"id":"kostick_15_opt_4","text":"Opción 4"}] },
-  { id: "16", question: "Afirmación Kostick 16...", options: [{"id":"kostick_16_opt_1","text":"Opción 1"},{"id":"kostick_16_opt_2","text":"Opción 2"},{"id":"kostick_16_opt_3","text":"Opción 3"},{"id":"kostick_16_opt_4","text":"Opción 4"}] },
-  { id: "17", question: "Afirmación Kostick 17...", options: [{"id":"kostick_17_opt_1","text":"Opción 1"},{"id":"kostick_17_opt_2","text":"Opción 2"},{"id":"kostick_17_opt_3","text":"Opción 3"},{"id":"kostick_17_opt_4","text":"Opción 4"}] },
-  { id: "18", question: "Afirmación Kostick 18...", options: [{"id":"kostick_18_opt_1","text":"Opción 1"},{"id":"kostick_18_opt_2","text":"Opción 2"},{"id":"kostick_18_opt_3","text":"Opción 3"},{"id":"kostick_18_opt_4","text":"Opción 4"}] },
-  { id: "19", question: "Afirmación Kostick 19...", options: [{"id":"kostick_19_opt_1","text":"Opción 1"},{"id":"kostick_19_opt_2","text":"Opción 2"},{"id":"kostick_19_opt_3","text":"Opción 3"},{"id":"kostick_19_opt_4","text":"Opción 4"}] },
-  { id: "20", question: "Afirmación Kostick 20...", options: [{"id":"kostick_20_opt_1","text":"Opción 1"},{"id":"kostick_20_opt_2","text":"Opción 2"},{"id":"kostick_20_opt_3","text":"Opción 3"},{"id":"kostick_20_opt_4","text":"Opción 4"}] },
-  { id: "21", question: "Afirmación Kostick 21...", options: [{"id":"kostick_21_opt_1","text":"Opción 1"},{"id":"kostick_21_opt_2","text":"Opción 2"},{"id":"kostick_21_opt_3","text":"Opción 3"},{"id":"kostick_21_opt_4","text":"Opción 4"}] },
-  { id: "22", question: "Afirmación Kostick 22...", options: [{"id":"kostick_22_opt_1","text":"Opción 1"},{"id":"kostick_22_opt_2","text":"Opción 2"},{"id":"kostick_22_opt_3","text":"Opción 3"},{"id":"kostick_22_opt_4","text":"Opción 4"}] },
-  { id: "23", question: "Afirmación Kostick 23...", options: [{"id":"kostick_23_opt_1","text":"Opción 1"},{"id":"kostick_23_opt_2","text":"Opción 2"},{"id":"kostick_23_opt_3","text":"Opción 3"},{"id":"kostick_23_opt_4","text":"Opción 4"}] },
-  { id: "24", question: "Afirmación Kostick 24...", options: [{"id":"kostick_24_opt_1","text":"Opción 1"},{"id":"kostick_24_opt_2","text":"Opción 2"},{"id":"kostick_24_opt_3","text":"Opción 3"},{"id":"kostick_24_opt_4","text":"Opción 4"}] },
-  { id: "25", question: "Afirmación Kostick 25...", options: [{"id":"kostick_25_opt_1","text":"Opción 1"},{"id":"kostick_25_opt_2","text":"Opción 2"},{"id":"kostick_25_opt_3","text":"Opción 3"},{"id":"kostick_25_opt_4","text":"Opción 4"}] },
-  { id: "26", question: "Afirmación Kostick 26...", options: [{"id":"kostick_26_opt_1","text":"Opción 1"},{"id":"kostick_26_opt_2","text":"Opción 2"},{"id":"kostick_26_opt_3","text":"Opción 3"},{"id":"kostick_26_opt_4","text":"Opción 4"}] },
-  { id: "27", question: "Afirmación Kostick 27...", options: [{"id":"kostick_27_opt_1","text":"Opción 1"},{"id":"kostick_27_opt_2","text":"Opción 2"},{"id":"kostick_27_opt_3","text":"Opción 3"},{"id":"kostick_27_opt_4","text":"Opción 4"}] },
-  { id: "28", question: "Afirmación Kostick 28...", options: [{"id":"kostick_28_opt_1","text":"Opción 1"},{"id":"kostick_28_opt_2","text":"Opción 2"},{"id":"kostick_28_opt_3","text":"Opción 3"},{"id":"kostick_28_opt_4","text":"Opción 4"}] },
-  { id: "29", question: "Afirmación Kostick 29...", options: [{"id":"kostick_29_opt_1","text":"Opción 1"},{"id":"kostick_29_opt_2","text":"Opción 2"},{"id":"kostick_29_opt_3","text":"Opción 3"},{"id":"kostick_29_opt_4","text":"Opción 4"}] },
-  { id: "30", question: "Afirmación Kostick 30...", options: [{"id":"kostick_30_opt_1","text":"Opción 1"},{"id":"kostick_30_opt_2","text":"Opción 2"},{"id":"kostick_30_opt_3","text":"Opción 3"},{"id":"kostick_30_opt_4","text":"Opción 4"}] },
-  { id: "31", question: "Afirmación Kostick 31...", options: [{"id":"kostick_31_opt_1","text":"Opción 1"},{"id":"kostick_31_opt_2","text":"Opción 2"},{"id":"kostick_31_opt_3","text":"Opción 3"},{"id":"kostick_31_opt_4","text":"Opción 4"}] },
-  { id: "32", question: "Afirmación Kostick 32...", options: [{"id":"kostick_32_opt_1","text":"Opción 1"},{"id":"kostick_32_opt_2","text":"Opción 2"},{"id":"kostick_32_opt_3","text":"Opción 3"},{"id":"kostick_32_opt_4","text":"Opción 4"}] },
-  { id: "33", question: "Afirmación Kostick 33...", options: [{"id":"kostick_33_opt_1","text":"Opción 1"},{"id":"kostick_33_opt_2","text":"Opción 2"},{"id":"kostick_33_opt_3","text":"Opción 3"},{"id":"kostick_33_opt_4","text":"Opción 4"}] },
-  { id: "34", question: "Afirmación Kostick 34...", options: [{"id":"kostick_34_opt_1","text":"Opción 1"},{"id":"kostick_34_opt_2","text":"Opción 2"},{"id":"kostick_34_opt_3","text":"Opción 3"},{"id":"kostick_34_opt_4","text":"Opción 4"}] },
-  { id: "35", question: "Afirmación Kostick 35...", options: [{"id":"kostick_35_opt_1","text":"Opción 1"},{"id":"kostick_35_opt_2","text":"Opción 2"},{"id":"kostick_35_opt_3","text":"Opción 3"},{"id":"kostick_35_opt_4","text":"Opción 4"}] },
-  { id: "36", question: "Afirmación Kostick 36...", options: [{"id":"kostick_36_opt_1","text":"Opción 1"},{"id":"kostick_36_opt_2","text":"Opción 2"},{"id":"kostick_36_opt_3","text":"Opción 3"},{"id":"kostick_36_opt_4","text":"Opción 4"}] },
-  { id: "37", question: "Afirmación Kostick 37...", options: [{"id":"kostick_37_opt_1","text":"Opción 1"},{"id":"kostick_37_opt_2","text":"Opción 2"},{"id":"kostick_37_opt_3","text":"Opción 3"},{"id":"kostick_37_opt_4","text":"Opción 4"}] },
-  { id: "38", question: "Afirmación Kostick 38...", options: [{"id":"kostick_38_opt_1","text":"Opción 1"},{"id":"kostick_38_opt_2","text":"Opción 2"},{"id":"kostick_38_opt_3","text":"Opción 3"},{"id":"kostick_38_opt_4","text":"Opción 4"}] },
-  { id: "39", question: "Afirmación Kostick 39...", options: [{"id":"kostick_39_opt_1","text":"Opción 1"},{"id":"kostick_39_opt_2","text":"Opción 2"},{"id":"kostick_39_opt_3","text":"Opción 3"},{"id":"kostick_39_opt_4","text":"Opción 4"}] },
-  { id: "40", question: "Afirmación Kostick 40...", options: [{"id":"kostick_40_opt_1","text":"Opción 1"},{"id":"kostick_40_opt_2","text":"Opción 2"},{"id":"kostick_40_opt_3","text":"Opción 3"},{"id":"kostick_40_opt_4","text":"Opción 4"}] },
-  { id: "41", question: "Afirmación Kostick 41...", options: [{"id":"kostick_41_opt_1","text":"Opción 1"},{"id":"kostick_41_opt_2","text":"Opción 2"},{"id":"kostick_41_opt_3","text":"Opción 3"},{"id":"kostick_41_opt_4","text":"Opción 4"}] },
-  { id: "42", question: "Afirmación Kostick 42...", options: [{"id":"kostick_42_opt_1","text":"Opción 1"},{"id":"kostick_42_opt_2","text":"Opción 2"},{"id":"kostick_42_opt_3","text":"Opción 3"},{"id":"kostick_42_opt_4","text":"Opción 4"}] },
-  { id: "43", question: "Afirmación Kostick 43...", options: [{"id":"kostick_43_opt_1","text":"Opción 1"},{"id":"kostick_43_opt_2","text":"Opción 2"},{"id":"kostick_43_opt_3","text":"Opción 3"},{"id":"kostick_43_opt_4","text":"Opción 4"}] },
-  { id: "44", question: "Afirmación Kostick 44...", options: [{"id":"kostick_44_opt_1","text":"Opción 1"},{"id":"kostick_44_opt_2","text":"Opción 2"},{"id":"kostick_44_opt_3","text":"Opción 3"},{"id":"kostick_44_opt_4","text":"Opción 4"}] },
-  { id: "45", question: "Afirmación Kostick 45...", options: [{"id":"kostick_45_opt_1","text":"Opción 1"},{"id":"kostick_45_opt_2","text":"Opción 2"},{"id":"kostick_45_opt_3","text":"Opción 3"},{"id":"kostick_45_opt_4","text":"Opción 4"}] },
-  { id: "46", question: "Afirmación Kostick 46...", options: [{"id":"kostick_46_opt_1","text":"Opción 1"},{"id":"kostick_46_opt_2","text":"Opción 2"},{"id":"kostick_46_opt_3","text":"Opción 3"},{"id":"kostick_46_opt_4","text":"Opción 4"}] },
-  { id: "47", question: "Afirmación Kostick 47...", options: [{"id":"kostick_47_opt_1","text":"Opción 1"},{"id":"kostick_47_opt_2","text":"Opción 2"},{"id":"kostick_47_opt_3","text":"Opción 3"},{"id":"kostick_47_opt_4","text":"Opción 4"}] },
-  { id: "48", question: "Afirmación Kostick 48...", options: [{"id":"kostick_48_opt_1","text":"Opción 1"},{"id":"kostick_48_opt_2","text":"Opción 2"},{"id":"kostick_48_opt_3","text":"Opción 3"},{"id":"kostick_48_opt_4","text":"Opción 4"}] },
-  { id: "49", question: "Afirmación Kostick 49...", options: [{"id":"kostick_49_opt_1","text":"Opción 1"},{"id":"kostick_49_opt_2","text":"Opción 2"},{"id":"kostick_49_opt_3","text":"Opción 3"},{"id":"kostick_49_opt_4","text":"Opción 4"}] },
-  { id: "50", question: "Afirmación Kostick 50...", options: [{"id":"kostick_50_opt_1","text":"Opción 1"},{"id":"kostick_50_opt_2","text":"Opción 2"},{"id":"kostick_50_opt_3","text":"Opción 3"},{"id":"kostick_50_opt_4","text":"Opción 4"}] },
-  { id: "51", question: "Afirmación Kostick 51...", options: [{"id":"kostick_51_opt_1","text":"Opción 1"},{"id":"kostick_51_opt_2","text":"Opción 2"},{"id":"kostick_51_opt_3","text":"Opción 3"},{"id":"kostick_51_opt_4","text":"Opción 4"}] },
-  { id: "52", question: "Afirmación Kostick 52...", options: [{"id":"kostick_52_opt_1","text":"Opción 1"},{"id":"kostick_52_opt_2","text":"Opción 2"},{"id":"kostick_52_opt_3","text":"Opción 3"},{"id":"kostick_52_opt_4","text":"Opción 4"}] },
-  { id: "53", question: "Afirmación Kostick 53...", options: [{"id":"kostick_53_opt_1","text":"Opción 1"},{"id":"kostick_53_opt_2","text":"Opción 2"},{"id":"kostick_53_opt_3","text":"Opción 3"},{"id":"kostick_53_opt_4","text":"Opción 4"}] },
-  { id: "54", question: "Afirmación Kostick 54...", options: [{"id":"kostick_54_opt_1","text":"Opción 1"},{"id":"kostick_54_opt_2","text":"Opción 2"},{"id":"kostick_54_opt_3","text":"Opción 3"},{"id":"kostick_54_opt_4","text":"Opción 4"}] },
-  { id: "55", question: "Afirmación Kostick 55...", options: [{"id":"kostick_55_opt_1","text":"Opción 1"},{"id":"kostick_55_opt_2","text":"Opción 2"},{"id":"kostick_55_opt_3","text":"Opción 3"},{"id":"kostick_55_opt_4","text":"Opción 4"}] },
-  { id: "56", question: "Afirmación Kostick 56...", options: [{"id":"kostick_56_opt_1","text":"Opción 1"},{"id":"kostick_56_opt_2","text":"Opción 2"},{"id":"kostick_56_opt_3","text":"Opción 3"},{"id":"kostick_56_opt_4","text":"Opción 4"}] },
-  { id: "57", question: "Afirmación Kostick 57...", options: [{"id":"kostick_57_opt_1","text":"Opción 1"},{"id":"kostick_57_opt_2","text":"Opción 2"},{"id":"kostick_57_opt_3","text":"Opción 3"},{"id":"kostick_57_opt_4","text":"Opción 4"}] },
-  { id: "58", question: "Afirmación Kostick 58...", options: [{"id":"kostick_58_opt_1","text":"Opción 1"},{"id":"kostick_58_opt_2","text":"Opción 2"},{"id":"kostick_58_opt_3","text":"Opción 3"},{"id":"kostick_58_opt_4","text":"Opción 4"}] },
-  { id: "59", question: "Afirmación Kostick 59...", options: [{"id":"kostick_59_opt_1","text":"Opción 1"},{"id":"kostick_59_opt_2","text":"Opción 2"},{"id":"kostick_59_opt_3","text":"Opción 3"},{"id":"kostick_59_opt_4","text":"Opción 4"}] },
-  { id: "60", question: "Afirmación Kostick 60...", options: [{"id":"kostick_60_opt_1","text":"Opción 1"},{"id":"kostick_60_opt_2","text":"Opción 2"},{"id":"kostick_60_opt_3","text":"Opción 3"},{"id":"kostick_60_opt_4","text":"Opción 4"}] },
-  { id: "61", question: "Afirmación Kostick 61...", options: [{"id":"kostick_61_opt_1","text":"Opción 1"},{"id":"kostick_61_opt_2","text":"Opción 2"},{"id":"kostick_61_opt_3","text":"Opción 3"},{"id":"kostick_61_opt_4","text":"Opción 4"}] },
-  { id: "62", question: "Afirmación Kostick 62...", options: [{"id":"kostick_62_opt_1","text":"Opción 1"},{"id":"kostick_62_opt_2","text":"Opción 2"},{"id":"kostick_62_opt_3","text":"Opción 3"},{"id":"kostick_62_opt_4","text":"Opción 4"}] },
-  { id: "63", question: "Afirmación Kostick 63...", options: [{"id":"kostick_63_opt_1","text":"Opción 1"},{"id":"kostick_63_opt_2","text":"Opción 2"},{"id":"kostick_63_opt_3","text":"Opción 3"},{"id":"kostick_63_opt_4","text":"Opción 4"}] },
-  { id: "64", question: "Afirmación Kostick 64...", options: [{"id":"kostick_64_opt_1","text":"Opción 1"},{"id":"kostick_64_opt_2","text":"Opción 2"},{"id":"kostick_64_opt_3","text":"Opción 3"},{"id":"kostick_64_opt_4","text":"Opción 4"}] },
-  { id: "65", question: "Afirmación Kostick 65...", options: [{"id":"kostick_65_opt_1","text":"Opción 1"},{"id":"kostick_65_opt_2","text":"Opción 2"},{"id":"kostick_65_opt_3","text":"Opción 3"},{"id":"kostick_65_opt_4","text":"Opción 4"}] },
-  { id: "66", question: "Afirmación Kostick 66...", options: [{"id":"kostick_66_opt_1","text":"Opción 1"},{"id":"kostick_66_opt_2","text":"Opción 2"},{"id":"kostick_66_opt_3","text":"Opción 3"},{"id":"kostick_66_opt_4","text":"Opción 4"}] },
-  { id: "67", question: "Afirmación Kostick 67...", options: [{"id":"kostick_67_opt_1","text":"Opción 1"},{"id":"kostick_67_opt_2","text":"Opción 2"},{"id":"kostick_67_opt_3","text":"Opción 3"},{"id":"kostick_67_opt_4","text":"Opción 4"}] },
-  { id: "68", question: "Afirmación Kostick 68...", options: [{"id":"kostick_68_opt_1","text":"Opción 1"},{"id":"kostick_68_opt_2","text":"Opción 2"},{"id":"kostick_68_opt_3","text":"Opción 3"},{"id":"kostick_68_opt_4","text":"Opción 4"}] },
-  { id: "69", question: "Afirmación Kostick 69...", options: [{"id":"kostick_69_opt_1","text":"Opción 1"},{"id":"kostick_69_opt_2","text":"Opción 2"},{"id":"kostick_69_opt_3","text":"Opción 3"},{"id":"kostick_69_opt_4","text":"Opción 4"}] },
-  { id: "70", question: "Afirmación Kostick 70...", options: [{"id":"kostick_70_opt_1","text":"Opción 1"},{"id":"kostick_70_opt_2","text":"Opción 2"},{"id":"kostick_70_opt_3","text":"Opción 3"},{"id":"kostick_70_opt_4","text":"Opción 4"}] },
-  { id: "71", question: "Afirmación Kostick 71...", options: [{"id":"kostick_71_opt_1","text":"Opción 1"},{"id":"kostick_71_opt_2","text":"Opción 2"},{"id":"kostick_71_opt_3","text":"Opción 3"},{"id":"kostick_71_opt_4","text":"Opción 4"}] },
-  { id: "72", question: "Afirmación Kostick 72...", options: [{"id":"kostick_72_opt_1","text":"Opción 1"},{"id":"kostick_72_opt_2","text":"Opción 2"},{"id":"kostick_72_opt_3","text":"Opción 3"},{"id":"kostick_72_opt_4","text":"Opción 4"}] },
-  { id: "73", question: "Afirmación Kostick 73...", options: [{"id":"kostick_73_opt_1","text":"Opción 1"},{"id":"kostick_73_opt_2","text":"Opción 2"},{"id":"kostick_73_opt_3","text":"Opción 3"},{"id":"kostick_73_opt_4","text":"Opción 4"}] },
-  { id: "74", question: "Afirmación Kostick 74...", options: [{"id":"kostick_74_opt_1","text":"Opción 1"},{"id":"kostick_74_opt_2","text":"Opción 2"},{"id":"kostick_74_opt_3","text":"Opción 3"},{"id":"kostick_74_opt_4","text":"Opción 4"}] },
-  { id: "75", question: "Afirmación Kostick 75...", options: [{"id":"kostick_75_opt_1","text":"Opción 1"},{"id":"kostick_75_opt_2","text":"Opción 2"},{"id":"kostick_75_opt_3","text":"Opción 3"},{"id":"kostick_75_opt_4","text":"Opción 4"}] },
-  { id: "76", question: "Afirmación Kostick 76...", options: [{"id":"kostick_76_opt_1","text":"Opción 1"},{"id":"kostick_76_opt_2","text":"Opción 2"},{"id":"kostick_76_opt_3","text":"Opción 3"},{"id":"kostick_76_opt_4","text":"Opción 4"}] },
-  { id: "77", question: "Afirmación Kostick 77...", options: [{"id":"kostick_77_opt_1","text":"Opción 1"},{"id":"kostick_77_opt_2","text":"Opción 2"},{"id":"kostick_77_opt_3","text":"Opción 3"},{"id":"kostick_77_opt_4","text":"Opción 4"}] },
-  { id: "78", question: "Afirmación Kostick 78...", options: [{"id":"kostick_78_opt_1","text":"Opción 1"},{"id":"kostick_78_opt_2","text":"Opción 2"},{"id":"kostick_78_opt_3","text":"Opción 3"},{"id":"kostick_78_opt_4","text":"Opción 4"}] },
-  { id: "79", question: "Afirmación Kostick 79...", options: [{"id":"kostick_79_opt_1","text":"Opción 1"},{"id":"kostick_79_opt_2","text":"Opción 2"},{"id":"kostick_79_opt_3","text":"Opción 3"},{"id":"kostick_79_opt_4","text":"Opción 4"}] },
-  { id: "80", question: "Afirmación Kostick 80...", options: [{"id":"kostick_80_opt_1","text":"Opción 1"},{"id":"kostick_80_opt_2","text":"Opción 2"},{"id":"kostick_80_opt_3","text":"Opción 3"},{"id":"kostick_80_opt_4","text":"Opción 4"}] },
-  { id: "81", question: "Afirmación Kostick 81...", options: [{"id":"kostick_81_opt_1","text":"Opción 1"},{"id":"kostick_81_opt_2","text":"Opción 2"},{"id":"kostick_81_opt_3","text":"Opción 3"},{"id":"kostick_81_opt_4","text":"Opción 4"}] },
-  { id: "82", question: "Afirmación Kostick 82...", options: [{"id":"kostick_82_opt_1","text":"Opción 1"},{"id":"kostick_82_opt_2","text":"Opción 2"},{"id":"kostick_82_opt_3","text":"Opción 3"},{"id":"kostick_82_opt_4","text":"Opción 4"}] },
-  { id: "83", question: "Afirmación Kostick 83...", options: [{"id":"kostick_83_opt_1","text":"Opción 1"},{"id":"kostick_83_opt_2","text":"Opción 2"},{"id":"kostick_83_opt_3","text":"Opción 3"},{"id":"kostick_83_opt_4","text":"Opción 4"}] },
-  { id: "84", question: "Afirmación Kostick 84...", options: [{"id":"kostick_84_opt_1","text":"Opción 1"},{"id":"kostick_84_opt_2","text":"Opción 2"},{"id":"kostick_84_opt_3","text":"Opción 3"},{"id":"kostick_84_opt_4","text":"Opción 4"}] },
-  { id: "85", question: "Afirmación Kostick 85...", options: [{"id":"kostick_85_opt_1","text":"Opción 1"},{"id":"kostick_85_opt_2","text":"Opción 2"},{"id":"kostick_85_opt_3","text":"Opción 3"},{"id":"kostick_85_opt_4","text":"Opción 4"}] },
-  { id: "86", question: "Afirmación Kostick 86...", options: [{"id":"kostick_86_opt_1","text":"Opción 1"},{"id":"kostick_86_opt_2","text":"Opción 2"},{"id":"kostick_86_opt_3","text":"Opción 3"},{"id":"kostick_86_opt_4","text":"Opción 4"}] },
-  { id: "87", question: "Afirmación Kostick 87...", options: [{"id":"kostick_87_opt_1","text":"Opción 1"},{"id":"kostick_87_opt_2","text":"Opción 2"},{"id":"kostick_87_opt_3","text":"Opción 3"},{"id":"kostick_87_opt_4","text":"Opción 4"}] },
-  { id: "88", question: "Afirmación Kostick 88...", options: [{"id":"kostick_88_opt_1","text":"Opción 1"},{"id":"kostick_88_opt_2","text":"Opción 2"},{"id":"kostick_88_opt_3","text":"Opción 3"},{"id":"kostick_88_opt_4","text":"Opción 4"}] },
-  { id: "89", question: "Afirmación Kostick 89...", options: [{"id":"kostick_89_opt_1","text":"Opción 1"},{"id":"kostick_89_opt_2","text":"Opción 2"},{"id":"kostick_89_opt_3","text":"Opción 3"},{"id":"kostick_89_opt_4","text":"Opción 4"}] },
-  { id: "90", question: "Afirmación Kostick 90...", options: [{"id":"kostick_90_opt_1","text":"Opción 1"},{"id":"kostick_90_opt_2","text":"Opción 2"},{"id":"kostick_90_opt_3","text":"Opción 3"},{"id":"kostick_90_opt_4","text":"Opción 4"}] }
+  {
+    "id": "1",
+    "question": "Par 1. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_1_opt_A",
+        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
+      },
+      {
+        "id": "kostick_1_opt_B",
+        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "question": "Par 2. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_2_opt_A",
+        "text": "A) Prefiero presentar datos y dejar que decidan."
+      },
+      {
+        "id": "kostick_2_opt_B",
+        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "question": "Par 3. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_3_opt_A",
+        "text": "A) Me siento cómodo tomando decisiones bajo presión."
+      },
+      {
+        "id": "kostick_3_opt_B",
+        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "question": "Par 4. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_4_opt_A",
+        "text": "A) Rindo mejor con cronogramas amplios."
+      },
+      {
+        "id": "kostick_4_opt_B",
+        "text": "B) Me gusta trabajar con plazos ajustados."
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "question": "Par 5. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_5_opt_A",
+        "text": "A) Prefiero variar de tareas a lo largo del día."
+      },
+      {
+        "id": "kostick_5_opt_B",
+        "text": "B) Rindo mejor con tareas continuas y enfocadas."
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "question": "Par 6. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_6_opt_A",
+        "text": "A) Prefiero un círculo reducido de colegas."
+      },
+      {
+        "id": "kostick_6_opt_B",
+        "text": "B) Me gusta convivir con muchas personas en el trabajo."
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "question": "Par 7. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_7_opt_A",
+        "text": "A) Tomo iniciativa para introducir cambios."
+      },
+      {
+        "id": "kostick_7_opt_B",
+        "text": "B) Espero a que el cambio esté validado por otros."
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "question": "Par 8. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_8_opt_A",
+        "text": "A) Me motivan las tareas concretas y prácticas."
+      },
+      {
+        "id": "kostick_8_opt_B",
+        "text": "B) Me motivan los retos intelectuales complejos."
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "question": "Par 9. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_9_opt_A",
+        "text": "A) Defiendo mi punto aunque genere conflicto."
+      },
+      {
+        "id": "kostick_9_opt_B",
+        "text": "B) Cedo si veo que mantener la armonía es más útil."
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "question": "Par 10. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_10_opt_A",
+        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
+      },
+      {
+        "id": "kostick_10_opt_B",
+        "text": "B) Me siento cómodo hablando en público."
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "question": "Par 11. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_11_opt_A",
+        "text": "A) Pongo metas ambiciosas y voy por ellas."
+      },
+      {
+        "id": "kostick_11_opt_B",
+        "text": "B) Pongo metas alcanzables para asegurar avance."
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "question": "Par 12. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_12_opt_A",
+        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
+      },
+      {
+        "id": "kostick_12_opt_B",
+        "text": "B) Disfruto liderar reuniones."
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "question": "Par 13. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_13_opt_A",
+        "text": "A) Tomo riesgos calculados con frecuencia."
+      },
+      {
+        "id": "kostick_13_opt_B",
+        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "question": "Par 14. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_14_opt_A",
+        "text": "A) Cuido el equilibrio entre vida laboral y social."
+      },
+      {
+        "id": "kostick_14_opt_B",
+        "text": "B) Pongo mi trabajo por encima de la rutina social."
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "question": "Par 15. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_15_opt_A",
+        "text": "A) Confronto a quien no cumple su parte."
+      },
+      {
+        "id": "kostick_15_opt_B",
+        "text": "B) Prefiero hablar en privado y con tacto."
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "question": "Par 16. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_16_opt_A",
+        "text": "A) Necesito tiempo para internalizar cambios."
+      },
+      {
+        "id": "kostick_16_opt_B",
+        "text": "B) Me adapto rápido a nuevos procesos."
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "question": "Par 17. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_17_opt_A",
+        "text": "A) Trabajo mejor con autonomía total."
+      },
+      {
+        "id": "kostick_17_opt_B",
+        "text": "B) Trabajo mejor con supervisión cercana."
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "question": "Par 18. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_18_opt_A",
+        "text": "A) Prefiero coordinar equipos pequeños."
+      },
+      {
+        "id": "kostick_18_opt_B",
+        "text": "B) Me agrada estar al frente de un equipo grande."
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "question": "Par 19. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_19_opt_A",
+        "text": "A) Comparto ideas aunque no estén pulidas."
+      },
+      {
+        "id": "kostick_19_opt_B",
+        "text": "B) Comparto solo cuando la idea está lista."
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "question": "Par 20. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_20_opt_A",
+        "text": "A) Trabajo mejor sin retroalimentación constante."
+      },
+      {
+        "id": "kostick_20_opt_B",
+        "text": "B) Pido feedback frecuente."
+      }
+    ]
+  },
+  {
+    "id": "21",
+    "question": "Par 21. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_21_opt_A",
+        "text": "A) Negocio con dureza para obtener ventaja."
+      },
+      {
+        "id": "kostick_21_opt_B",
+        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "question": "Par 22. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_22_opt_A",
+        "text": "A) Delego el seguimiento y confío en el equipo."
+      },
+      {
+        "id": "kostick_22_opt_B",
+        "text": "B) Doy seguimiento personalmente a cada detalle."
+      }
+    ]
+  },
+  {
+    "id": "23",
+    "question": "Par 23. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_23_opt_A",
+        "text": "A) Compito por reconocimiento profesional."
+      },
+      {
+        "id": "kostick_23_opt_B",
+        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
+      }
+    ]
+  },
+  {
+    "id": "24",
+    "question": "Par 24. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_24_opt_A",
+        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
+      },
+      {
+        "id": "kostick_24_opt_B",
+        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
+      }
+    ]
+  },
+  {
+    "id": "25",
+    "question": "Par 25. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_25_opt_A",
+        "text": "A) Hago las cosas a mi manera aunque haya un manual."
+      },
+      {
+        "id": "kostick_25_opt_B",
+        "text": "B) Sigo el manual estrictamente."
+      }
+    ]
+  },
+  {
+    "id": "26",
+    "question": "Par 26. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_26_opt_A",
+        "text": "A) Espero a tener toda la información antes de decidir."
+      },
+      {
+        "id": "kostick_26_opt_B",
+        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
+      }
+    ]
+  },
+  {
+    "id": "27",
+    "question": "Par 27. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_27_opt_A",
+        "text": "A) Defiendo nuevas formas de hacer las cosas."
+      },
+      {
+        "id": "kostick_27_opt_B",
+        "text": "B) Mantengo los métodos que ya funcionan."
+      }
+    ]
+  },
+  {
+    "id": "28",
+    "question": "Par 28. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_28_opt_A",
+        "text": "A) Mi energía varía y manejo bien los descansos."
+      },
+      {
+        "id": "kostick_28_opt_B",
+        "text": "B) Mi energía es alta y constante."
+      }
+    ]
+  },
+  {
+    "id": "29",
+    "question": "Par 29. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_29_opt_A",
+        "text": "A) Disfruto la presión de ventas o metas comerciales."
+      },
+      {
+        "id": "kostick_29_opt_B",
+        "text": "B) Prefiero roles técnicos sin presión comercial."
+      }
+    ]
+  },
+  {
+    "id": "30",
+    "question": "Par 30. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_30_opt_A",
+        "text": "A) Modulo mis comentarios para no incomodar."
+      },
+      {
+        "id": "kostick_30_opt_B",
+        "text": "B) Hablo con franqueza aunque incomode."
+      }
+    ]
+  },
+  {
+    "id": "31",
+    "question": "Par 31. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_31_opt_A",
+        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
+      },
+      {
+        "id": "kostick_31_opt_B",
+        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
+      }
+    ]
+  },
+  {
+    "id": "32",
+    "question": "Par 32. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_32_opt_A",
+        "text": "A) Prefiero presentar datos y dejar que decidan."
+      },
+      {
+        "id": "kostick_32_opt_B",
+        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
+      }
+    ]
+  },
+  {
+    "id": "33",
+    "question": "Par 33. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_33_opt_A",
+        "text": "A) Me siento cómodo tomando decisiones bajo presión."
+      },
+      {
+        "id": "kostick_33_opt_B",
+        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
+      }
+    ]
+  },
+  {
+    "id": "34",
+    "question": "Par 34. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_34_opt_A",
+        "text": "A) Rindo mejor con cronogramas amplios."
+      },
+      {
+        "id": "kostick_34_opt_B",
+        "text": "B) Me gusta trabajar con plazos ajustados."
+      }
+    ]
+  },
+  {
+    "id": "35",
+    "question": "Par 35. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_35_opt_A",
+        "text": "A) Prefiero variar de tareas a lo largo del día."
+      },
+      {
+        "id": "kostick_35_opt_B",
+        "text": "B) Rindo mejor con tareas continuas y enfocadas."
+      }
+    ]
+  },
+  {
+    "id": "36",
+    "question": "Par 36. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_36_opt_A",
+        "text": "A) Prefiero un círculo reducido de colegas."
+      },
+      {
+        "id": "kostick_36_opt_B",
+        "text": "B) Me gusta convivir con muchas personas en el trabajo."
+      }
+    ]
+  },
+  {
+    "id": "37",
+    "question": "Par 37. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_37_opt_A",
+        "text": "A) Tomo iniciativa para introducir cambios."
+      },
+      {
+        "id": "kostick_37_opt_B",
+        "text": "B) Espero a que el cambio esté validado por otros."
+      }
+    ]
+  },
+  {
+    "id": "38",
+    "question": "Par 38. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_38_opt_A",
+        "text": "A) Me motivan las tareas concretas y prácticas."
+      },
+      {
+        "id": "kostick_38_opt_B",
+        "text": "B) Me motivan los retos intelectuales complejos."
+      }
+    ]
+  },
+  {
+    "id": "39",
+    "question": "Par 39. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_39_opt_A",
+        "text": "A) Defiendo mi punto aunque genere conflicto."
+      },
+      {
+        "id": "kostick_39_opt_B",
+        "text": "B) Cedo si veo que mantener la armonía es más útil."
+      }
+    ]
+  },
+  {
+    "id": "40",
+    "question": "Par 40. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_40_opt_A",
+        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
+      },
+      {
+        "id": "kostick_40_opt_B",
+        "text": "B) Me siento cómodo hablando en público."
+      }
+    ]
+  },
+  {
+    "id": "41",
+    "question": "Par 41. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_41_opt_A",
+        "text": "A) Pongo metas ambiciosas y voy por ellas."
+      },
+      {
+        "id": "kostick_41_opt_B",
+        "text": "B) Pongo metas alcanzables para asegurar avance."
+      }
+    ]
+  },
+  {
+    "id": "42",
+    "question": "Par 42. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_42_opt_A",
+        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
+      },
+      {
+        "id": "kostick_42_opt_B",
+        "text": "B) Disfruto liderar reuniones."
+      }
+    ]
+  },
+  {
+    "id": "43",
+    "question": "Par 43. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_43_opt_A",
+        "text": "A) Tomo riesgos calculados con frecuencia."
+      },
+      {
+        "id": "kostick_43_opt_B",
+        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
+      }
+    ]
+  },
+  {
+    "id": "44",
+    "question": "Par 44. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_44_opt_A",
+        "text": "A) Cuido el equilibrio entre vida laboral y social."
+      },
+      {
+        "id": "kostick_44_opt_B",
+        "text": "B) Pongo mi trabajo por encima de la rutina social."
+      }
+    ]
+  },
+  {
+    "id": "45",
+    "question": "Par 45. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_45_opt_A",
+        "text": "A) Confronto a quien no cumple su parte."
+      },
+      {
+        "id": "kostick_45_opt_B",
+        "text": "B) Prefiero hablar en privado y con tacto."
+      }
+    ]
+  },
+  {
+    "id": "46",
+    "question": "Par 46. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_46_opt_A",
+        "text": "A) Necesito tiempo para internalizar cambios."
+      },
+      {
+        "id": "kostick_46_opt_B",
+        "text": "B) Me adapto rápido a nuevos procesos."
+      }
+    ]
+  },
+  {
+    "id": "47",
+    "question": "Par 47. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_47_opt_A",
+        "text": "A) Trabajo mejor con autonomía total."
+      },
+      {
+        "id": "kostick_47_opt_B",
+        "text": "B) Trabajo mejor con supervisión cercana."
+      }
+    ]
+  },
+  {
+    "id": "48",
+    "question": "Par 48. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_48_opt_A",
+        "text": "A) Prefiero coordinar equipos pequeños."
+      },
+      {
+        "id": "kostick_48_opt_B",
+        "text": "B) Me agrada estar al frente de un equipo grande."
+      }
+    ]
+  },
+  {
+    "id": "49",
+    "question": "Par 49. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_49_opt_A",
+        "text": "A) Comparto ideas aunque no estén pulidas."
+      },
+      {
+        "id": "kostick_49_opt_B",
+        "text": "B) Comparto solo cuando la idea está lista."
+      }
+    ]
+  },
+  {
+    "id": "50",
+    "question": "Par 50. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_50_opt_A",
+        "text": "A) Trabajo mejor sin retroalimentación constante."
+      },
+      {
+        "id": "kostick_50_opt_B",
+        "text": "B) Pido feedback frecuente."
+      }
+    ]
+  },
+  {
+    "id": "51",
+    "question": "Par 51. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_51_opt_A",
+        "text": "A) Negocio con dureza para obtener ventaja."
+      },
+      {
+        "id": "kostick_51_opt_B",
+        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
+      }
+    ]
+  },
+  {
+    "id": "52",
+    "question": "Par 52. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_52_opt_A",
+        "text": "A) Delego el seguimiento y confío en el equipo."
+      },
+      {
+        "id": "kostick_52_opt_B",
+        "text": "B) Doy seguimiento personalmente a cada detalle."
+      }
+    ]
+  },
+  {
+    "id": "53",
+    "question": "Par 53. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_53_opt_A",
+        "text": "A) Compito por reconocimiento profesional."
+      },
+      {
+        "id": "kostick_53_opt_B",
+        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
+      }
+    ]
+  },
+  {
+    "id": "54",
+    "question": "Par 54. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_54_opt_A",
+        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
+      },
+      {
+        "id": "kostick_54_opt_B",
+        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
+      }
+    ]
+  },
+  {
+    "id": "55",
+    "question": "Par 55. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_55_opt_A",
+        "text": "A) Hago las cosas a mi manera aunque haya un manual."
+      },
+      {
+        "id": "kostick_55_opt_B",
+        "text": "B) Sigo el manual estrictamente."
+      }
+    ]
+  },
+  {
+    "id": "56",
+    "question": "Par 56. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_56_opt_A",
+        "text": "A) Espero a tener toda la información antes de decidir."
+      },
+      {
+        "id": "kostick_56_opt_B",
+        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
+      }
+    ]
+  },
+  {
+    "id": "57",
+    "question": "Par 57. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_57_opt_A",
+        "text": "A) Defiendo nuevas formas de hacer las cosas."
+      },
+      {
+        "id": "kostick_57_opt_B",
+        "text": "B) Mantengo los métodos que ya funcionan."
+      }
+    ]
+  },
+  {
+    "id": "58",
+    "question": "Par 58. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_58_opt_A",
+        "text": "A) Mi energía varía y manejo bien los descansos."
+      },
+      {
+        "id": "kostick_58_opt_B",
+        "text": "B) Mi energía es alta y constante."
+      }
+    ]
+  },
+  {
+    "id": "59",
+    "question": "Par 59. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_59_opt_A",
+        "text": "A) Disfruto la presión de ventas o metas comerciales."
+      },
+      {
+        "id": "kostick_59_opt_B",
+        "text": "B) Prefiero roles técnicos sin presión comercial."
+      }
+    ]
+  },
+  {
+    "id": "60",
+    "question": "Par 60. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_60_opt_A",
+        "text": "A) Modulo mis comentarios para no incomodar."
+      },
+      {
+        "id": "kostick_60_opt_B",
+        "text": "B) Hablo con franqueza aunque incomode."
+      }
+    ]
+  },
+  {
+    "id": "61",
+    "question": "Par 61. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_61_opt_A",
+        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
+      },
+      {
+        "id": "kostick_61_opt_B",
+        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
+      }
+    ]
+  },
+  {
+    "id": "62",
+    "question": "Par 62. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_62_opt_A",
+        "text": "A) Prefiero presentar datos y dejar que decidan."
+      },
+      {
+        "id": "kostick_62_opt_B",
+        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
+      }
+    ]
+  },
+  {
+    "id": "63",
+    "question": "Par 63. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_63_opt_A",
+        "text": "A) Me siento cómodo tomando decisiones bajo presión."
+      },
+      {
+        "id": "kostick_63_opt_B",
+        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
+      }
+    ]
+  },
+  {
+    "id": "64",
+    "question": "Par 64. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_64_opt_A",
+        "text": "A) Rindo mejor con cronogramas amplios."
+      },
+      {
+        "id": "kostick_64_opt_B",
+        "text": "B) Me gusta trabajar con plazos ajustados."
+      }
+    ]
+  },
+  {
+    "id": "65",
+    "question": "Par 65. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_65_opt_A",
+        "text": "A) Prefiero variar de tareas a lo largo del día."
+      },
+      {
+        "id": "kostick_65_opt_B",
+        "text": "B) Rindo mejor con tareas continuas y enfocadas."
+      }
+    ]
+  },
+  {
+    "id": "66",
+    "question": "Par 66. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_66_opt_A",
+        "text": "A) Prefiero un círculo reducido de colegas."
+      },
+      {
+        "id": "kostick_66_opt_B",
+        "text": "B) Me gusta convivir con muchas personas en el trabajo."
+      }
+    ]
+  },
+  {
+    "id": "67",
+    "question": "Par 67. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_67_opt_A",
+        "text": "A) Tomo iniciativa para introducir cambios."
+      },
+      {
+        "id": "kostick_67_opt_B",
+        "text": "B) Espero a que el cambio esté validado por otros."
+      }
+    ]
+  },
+  {
+    "id": "68",
+    "question": "Par 68. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_68_opt_A",
+        "text": "A) Me motivan las tareas concretas y prácticas."
+      },
+      {
+        "id": "kostick_68_opt_B",
+        "text": "B) Me motivan los retos intelectuales complejos."
+      }
+    ]
+  },
+  {
+    "id": "69",
+    "question": "Par 69. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_69_opt_A",
+        "text": "A) Defiendo mi punto aunque genere conflicto."
+      },
+      {
+        "id": "kostick_69_opt_B",
+        "text": "B) Cedo si veo que mantener la armonía es más útil."
+      }
+    ]
+  },
+  {
+    "id": "70",
+    "question": "Par 70. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_70_opt_A",
+        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
+      },
+      {
+        "id": "kostick_70_opt_B",
+        "text": "B) Me siento cómodo hablando en público."
+      }
+    ]
+  },
+  {
+    "id": "71",
+    "question": "Par 71. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_71_opt_A",
+        "text": "A) Pongo metas ambiciosas y voy por ellas."
+      },
+      {
+        "id": "kostick_71_opt_B",
+        "text": "B) Pongo metas alcanzables para asegurar avance."
+      }
+    ]
+  },
+  {
+    "id": "72",
+    "question": "Par 72. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_72_opt_A",
+        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
+      },
+      {
+        "id": "kostick_72_opt_B",
+        "text": "B) Disfruto liderar reuniones."
+      }
+    ]
+  },
+  {
+    "id": "73",
+    "question": "Par 73. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_73_opt_A",
+        "text": "A) Tomo riesgos calculados con frecuencia."
+      },
+      {
+        "id": "kostick_73_opt_B",
+        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
+      }
+    ]
+  },
+  {
+    "id": "74",
+    "question": "Par 74. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_74_opt_A",
+        "text": "A) Cuido el equilibrio entre vida laboral y social."
+      },
+      {
+        "id": "kostick_74_opt_B",
+        "text": "B) Pongo mi trabajo por encima de la rutina social."
+      }
+    ]
+  },
+  {
+    "id": "75",
+    "question": "Par 75. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_75_opt_A",
+        "text": "A) Confronto a quien no cumple su parte."
+      },
+      {
+        "id": "kostick_75_opt_B",
+        "text": "B) Prefiero hablar en privado y con tacto."
+      }
+    ]
+  },
+  {
+    "id": "76",
+    "question": "Par 76. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_76_opt_A",
+        "text": "A) Necesito tiempo para internalizar cambios."
+      },
+      {
+        "id": "kostick_76_opt_B",
+        "text": "B) Me adapto rápido a nuevos procesos."
+      }
+    ]
+  },
+  {
+    "id": "77",
+    "question": "Par 77. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_77_opt_A",
+        "text": "A) Trabajo mejor con autonomía total."
+      },
+      {
+        "id": "kostick_77_opt_B",
+        "text": "B) Trabajo mejor con supervisión cercana."
+      }
+    ]
+  },
+  {
+    "id": "78",
+    "question": "Par 78. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_78_opt_A",
+        "text": "A) Prefiero coordinar equipos pequeños."
+      },
+      {
+        "id": "kostick_78_opt_B",
+        "text": "B) Me agrada estar al frente de un equipo grande."
+      }
+    ]
+  },
+  {
+    "id": "79",
+    "question": "Par 79. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_79_opt_A",
+        "text": "A) Comparto ideas aunque no estén pulidas."
+      },
+      {
+        "id": "kostick_79_opt_B",
+        "text": "B) Comparto solo cuando la idea está lista."
+      }
+    ]
+  },
+  {
+    "id": "80",
+    "question": "Par 80. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_80_opt_A",
+        "text": "A) Trabajo mejor sin retroalimentación constante."
+      },
+      {
+        "id": "kostick_80_opt_B",
+        "text": "B) Pido feedback frecuente."
+      }
+    ]
+  },
+  {
+    "id": "81",
+    "question": "Par 81. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_81_opt_A",
+        "text": "A) Negocio con dureza para obtener ventaja."
+      },
+      {
+        "id": "kostick_81_opt_B",
+        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
+      }
+    ]
+  },
+  {
+    "id": "82",
+    "question": "Par 82. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_82_opt_A",
+        "text": "A) Delego el seguimiento y confío en el equipo."
+      },
+      {
+        "id": "kostick_82_opt_B",
+        "text": "B) Doy seguimiento personalmente a cada detalle."
+      }
+    ]
+  },
+  {
+    "id": "83",
+    "question": "Par 83. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_83_opt_A",
+        "text": "A) Compito por reconocimiento profesional."
+      },
+      {
+        "id": "kostick_83_opt_B",
+        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
+      }
+    ]
+  },
+  {
+    "id": "84",
+    "question": "Par 84. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_84_opt_A",
+        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
+      },
+      {
+        "id": "kostick_84_opt_B",
+        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
+      }
+    ]
+  },
+  {
+    "id": "85",
+    "question": "Par 85. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_85_opt_A",
+        "text": "A) Hago las cosas a mi manera aunque haya un manual."
+      },
+      {
+        "id": "kostick_85_opt_B",
+        "text": "B) Sigo el manual estrictamente."
+      }
+    ]
+  },
+  {
+    "id": "86",
+    "question": "Par 86. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_86_opt_A",
+        "text": "A) Espero a tener toda la información antes de decidir."
+      },
+      {
+        "id": "kostick_86_opt_B",
+        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
+      }
+    ]
+  },
+  {
+    "id": "87",
+    "question": "Par 87. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_87_opt_A",
+        "text": "A) Defiendo nuevas formas de hacer las cosas."
+      },
+      {
+        "id": "kostick_87_opt_B",
+        "text": "B) Mantengo los métodos que ya funcionan."
+      }
+    ]
+  },
+  {
+    "id": "88",
+    "question": "Par 88. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_88_opt_A",
+        "text": "A) Mi energía varía y manejo bien los descansos."
+      },
+      {
+        "id": "kostick_88_opt_B",
+        "text": "B) Mi energía es alta y constante."
+      }
+    ]
+  },
+  {
+    "id": "89",
+    "question": "Par 89. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_89_opt_A",
+        "text": "A) Disfruto la presión de ventas o metas comerciales."
+      },
+      {
+        "id": "kostick_89_opt_B",
+        "text": "B) Prefiero roles técnicos sin presión comercial."
+      }
+    ]
+  },
+  {
+    "id": "90",
+    "question": "Par 90. ¿Cuál te describe mejor?",
+    "options": [
+      {
+        "id": "kostick_90_opt_A",
+        "text": "A) Modulo mis comentarios para no incomodar."
+      },
+      {
+        "id": "kostick_90_opt_B",
+        "text": "B) Hablo con franqueza aunque incomode."
+      }
+    ]
+  }
 ];
 
 export const getKostickQuestions = () => KOSTICK_QUESTIONS;

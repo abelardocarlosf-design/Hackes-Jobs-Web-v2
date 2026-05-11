@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
-import { Clock, Activity, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Clock, Activity, AlertCircle, ArrowRight, ArrowLeft, Hourglass } from 'lucide-react';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
 
 export function TestInstrucciones({ config }: { config: TestInfoProps }) {
@@ -100,6 +100,31 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
 
         {/* Lead Form Section */}
         <div>
+          {config.comingSoon ? (
+            <div className="card-premium p-10 sticky top-24 text-center space-y-6">
+              <div className="w-16 h-16 mx-auto rounded-2xl bg-brand-orange/15 border border-brand-orange/30 flex items-center justify-center text-brand-orange">
+                <Hourglass size={28} />
+              </div>
+              <div className="space-y-3">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-[10px] font-black uppercase tracking-[0.25em]">
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-brand-orange"></span>
+                  Próximamente
+                </span>
+                <h2 className="text-2xl font-black text-white uppercase tracking-tight">Evaluación en preparación</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Esta evaluación requiere material visual especializado que estamos finalizando. Mientras tanto, puedes revisar el resto del catálogo, todas las demás pruebas están 100% activas.
+                </p>
+              </div>
+              <Link href="/psicometrias" className="block">
+                <Button variant="secondary" className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-xs">
+                  Volver al catálogo <ArrowLeft size={14} className="ml-2 rotate-180" />
+                </Button>
+              </Link>
+              <p className="text-[10px] text-slate-500 uppercase tracking-[0.25em]">
+                ¿Te avisamos cuando esté lista? Escríbenos a <a href="mailto:abelardo.carlos@hackesjobs.com.mx" className="text-brand-orange hover:underline normal-case tracking-normal">abelardo.carlos@hackesjobs.com.mx</a>
+              </p>
+            </div>
+          ) : (
           <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl sticky top-24">
             <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">Registro Requerido</h2>
             <p className="text-slate-400 text-sm mb-8">Ingresa tus datos reales para poder enviarte los resultados al finalizar la prueba.</p>
@@ -162,6 +187,7 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
               </p>
             </form>
           </div>
+          )}
         </div>
 
       </div>

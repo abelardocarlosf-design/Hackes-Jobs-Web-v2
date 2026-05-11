@@ -15,25 +15,25 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
-    template: "%s | Hacke's Jobs"
+    default: "Infraestructura HR-Tech y Automatización B2B para Industria | Hacke's Jobs Technologies",
+    template: "%s | Hacke's Jobs Technologies"
   },
-  description: "Agencia de reclutamiento en Toluca y headhunting en CDMX. Usamos IA y psicometría avanzada para encontrar el top 1% de talento. ¡Contrata el mejor equipo hoy!",
-  keywords: ["Reclutamiento Toluca", "Headhunting CDMX", "Psicometrias Toluca", "Agencia de reclutamiento", "Selección de personal", "Talento IT", "Recursos Humanos", "IA", "Psicometría avanzada", "Hacke's Jobs"],
-  authors: [{ name: "Hacke's Jobs Team" }],
-  creator: "Hacke's Jobs",
+  description: "Proveedor de infraestructura tecnológica para Recursos Humanos y ventas B2B. Plataforma de evaluaciones psicométricas y sistemas de prospección automatizada con n8n para empresas industriales Tier 1 y Tier 2 en Toluca, Lerma, Metepec y CDMX.",
+  keywords: ["Infraestructura HR-Tech", "Evaluaciones psicométricas SaaS", "Automatización B2B", "n8n prospección", "Plataforma RRHH industrial", "Manufactura Tier 1", "Toluca", "Lerma", "Metepec", "CDMX", "Hacke's Jobs Technologies"],
+  authors: [{ name: "Hacke's Jobs Technologies" }],
+  creator: "Hacke's Jobs Technologies",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://hackesjobs.com.mx/",
-    title: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
-    description: "Encontramos al top 1% de talento en Toluca y CDMX con IA y psicometría avanzada. ¡Escala tu empresa hoy!",
-    siteName: "Hacke's Jobs",
+    title: "Infraestructura HR-Tech y Automatización B2B para Industria | Hacke's Jobs Technologies",
+    description: "Plataforma de evaluaciones psicométricas y sistemas de prospección B2B automatizada para empresas industriales en el corredor Toluca–Lerma–Metepec–CDMX.",
+    siteName: "Hacke's Jobs Technologies",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Reclutamiento Toluca y Headhunting CDMX | Hacke's Jobs",
-    description: "Expertos en Headhunting CDMX y Reclutamiento Toluca. Top 1% de talento con IA.",
+    title: "Infraestructura HR-Tech y Automatización B2B | Hacke's Jobs Technologies",
+    description: "Plataforma de psicometrías y prospección B2B automatizada para industria Tier 1 y Tier 2 en México.",
   },
   robots: {
     index: true,

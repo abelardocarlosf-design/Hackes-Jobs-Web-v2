@@ -16,16 +16,22 @@
   }
 
   body {
-    @apply bg-brand-black text-white overflow-x-hidden;
+    @apply bg-[#07070f] text-white overflow-x-hidden;
   }
 
   ::selection {
     @apply bg-brand-orange/40 text-white;
   }
 
-  /* Custom Typography */
   h1, h2, h3, h4 {
     @apply font-black tracking-tighter;
+  }
+
+  /* Global transition defaults — all interactive elements feel fluid */
+  a, button {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity, filter, text-decoration-color;
+    transition-duration: 280ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -79,5 +85,282 @@
 
 .mask-fade-bottom {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREMIUM B2B UI · Micro-interacciones y utilidades
+   ───────────────────────────────────────────────────────── */
+
+/* Tarjeta corporativa con glassmorphism y elevación sutil */
+.card-premium {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.016) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 380ms ease,
+              box-shadow 380ms ease,
+              background 380ms ease;
+  will-change: transform;
+}
+
+.card-premium::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent 40%, rgba(249,115,22,0.0) 60%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 400ms ease, background 600ms ease;
+  pointer-events: none;
+}
+
+.card-premium:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255,255,255,0.16);
+  background: linear-gradient(180deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.028) 100%);
+  box-shadow:
+    0 28px 56px -16px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 0 40px -20px rgba(30,58,138,0.18);
+}
+
+.card-premium:hover::before {
+  opacity: 1;
+  background: linear-gradient(135deg, transparent 30%, rgba(249,115,22,0.45) 50%, transparent 80%);
+}
+
+/* Variante azul (n8n/B2B) */
+.card-premium-blue:hover::before {
+  background: linear-gradient(135deg, transparent 30%, rgba(30,64,175,0.55) 50%, transparent 80%);
+}
+
+/* Halo de fondo ambient — para secciones premium */
+.ambient-glow-orange {
+  position: relative;
+}
+.ambient-glow-orange::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at center, rgba(249,115,22,0.10), transparent 60%);
+  filter: blur(60px);
+  top: -200px;
+  left: -200px;
+  pointer-events: none;
+  z-index: 0;
+}
+.ambient-glow-blue {
+  position: relative;
+}
+.ambient-glow-blue::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at center, rgba(30,64,175,0.15), transparent 60%);
+  filter: blur(60px);
+  bottom: -200px;
+  right: -200px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Botón con interacción premium */
+.btn-elev {
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 250ms ease,
+              filter 250ms ease;
+}
+.btn-elev:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 28px -8px rgba(249,115,22,0.35);
+}
+.btn-elev:active {
+  transform: translateY(0);
+  filter: brightness(1);
+}
+
+/* Tipografía: número grande de KPI con tracking ajustado */
+.kpi-num {
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+/* Reveal de secciones al entrar al viewport */
+@keyframes reveal-up {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.reveal-on-load {
+  animation: reveal-up 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reveal-delay-100 { animation-delay: 100ms; }
+.reveal-delay-200 { animation-delay: 200ms; }
+.reveal-delay-300 { animation-delay: 300ms; }
+.reveal-delay-400 { animation-delay: 400ms; }
+
+/* Divider sutil con dot central — separación tipográfica corporativa */
+.divider-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.divider-dot::before,
+.divider-dot::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* Acento de barra lateral para titulares */
+.accent-bar {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.accent-bar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent, rgb(249,115,22)) 0%, transparent 100%);
+}
+
+/* Link underline animado */
+.link-underline {
+  position: relative;
+  padding-bottom: 2px;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Patrón de puntos sutil reutilizable */
+.bg-dotgrid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ANIMATED MESH BACKGROUND — Glassmorphism Foundation
+   Three slow-drifting color orbs behind all page content.
+   Pages use semi-transparent overlays so the mesh bleeds through.
+   ───────────────────────────────────────────────────────── */
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%      { transform: translate(80px, -60px) scale(1.06); }
+  66%      { transform: translate(-50px, 40px) scale(0.96); }
+}
+
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  40%      { transform: translate(-90px, 70px) scale(1.08); }
+  75%      { transform: translate(60px, -80px) scale(0.94); }
+}
+
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50%      { transform: translate(45px, 85px) scale(1.04); }
+}
+
+.mesh-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-orb {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+/* Top-left: deep electric blue */
+.mesh-orb-1 {
+  width: 70vw;
+  height: 70vw;
+  top: -22%;
+  left: -16%;
+  background: radial-gradient(circle at center, rgba(30, 58, 138, 0.44), transparent 65%);
+  filter: blur(72px);
+  animation: orb-drift-1 30s ease-in-out infinite;
+}
+
+/* Bottom-right: deep teal/cyan */
+.mesh-orb-2 {
+  width: 60vw;
+  height: 60vw;
+  bottom: -20%;
+  right: -12%;
+  background: radial-gradient(circle at center, rgba(6, 78, 100, 0.36), transparent 65%);
+  filter: blur(80px);
+  animation: orb-drift-2 24s ease-in-out infinite;
+}
+
+/* Center-right: indigo accent */
+.mesh-orb-3 {
+  width: 44vw;
+  height: 44vw;
+  top: 32%;
+  right: 14%;
+  background: radial-gradient(circle at center, rgba(49, 46, 129, 0.28), transparent 65%);
+  filter: blur(60px);
+  animation: orb-drift-3 38s ease-in-out infinite;
+}
+
+/* Page gradient overlay — sits above the mesh, lets orbs bleed through */
+.page-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(7, 7, 15, 0.88) 0%,
+    rgba(8, 8, 14, 0.82) 50%,
+    rgba(10, 10, 22, 0.75) 100%
+  );
+}
+
+/* Dotgrid overlay — sits above page-overlay */
+.page-dotgrid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0);
+  background-size: 32px 32px;
 }
 

@@ -8,6 +8,7 @@ export interface TestInfoProps {
   precioFormateado: string;
   categoria: string;
   instrucciones: string[];
+  comingSoon?: boolean;
 }
 
 export const testsConfig: Record<string, TestInfoProps> = {
@@ -113,6 +114,7 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precio: 519,
     precioFormateado: '$519 MXN',
     categoria: 'Inteligencia General',
+    comingSoon: true,
     instrucciones: [
       'Esta prueba tiene un límite de tiempo estricto de 45 minutos. El cronómetro no se puede pausar.',
       'Se te presentarán 60 figuras con una parte faltante.',

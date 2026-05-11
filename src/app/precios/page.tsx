@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { CheckCircle2, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, ShieldAlert, Brain, Workflow, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-import { Typewriter } from '@/components/Typewriter';
 
 export default function PreciosPage() {
   const router = useRouter();
@@ -19,18 +17,26 @@ export default function PreciosPage() {
     setIsLoading(planId);
     setError(null);
     setIsSuccess(null);
-    
+
     try {
       if (planId === 'starter') {
-        // Conexión con el webhook de n8n para el Plan Inicial
         const res = await fetch('https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/checkout-growth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
+            // Top-level fields for n8n workflow subject line
+            nombre_paciente: 'Cliente Interesado',
             plan: 'Plan Growth',
             action: 'CHECKOUT_START',
             timestamp: new Date().toISOString(),
-            source: 'pricing_page'
+            source: 'pricing_page',
+            // Sub-object for CRM data consistency
+            datos_plan: {
+              plan_id: 'starter',
+              plan_nombre: 'Plan Growth',
+              precio_mxn: 9799,
+              moneda: 'MXN'
+            }
           })
         });
 
@@ -43,7 +49,6 @@ export default function PreciosPage() {
         return;
       }
 
-      // Lógica original para otros planes
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,116 +70,166 @@ export default function PreciosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden pt-40 pb-32">
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img 
-          src="/images/hero-bg.gif" 
-          alt="" 
-          className="w-full h-full object-cover opacity-10"
-        />
-        <div className="absolute inset-0 bg-brand-black/60"></div>
-      </div>
+    <div className="min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden pt-32 pb-24">
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
+
       <div className="container relative mx-auto px-4 max-w-7xl z-10">
-        
-        <div className="text-center max-w-4xl mx-auto mb-24 space-y-8">
-          <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Módulo B2B Enterprise</span>
-          <h1 className="text-5xl md:text-[6.5rem] font-black text-white tracking-tighter leading-none uppercase flex flex-col items-center gap-2">
-            <span className="leading-none"><Typewriter text="Planes" speed={70} delay={400} /></span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
-              Escalables.
-            </span>
+
+        {/* HEADER */}
+        <div className="text-center max-w-4xl mx-auto mb-20 space-y-6">
+          <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">Modelo comercial</span>
+          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
+            Precios transparentes. <span className="text-brand-orange">En MXN.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed">
-            Tecnología de reclutamiento empresarial de última generación. Elige el plan que impulsará tu crecimiento.
+          <p className="text-lg text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed">
+            Dos líneas de producto independientes: tests psicométricos individuales y suscripciones a la plataforma con automatización B2B incluida.
           </p>
         </div>
 
         {error && (
-          <div className="mb-12 bg-red-500/10 border border-red-500/20 text-red-400 px-8 py-6 rounded-[2rem] flex items-center gap-6 max-w-2xl mx-auto backdrop-blur-xl">
-            <ShieldAlert size={32} />
-            <p className="font-black uppercase tracking-widest text-xs leading-relaxed">{error}</p>
+          <div className="mb-12 bg-red-500/10 border border-red-500/20 text-red-400 px-6 py-4 rounded-2xl flex items-center gap-4 max-w-2xl mx-auto">
+            <ShieldAlert size={24} />
+            <p className="font-bold text-sm leading-relaxed">{error}</p>
           </div>
         )}
 
-        <div className="grid lg:grid-cols-3 gap-12 items-stretch mt-16">
-          {/* STARTER */}
-          <Card className="glass-card p-12 flex flex-col hover:bg-white/10 transition-all duration-500 border-none group">
-            <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand-orange transition-colors">Plan Growth</h3>
-            <p className="text-[10px] font-black text-slate-500 mb-8 uppercase tracking-[0.3em]">Ideal para Pymes</p>
-            <div className="text-6xl font-black text-white tracking-tighter mb-10">$499<span className="text-lg text-slate-500 font-black uppercase ml-2 tracking-widest">/mo</span></div>
-            <ul className="space-y-6 mb-12 flex-1">
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-orange shrink-0 mt-0.5"/> Hasta 5 vacantes activas.</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-orange shrink-0 mt-0.5"/> Cribado básico con IA.</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-orange shrink-0 mt-0.5"/> Evaluaciones de Personalidad DISC.</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-orange shrink-0 mt-0.5"/> Soporte por correo prioritario.</li>
-            </ul>
-            <Button 
-              variant="outline" 
-              className={`w-full border-white/20 text-white hover:bg-white/10 h-14 rounded-2xl font-black uppercase tracking-widest text-xs transition-all ${isSuccess === 'starter' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:border-emerald-500/30 hover:text-emerald-400' : ''}`} 
-              disabled={isLoading !== null || isSuccess === 'starter'}
-              onClick={() => handleCheckout('starter')}
-            >
-              {isLoading === 'starter' ? (
-                <>
-                  <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
-                  Procesando...
-                </>
-              ) : isSuccess === 'starter' ? '¡Solicitud Enviada!' : 'Comenzar Plan Growth'}
-            </Button>
-          </Card>
+        {/* PRODUCTO A — SUITE PSICOMÉTRICA */}
+        <section className="mb-24">
+          <div className="flex items-center gap-4 mb-10 max-w-7xl mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center">
+              <Brain size={22} />
+            </div>
+            <div>
+              <span className="text-brand-orange font-bold tracking-[0.25em] uppercase text-[10px]">Producto A</span>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Suite Psicométrica · Pago por test</h2>
+            </div>
+          </div>
 
-          {/* PROFESSIONAL */}
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-blue to-brand-orange rounded-[4rem] blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
-            <Card className="relative p-12 pt-28 flex flex-col bg-brand-black/80 backdrop-blur-3xl border-2 border-brand-blue rounded-[4rem] h-full shadow-2xl overflow-visible">
-              <div className="absolute top-10 left-1/2 -translate-x-1/2 px-10 py-3 bg-brand-blue text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-2xl z-20 border border-white/20 whitespace-nowrap">
-                MÁS POPULAR
-              </div>
-              <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2">Professional</h3>
-              <p className="text-[10px] font-black text-brand-blue mb-8 uppercase tracking-[0.3em]">Corporativos en Expansión</p>
-              <div className="text-7xl font-black text-white tracking-tighter mb-10">$999<span className="text-xl text-brand-blue font-black uppercase ml-2 tracking-widest">/mo</span></div>
-              <ul className="space-y-6 mb-12 flex-1">
-                <li className="flex items-start gap-4 text-white font-bold leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-blue shrink-0 mt-0.5"/> Vacantes ilimitadas.</li>
-                <li className="flex items-start gap-4 text-white font-bold leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-blue shrink-0 mt-0.5"/> Filtrado IA y Smart Hunting.</li>
-                <li className="flex items-start gap-4 text-white font-bold leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-blue shrink-0 mt-0.5"/> Suite Completa de Evaluaciones CAT.</li>
-                <li className="flex items-start gap-4 text-white font-bold leading-relaxed"><CheckCircle2 className="w-6 h-6 text-brand-blue shrink-0 mt-0.5"/> Advanced HR Analytics.</li>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="card-premium p-8 flex flex-col">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-3">Nivel Intermedio</p>
+              <h3 className="text-xl font-black text-white tracking-tight mb-4">Tests operativos</h3>
+              <div className="text-5xl font-black text-white tracking-tight mb-2">$349<span className="text-base text-slate-400 font-medium ml-2">MXN</span></div>
+              <p className="text-xs text-slate-500 mb-8">Por test individual</p>
+              <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-300">
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Moss (Habilidades Gerenciales)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Zavic (Valores e Intereses)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Reporte PDF al cierre</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Cobro inmediato vía Stripe</li>
               </ul>
-              <Button 
-                variant="primary" 
-                className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs"
-                disabled={isLoading !== null}
-                onClick={() => handleCheckout('professional')}
-              >
-                {isLoading === 'professional' ? 'Procesando...' : 'Elegir Professional'}
-              </Button>
+              <Link href="/psicometrias">
+                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-12 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5">
+                  Ver tests intermedios
+                </Button>
+              </Link>
+            </Card>
+
+            <Card className="card-premium p-8 flex flex-col">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-3">Nivel Avanzado</p>
+              <h3 className="text-xl font-black text-white tracking-tight mb-4">Tests cognitivos</h3>
+              <div className="text-5xl font-black text-white tracking-tight mb-2">$519<span className="text-base text-slate-400 font-medium ml-2">MXN</span></div>
+              <p className="text-xs text-slate-500 mb-8">Por test individual</p>
+              <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-300">
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Terman-Merrill (Inteligencia)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Raven (Razonamiento abstracto)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Kostick (Personalidad laboral)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Reporte ejecutivo PDF</li>
+              </ul>
+              <Link href="/psicometrias">
+                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-12 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5">
+                  Ver tests avanzados
+                </Button>
+              </Link>
+            </Card>
+
+            <Card className="card-premium p-8 flex flex-col">
+              <p className="text-[10px] font-bold text-brand-orange uppercase tracking-[0.25em] mb-3">Nivel Clínico</p>
+              <h3 className="text-xl font-black text-white tracking-tight mb-4">Tests premium</h3>
+              <div className="text-5xl font-black text-white tracking-tight mb-2">$867<span className="text-base text-slate-400 font-medium ml-2">MXN</span></div>
+              <p className="text-xs text-slate-500 mb-8">Por test individual</p>
+              <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-300">
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> MMPI (567 ítems clínicos)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> 16PF (Cattell)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Análisis clínico profundo</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" /> Recomendado para puestos críticos</li>
+              </ul>
+              <Link href="/psicometrias">
+                <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-12 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5">
+                  Ver tests premium
+                </Button>
+              </Link>
             </Card>
           </div>
 
-          {/* ENTERPRISE */}
-          <Card className="glass-card p-12 flex flex-col hover:bg-white/10 transition-all duration-500 border-none group relative overflow-hidden">
-            <h3 className="text-3xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand-blue transition-colors">Enterprise</h3>
-            <p className="text-[10px] font-black text-slate-500 mb-8 uppercase tracking-[0.3em]">Operaciones Masivas</p>
-            <div className="text-6xl font-black text-white tracking-tighter mb-10">Custom</div>
-            <ul className="space-y-6 mb-12 flex-1">
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5"/> Todo lo del plan Professional.</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5"/> Videoentrevistas con Análisis de IA.</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5"/> Integraciones API y SSO (SAML).</li>
-              <li className="flex items-start gap-4 text-slate-400 font-medium leading-relaxed"><CheckCircle2 className="w-6 h-6 text-white shrink-0 mt-0.5"/> Key Account Manager Dedicado.</li>
-            </ul>
-            <Link href="/empresas">
-              <Button 
-                variant="secondary" 
-                className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-xs"
-              >
-                Hablar con Consultor
-              </Button>
-            </Link>
-          </Card>
-        </div>
+          <p className="text-center text-xs text-slate-500 mt-6">
+            Tests del Nivel Básico (DISC, Lüscher, Allport) disponibles sin costo en el <Link href="/psicometrias" className="text-brand-orange hover:underline">catálogo</Link>.
+          </p>
+        </section>
 
+        {/* PRODUCTO B — PLATAFORMA + AUTOMATIZACIÓN B2B */}
+        <section>
+          <div className="flex items-center gap-4 mb-10 max-w-7xl mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-brand-blue/10 border border-brand-blue/20 text-brand-blue flex items-center justify-center">
+              <Workflow size={22} />
+            </div>
+            <div>
+              <span className="text-brand-blue font-bold tracking-[0.25em] uppercase text-[10px]">Producto B</span>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Plataforma · Suscripción mensual con n8n</h2>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
+            <Card className="card-premium p-10 flex flex-col relative border-2 border-brand-blue bg-brand-blue/10">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 bg-brand-blue text-white text-[10px] font-bold uppercase tracking-[0.25em] rounded-full whitespace-nowrap">
+                Recomendado
+              </div>
+              <h3 className="text-2xl font-black text-white tracking-tight mb-1 mt-2">Plan Growth</h3>
+              <p className="text-[10px] font-bold text-brand-blue uppercase tracking-[0.25em] mb-6">Pymes · Posiciones operativas y técnicas</p>
+              <div className="text-5xl font-black text-white tracking-tight mb-2">
+                $9,799<span className="text-base text-slate-300 font-medium ml-2">MXN</span>
+              </div>
+              <p className="text-xs text-slate-400 mb-8">Proyecto completo · IVA no incluido</p>
+              <ul className="space-y-4 mb-10 flex-1 text-sm text-white">
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Proceso End-to-End para 3 candidatos (Operativos, Técnicos o Administrativos)</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Publicación activa en bolsas de empleo especializadas</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Garantía de Continuidad Operativa (Reposición de 10 días naturales)</li>
+              </ul>
+              <Button
+                variant="primary"
+                className={`w-full h-14 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${isSuccess === 'starter' ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : ''}`}
+                disabled={isLoading !== null || isSuccess === 'starter'}
+                onClick={() => handleCheckout('starter')}
+              >
+                {isLoading === 'starter' ? 'Procesando...' : isSuccess === 'starter' ? '¡Solicitud enviada!' : 'Activar Plan Growth'}
+              </Button>
+            </Card>
+
+            <Card className="card-premium p-10 flex flex-col">
+              <h3 className="text-2xl font-black text-white tracking-tight mb-1">Enterprise</h3>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-6">Operaciones industriales Tier 1</p>
+              <div className="text-5xl font-black text-white tracking-tight mb-2">A medida</div>
+              <p className="text-xs text-slate-500 mb-8">Contrato anual + SLA</p>
+              <ul className="space-y-4 mb-10 flex-1 text-sm text-slate-300">
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Todo lo del Plan Growth</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Workflows n8n ilimitados</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> SSO SAML 2.0 + API access</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Infraestructura dedicada</li>
+                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Key Account Manager</li>
+              </ul>
+              <Link href="/contacto">
+                <Button variant="secondary" className="w-full h-14 rounded-xl font-bold uppercase tracking-widest text-xs">
+                  Hablar con ventas <ArrowRight size={16} className="ml-2" />
+                </Button>
+              </Link>
+            </Card>
+          </div>
+
+          <p className="text-center text-xs text-slate-500 mt-10 max-w-2xl mx-auto">
+            El Plan Growth se factura en MXN con CFDI 4.0 disponible. La suscripción Enterprise se procesa en USD por nuestra pasarela. Para facturación en MXN con CFDI 4.0, contáctanos en el plan Enterprise.
+          </p>
+        </section>
       </div>
     </div>
-
-
   );
 }

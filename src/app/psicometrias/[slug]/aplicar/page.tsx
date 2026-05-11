@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { testsConfig } from '@/lib/psicometriasConfig';
 import dynamic from 'next/dynamic';
 
@@ -19,6 +19,11 @@ export default function AplicacionPage({ params }: { params: { slug: string } })
 
   if (!config) {
     notFound();
+  }
+
+  // Pruebas marcadas como "Próximamente" se redirigen al detalle (que muestra el banner)
+  if (config.comingSoon) {
+    redirect(`/psicometrias/${params.slug}`);
   }
 
   // Renderizado condicional según el slug
