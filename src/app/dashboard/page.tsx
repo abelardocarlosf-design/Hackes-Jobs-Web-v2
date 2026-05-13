@@ -1,12 +1,12 @@
 import { Card, CardContent } from '@/components/Card';
 import { getAllPosts } from '@/lib/blog';
-import { getAllJobs } from '@/lib/jobs';
+import { vacantesActivas } from '@/data/vacantes';
 import { getAllSubscribers } from '@/lib/newsletter';
-import { 
-  Briefcase, 
-  Users, 
-  FileText, 
-  TrendingUp, 
+import {
+  Briefcase,
+  Users,
+  FileText,
+  TrendingUp,
   ArrowUpRight,
   Clock,
   ExternalLink,
@@ -18,12 +18,12 @@ import Link from 'next/link';
 
 export default async function DashboardPage() {
   const posts = await getAllPosts();
-  const jobs = await getAllJobs();
   const subscribers = await getAllSubscribers();
+  const vacantesCount = vacantesActivas().length;
 
   const stats = [
-    { label: 'Vacantes Activas', value: jobs.filter(j => j.active).length, growth: '+2 este mes', icon: Briefcase, color: 'text-brand-blue', bg: 'bg-brand-blue/10' },
-    { label: 'Blog Posts', value: posts.length, growth: '+12% vs semana pasada', icon: FileText, color: 'text-brand-orange', bg: 'bg-brand-orange/10' },
+    { label: 'Vacantes Activas', value: vacantesCount, growth: 'Catálogo file-based', icon: Briefcase, color: 'text-brand-blue', bg: 'bg-brand-blue/10' },
+    { label: 'Blog Posts', value: posts.length, growth: 'Total publicados', icon: FileText, color: 'text-brand-orange', bg: 'bg-brand-orange/10' },
     { label: 'Suscriptores', value: subscribers.length, growth: 'Últimos 30 días', icon: Users, color: 'text-brand-blue', bg: 'bg-brand-blue/10' },
   ];
 
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
             </h3>
             <div className="grid grid-cols-2 gap-6">
                {[
-                 { label: 'Publicar Vacante', href: '/dashboard/vacantes', color: 'bg-brand-blue/20 text-brand-blue border-brand-blue/30', icon: Briefcase },
+                 { label: 'Ver Vacantes', href: '/vacantes', color: 'bg-brand-blue/20 text-brand-blue border-brand-blue/30', icon: Briefcase },
                  { label: 'Escribir Artículo', href: '/dashboard/blog', color: 'bg-brand-orange/20 text-brand-orange border-brand-orange/30', icon: FileText },
                  { label: 'Gestionar Equipo', href: '/dashboard/usuarios', color: 'bg-white/5 text-white border-white/10', icon: Users },
                  { label: 'Ver Sitio Web', href: '/', color: 'bg-white/10 text-white border-white/20', icon: ExternalLink },

@@ -180,7 +180,7 @@ export default function PreciosPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
-            <Card className="card-premium p-10 flex flex-col relative border-2 border-brand-blue bg-brand-blue/10">
+            <Card className="card-premium p-10 flex flex-col h-full relative border-2 border-brand-blue bg-brand-blue/10">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-5 py-1.5 bg-brand-blue text-white text-[10px] font-bold uppercase tracking-[0.25em] rounded-full whitespace-nowrap">
                 Recomendado
               </div>
@@ -191,13 +191,15 @@ export default function PreciosPage() {
               </div>
               <p className="text-xs text-slate-400 mb-8">Proyecto completo · IVA no incluido</p>
               <ul className="space-y-4 mb-10 flex-1 text-sm text-white">
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Proceso End-to-End para 3 candidatos (Operativos, Técnicos o Administrativos)</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Publicación activa en bolsas de empleo especializadas</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> Garantía de Continuidad Operativa (Reposición de 10 días naturales)</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> <span>Proceso End-to-End para 3 posiciones (Operativas, Técnicas o Administrativas).</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> <span>Atracción estratégica y filtrado en bolsas de empleo.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> <span>Batería psicométrica automatizada (DISC, 16PF, Moss, Zavic) por candidato.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> <span>Terna final con reporte ejecutivo de compatibilidad.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" /> <span>Garantía de Continuidad Operativa (Reposición en 10 días naturales).</span></li>
               </ul>
               <Button
                 variant="primary"
-                className={`w-full h-14 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${isSuccess === 'starter' ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : ''}`}
+                className={`w-full mt-auto h-14 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${isSuccess === 'starter' ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : ''}`}
                 disabled={isLoading !== null || isSuccess === 'starter'}
                 onClick={() => handleCheckout('starter')}
               >
@@ -205,19 +207,19 @@ export default function PreciosPage() {
               </Button>
             </Card>
 
-            <Card className="card-premium p-10 flex flex-col">
+            <Card className="card-premium p-10 flex flex-col h-full">
               <h3 className="text-2xl font-black text-white tracking-tight mb-1">Enterprise</h3>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-6">Operaciones industriales Tier 1</p>
               <div className="text-5xl font-black text-white tracking-tight mb-2">A medida</div>
               <p className="text-xs text-slate-500 mb-8">Contrato anual + SLA</p>
               <ul className="space-y-4 mb-10 flex-1 text-sm text-slate-300">
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Todo lo del Plan Growth</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Workflows n8n ilimitados</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> SSO SAML 2.0 + API access</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Infraestructura dedicada</li>
-                <li className="flex gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> Key Account Manager</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> <span>Reclutamiento masivo para nearshoring y corredores industriales.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> <span>Orquestación de workflows ilimitados y prospección B2B automatizada.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> <span>Infraestructura dedicada con seguridad enterprise (SSO SAML 2.0).</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> <span>Integración de datos vía API directo a su ERP o ATS corporativo.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" /> <span>Atención VIP con Key Account Manager asignado.</span></li>
               </ul>
-              <Link href="/contacto">
+              <Link href="/contacto" className="mt-auto">
                 <Button variant="secondary" className="w-full h-14 rounded-xl font-bold uppercase tracking-widest text-xs">
                   Hablar con ventas <ArrowRight size={16} className="ml-2" />
                 </Button>

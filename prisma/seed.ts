@@ -77,50 +77,8 @@ async function main() {
   });
   console.log('✅ Recruiter creado:', recruiter.email);
 
-  // Crear Vacantes Demo
-  const company = await prisma.company.findFirst({ where: { userId: companyUser.id } });
-  if (company) {
-    const jobs = [
-      {
-        title: 'Senior Frontend Developer',
-        description: 'Buscamos un desarrollador frontend senior con experiencia en React y TypeScript para liderar nuestro equipo de producto.',
-        salaryRange: '$45,000 - $60,000 MXN',
-        location: 'CDMX',
-        modality: 'Híbrido',
-        status: 'approved',
-        requirements: JSON.stringify({ skills: ['React', 'TypeScript', 'Next.js'], experience: 5, education: 'Licenciatura' }),
-        positions: 2,
-        companyId: company.id,
-      },
-      {
-        title: 'Product Manager',
-        description: 'Necesitamos un PM experimentado que pueda definir la estrategia de producto y coordinar equipos cross-funcionales.',
-        salaryRange: '$50,000 - $70,000 MXN',
-        location: 'Remoto',
-        modality: 'Remoto',
-        status: 'approved',
-        requirements: JSON.stringify({ skills: ['Product Strategy', 'Agile', 'Data Analysis'], experience: 3, education: 'Licenciatura' }),
-        positions: 1,
-        companyId: company.id,
-      },
-      {
-        title: 'DevOps Engineer',
-        description: 'Ingeniero DevOps para automatizar infraestructura cloud y pipelines CI/CD.',
-        salaryRange: '$40,000 - $55,000 MXN',
-        location: 'Querétaro',
-        modality: 'Presencial',
-        status: 'pending',
-        requirements: JSON.stringify({ skills: ['AWS', 'Docker', 'Kubernetes', 'Terraform'], experience: 3, education: 'Licenciatura' }),
-        positions: 1,
-        companyId: company.id,
-      },
-    ];
-
-    for (const job of jobs) {
-      await prisma.job.create({ data: job });
-    }
-    console.log('✅ Vacantes demo creadas:', jobs.length);
-  }
+  // Las vacantes ya no viven en la base de datos.
+  // Fuente de verdad: `src/data/vacantes.ts` (catálogo file-based, SEO-friendly).
 
   // Crear Test Psicométrico DISC
   await prisma.psychometricTest.upsert({

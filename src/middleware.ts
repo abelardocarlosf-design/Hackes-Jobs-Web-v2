@@ -15,7 +15,6 @@ const PUBLIC_API_ROUTES = [
   '/api/auth/register',
   '/api/auth/logout',
   '/api/webhooks',
-  '/api/jobs', // GET público
 ];
 
 export async function middleware(request: NextRequest) {
@@ -48,11 +47,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
       }
       
-      // Restrict /dashboard/vacantes to 'company' or 'admin'
-      if (pathname.startsWith('/dashboard/vacantes') && !['admin', 'company'].includes(role || '')) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-      }
-
       // Add custom headers for downstream API usage
       const response = NextResponse.next();
       if (role) response.headers.set('x-user-role', role);

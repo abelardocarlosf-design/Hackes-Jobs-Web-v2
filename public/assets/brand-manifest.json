@@ -1,0 +1,162 @@
+{
+  "tech": [
+    {
+      "slug": "anthropic",
+      "original": "Anthropic_logo.png"
+    },
+    {
+      "slug": "claude",
+      "original": "claude - color.png"
+    },
+    {
+      "slug": "gemini",
+      "original": "gemini-color.png"
+    },
+    {
+      "slug": "google-antigravity",
+      "original": "Google_Antigravity_Logo.svg.png"
+    },
+    {
+      "slug": "n8n",
+      "original": "n8n-color.png"
+    },
+    {
+      "slug": "nextjs",
+      "original": "Nextjs-logo - LOGO.png"
+    },
+    {
+      "slug": "openai",
+      "original": "OpenAI-Logo.png"
+    },
+    {
+      "slug": "pinecone",
+      "original": "pincode-color.png"
+    },
+    {
+      "slug": "postgresql",
+      "original": "PostgreSQL-color.png"
+    },
+    {
+      "slug": "stripe",
+      "original": "Stripe_Logo,_revised_2016.svg.png"
+    }
+  ],
+  "clientes": [
+    {
+      "slug": "aura-academy",
+      "original": "aura academy -  colors.png",
+      "hasAlpha": true,
+      "format": "png"
+    },
+    {
+      "slug": "goncalves",
+      "original": "goncalves de mexico - logo.jpg",
+      "hasAlpha": false,
+      "format": "jpeg"
+    },
+    {
+      "slug": "prisma-industrial",
+      "original": "prisma industrial - logo.png",
+      "hasAlpha": true,
+      "format": "png"
+    },
+    {
+      "slug": "racarsa",
+      "original": "racarsa - colors.png",
+      "hasAlpha": true,
+      "format": "png"
+    },
+    {
+      "slug": "sirga",
+      "original": "sirga - logo.png",
+      "hasAlpha": true,
+      "format": "png"
+    },
+    {
+      "slug": "truper",
+      "original": "truper - logo.png",
+      "hasAlpha": false,
+      "format": "png"
+    },
+    {
+      "slug": "zorro",
+      "original": "zorro - logo.png",
+      "hasAlpha": false,
+      "format": "png"
+    }
+  ],
+  "toluca": [
+    {
+      "slug": "nevado-1",
+      "original": "Nevado de toluca.jpeg",
+      "sizes": {
+        "640": {
+          "webp": "nevado-1-640.webp",
+          "avif": "nevado-1-640.avif"
+        },
+        "1280": {
+          "webp": "nevado-1-1280.webp",
+          "avif": "nevado-1-1280.avif"
+        },
+        "1920": {
+          "webp": "nevado-1-1920.webp",
+          "avif": "nevado-1-1920.avif"
+        }
+      }
+    },
+    {
+      "slug": "portales-1",
+      "original": "Portales .jpeg",
+      "sizes": {
+        "640": {
+          "webp": "portales-1-640.webp",
+          "avif": "portales-1-640.avif"
+        },
+        "1280": {
+          "webp": "portales-1-1280.webp",
+          "avif": "portales-1-1280.avif"
+        },
+        "1920": {
+          "webp": "portales-1-1920.webp",
+          "avif": "portales-1-1920.avif"
+        }
+      }
+    },
+    {
+      "slug": "portales-2",
+      "original": "Portales toluca.jpeg",
+      "sizes": {
+        "640": {
+          "webp": "portales-2-640.webp",
+          "avif": "portales-2-640.avif"
+        },
+        "1280": {
+          "webp": "portales-2-1280.webp",
+          "avif": "portales-2-1280.avif"
+        },
+        "1920": {
+          "webp": "portales-2-1920.webp",
+          "avif": "portales-2-1920.avif"
+        }
+      }
+    },
+    {
+      "slug": "nevado-2",
+      "original": "Toluca Nevado.jpeg",
+      "sizes": {
+        "640": {
+          "webp": "nevado-2-640.webp",
+          "avif": "nevado-2-640.avif"
+        },
+        "1280": {
+          "webp": "nevado-2-1280.webp",
+          "avif": "nevado-2-1280.avif"
+        },
+        "1920": {
+          "webp": "nevado-2-1920.webp",
+          "avif": "nevado-2-1920.avif"
+        }
+      }
+    }
+  ]
+}

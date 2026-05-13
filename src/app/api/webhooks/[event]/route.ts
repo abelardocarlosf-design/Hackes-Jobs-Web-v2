@@ -5,12 +5,15 @@ export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/webhooks/[event] — Recibir callbacks de n8n
- * 
+ *
  * Eventos soportados:
- * - job-created: n8n notifica si la vacante fue aprobada/rechazada
- * - new-application: n8n envía score calculado
- * - test-completed: n8n envía resultado procesado
+ * - test-completed: n8n envía resultado procesado de test psicométrico
  * - company-lead: n8n confirma procesamiento del lead
+ *
+ * Nota: los eventos `job-created` y `new-application` fueron retirados al
+ * migrar las vacantes a un catálogo file-based (src/data/vacantes.ts). Las
+ * postulaciones ahora se manejan vía webhook directo desde
+ * `src/components/vacantes/PostularButton.tsx`.
  */
 export async function POST(
   request: Request,
@@ -31,38 +34,6 @@ export async function POST(
     }
 
     switch (event) {
-      case 'job-created': {
-        // n8n responde con aprobación/rechazo de vacante
-        const { jobId, status, reason } = body;
-        if (jobId && status) {
-          await prisma.job.update({
-            where: { id: jobId },
-            data: {
-              status: status === 'approved' ? 'approved' : 'rejected',
-            },
-          });
-          console.log(`[Webhook] Vacante ${jobId} → ${status}`);
-        }
-        break;
-      }
-
-      case 'new-application': {
-        // n8n envía score calculado para una aplicación
-        const { applicationId, score, notes } = body;
-        if (applicationId && score !== undefined) {
-          await prisma.application.update({
-            where: { id: applicationId },
-            data: {
-              score: parseInt(score),
-              notes: notes || null,
-              status: 'reviewing',
-            },
-          });
-          console.log(`[Webhook] Application ${applicationId} → score: ${score}`);
-        }
-        break;
-      }
-
       case 'test-completed': {
         // n8n procesa resultado de test psicométrico
         const { testResultId, score: testScore, summary } = body;

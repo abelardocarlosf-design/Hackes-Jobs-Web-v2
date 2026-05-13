@@ -43,37 +43,15 @@ model Company {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Relations
-  jobs         Job[]
   subscription Subscription?
 
   @@map("companies")
 }
 
-// â”€â”€â”€ JOBS (VACANTES) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-model Job {
-  id           String   @id @default(cuid())
-  title        String
-  description  String
-  salaryRange  String?
-  location     String?
-  modality     String?  // Presencial | HÃ­brido | Remoto
-  status       String   @default("pending") // pending | approved | rejected | closed
-  requirements String?  // JSON string: skills, experience, education
-  schedule     String?  // JSON string: jornada laboral
-  benefits     String?
-  positions    Int      @default(1)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // FK
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  // Relations
-  applications Application[]
-
-  @@map("jobs")
-}
+// ─── VACANTES ──────────────────────────────────────────────────
+// Las vacantes públicas ahora viven en `src/data/vacantes.ts` (file-based).
+// El modelo `Job` y `Application` fueron retirados de Prisma en favor de un
+// catálogo estático versionado en git, optimizado para SEO + Google Jobs.
 
 // â”€â”€â”€ CANDIDATES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 model Candidate {
@@ -92,31 +70,11 @@ model Candidate {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Relations
-  applications Application[]
   testResults  TestResult[]
   testpurchases TestPurchase[]
   catSessions   CatSession[]
 
   @@map("candidates")
-}
-
-// â”€â”€â”€ APPLICATIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-model Application {
-  id        String   @id @default(cuid())
-  status    String   @default("pending") // pending | reviewing | shortlisted | rejected | hired
-  score     Int?
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // FK
-  jobId       String
-  job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  candidateId String
-  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-
-  @@unique([jobId, candidateId]) // Un candidato solo puede aplicar una vez por vacante
-  @@map("applications")
 }
 
 // â”€â”€â”€ PSYCHOMETRIC TESTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

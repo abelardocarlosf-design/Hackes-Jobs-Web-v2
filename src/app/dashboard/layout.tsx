@@ -28,7 +28,6 @@ export default function DashboardLayout({
   const menuItems = [
     { name: 'Vista General', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Blog', href: '/dashboard/blog', icon: FileText },
-    { name: 'Vacantes', href: '/dashboard/vacantes', icon: Briefcase },
     { name: 'Equipo', href: '/dashboard/usuarios', icon: Users },
   ];
 
@@ -94,9 +93,9 @@ export default function DashboardLayout({
            <div className="flex items-center gap-8 flex-grow max-w-2xl">
               <div className="relative w-full group">
                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-orange transition-colors" size={20} />
-                 <input 
-                  type="text" 
-                  placeholder="Inteligencia Artificial: Buscar vacantes, talentos..." 
+                 <input
+                  type="text"
+                  placeholder="Buscar talento, posts o equipo…"
                   className="w-full h-14 bg-white/5 border border-white/5 rounded-2xl pl-16 pr-6 text-[11px] font-black uppercase tracking-widest text-white placeholder-slate-600 focus:bg-white/10 focus:ring-4 focus:ring-brand-blue/20 focus:border-brand-blue outline-none transition-all shadow-inner"
                  />
               </div>
@@ -107,10 +106,6 @@ export default function DashboardLayout({
                  <Bell size={22} className="group-hover:rotate-12 transition-transform" />
                  <span className="absolute top-4 right-4 w-2.5 h-2.5 bg-brand-orange rounded-full border-2 border-brand-black animate-pulse"></span>
               </button>
-              <div className="h-10 w-px bg-white/10 mx-2"></div>
-              <Button size="xl" variant="secondary" className="hidden sm:flex h-14 px-10 rounded-2xl text-[10px] uppercase font-black tracking-widest border-none shadow-2xl shadow-brand-orange/20">
-                Lanzar Vacante
-              </Button>
            </div>
         </header>
 

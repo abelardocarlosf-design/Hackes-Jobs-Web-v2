@@ -16,6 +16,9 @@ import {
   Plug,
   ArrowRight,
 } from 'lucide-react';
+import { HeroToluca } from '@/components/brand/HeroToluca';
+import { TechStackGrid } from '@/components/brand/TechStackGrid';
+import { ClientsMarquee } from '@/components/brand/ClientsMarquee';
 
 export default function HomePage() {
   const router = useRouter();
@@ -52,8 +55,9 @@ export default function HomePage() {
       <div className="page-overlay"></div>
       <div className="page-dotgrid"></div>
 
-      {/* 1. HERO — INFRAESTRUCTURA */}
-      <section className="relative min-h-[92vh] flex items-center pt-32 pb-20 overflow-hidden ambient-glow-orange ambient-glow-blue">
+      {/* 1. HERO — INFRAESTRUCTURA · Cinematic Toluca background */}
+      <section className="relative min-h-[92vh] flex items-center pt-32 pb-20 overflow-hidden">
+        <HeroToluca />
 
         <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-5xl mx-auto space-y-10 text-center">
@@ -115,6 +119,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 2.5 CLIENTS · infinite marquee */}
+      <ClientsMarquee />
 
       {/* 3. PRODUCTOS — layout asimétrico premium */}
       <section className="relative py-32 bg-brand-black overflow-hidden" aria-labelledby="productos-title">
@@ -257,21 +264,7 @@ export default function HomePage() {
             <p className="text-slate-400 text-lg font-medium">No vendemos cajas negras. Estos son los componentes reales que operan tu infraestructura.</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
-            {[
-              { n: 'n8n', d: 'Orquestación' },
-              { n: 'Stripe', d: 'Cobros MXN' },
-              { n: 'PostgreSQL', d: 'Datos relacionales' },
-              { n: 'Pinecone', d: 'Búsqueda vectorial' },
-              { n: 'OpenAI / Gemini', d: 'Modelos LLM' },
-              { n: 'Next.js', d: 'Frontend SSR' },
-            ].map((tech, i) => (
-              <div key={i} className="card-premium p-5 text-center" style={{ animationDelay: `${i * 60}ms` }}>
-                <div className="text-white font-bold text-sm">{tech.n}</div>
-                <div className="text-slate-500 text-[10px] uppercase tracking-widest mt-1 font-bold">{tech.d}</div>
-              </div>
-            ))}
-          </div>
+          <TechStackGrid />
 
           <div className="mt-12 flex flex-wrap justify-center gap-3 text-xs text-slate-400">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10"><Cpu size={12} className="text-brand-orange" /> API Access disponible</span>
@@ -290,36 +283,66 @@ export default function HomePage() {
             <p className="text-slate-400 text-lg font-medium">Comienza con un test individual o despliega la suite completa con suscripción mensual.</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
-            <Card className="card-premium p-8 flex flex-col">
+          <div className="grid lg:grid-cols-3 gap-6 items-stretch">
+            <Card className="card-premium p-8 flex flex-col h-full">
               <h3 className="text-xl font-black text-white tracking-tight mb-1">Pago por test</h3>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-6">Suite Psicométrica</p>
               <div className="text-3xl font-black text-white mb-1">desde $349<span className="text-base text-slate-400 font-medium ml-1">MXN</span></div>
               <p className="text-xs text-slate-500 mb-6">Tarifas: $349 · $519 · $867 MXN según test</p>
-              <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-300">
-                <li>· Catálogo de 10+ pruebas validadas</li>
-                <li>· Reporte PDF profesional</li>
-                <li>· Cobro inmediato vía Stripe</li>
+              <ul className="space-y-4 mb-8 flex-1 text-sm text-slate-300">
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-orange mt-0.5">•</span>
+                  <span>Acceso a suite clínica y laboral (MMPI-2, Lüscher, 16PF y más).</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-orange mt-0.5">•</span>
+                  <span>Motor de validación estricta (garantiza pruebas 100% completadas).</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-orange mt-0.5">•</span>
+                  <span>Generación automatizada de reportes algorítmicos en PDF.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-orange mt-0.5">•</span>
+                  <span>Uso on-demand con activación instantánea vía Stripe.</span>
+                </li>
               </ul>
-              <Link href="/psicometrias">
+              <Link href="/psicometrias" className="mt-auto">
                 <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-12 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5">Ver catálogo</Button>
               </Link>
             </Card>
 
-            <Card className="p-8 flex flex-col bg-brand-blue/10 border-2 border-brand-blue rounded-3xl relative lg:-translate-y-2">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-blue text-white px-5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Más popular</div>
+            <Card className="p-8 flex flex-col bg-brand-blue/10 border-2 border-brand-blue rounded-3xl relative lg:-translate-y-2 h-full !overflow-visible shadow-[0_0_40px_-10px_rgba(30,64,175,0.3)]">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-blue text-white px-5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg whitespace-nowrap z-10">Más popular</div>
               <h3 className="text-xl font-black text-white tracking-tight mb-1">Plan Growth</h3>
               <p className="text-[10px] font-bold text-brand-blue uppercase tracking-[0.25em] mb-6">Pymes · Posiciones operativas y técnicas</p>
               <div className="text-3xl font-black text-white mb-1">$9,799<span className="text-base text-slate-300 font-medium ml-1">MXN</span></div>
               <p className="text-xs text-slate-400 mb-6">Proyecto completo · IVA no incluido</p>
-              <ul className="space-y-3 mb-8 flex-1 text-sm text-white">
-                <li>· Proceso End-to-End para 3 candidatos (Operativos, Técnicos o Administrativos)</li>
-                <li>· Publicación en bolsas de empleo</li>
-                <li>· Garantía de Continuidad Operativa (Reposición de 10 días naturales)</li>
+              <ul className="space-y-4 mb-8 flex-1 text-sm text-white">
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-blue mt-0.5">•</span>
+                  <span>Proceso End-to-End para 3 posiciones (Operativas, Técnicas o Administrativas).</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-blue mt-0.5">•</span>
+                  <span>Atracción estratégica y filtrado en bolsas de empleo.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-blue mt-0.5">•</span>
+                  <span>Batería psicométrica automatizada (DISC, 16PF, Moss, Zavic) por candidato.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-blue mt-0.5">•</span>
+                  <span>Terna final con reporte ejecutivo de compatibilidad.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-brand-blue mt-0.5">•</span>
+                  <span>Garantía de Continuidad Operativa (Reposición en 10 días naturales).</span>
+                </li>
               </ul>
               <Button
                 variant="primary"
-                className={`w-full h-12 rounded-xl font-bold text-xs uppercase tracking-widest ${isSuccess ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : ''}`}
+                className={`w-full mt-auto h-12 rounded-xl font-bold text-xs uppercase tracking-widest ${isSuccess ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' : ''}`}
                 onClick={handleGrowthPlan}
                 disabled={isLoading || isSuccess}
               >
@@ -327,18 +350,34 @@ export default function HomePage() {
               </Button>
             </Card>
 
-            <Card className="card-premium p-8 flex flex-col">
+            <Card className="card-premium p-8 flex flex-col h-full">
               <h3 className="text-xl font-black text-white tracking-tight mb-1">Enterprise</h3>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.25em] mb-6">Operaciones industriales</p>
               <div className="text-3xl font-black text-white mb-1">A medida</div>
               <p className="text-xs text-slate-500 mb-6">Para plantas Tier 1 y operación masiva</p>
-              <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-300">
-                <li>· Infraestructura dedicada</li>
-                <li>· SSO SAML 2.0 y API access</li>
-                <li>· Workflows n8n ilimitados</li>
-                <li>· Key Account Manager</li>
+              <ul className="space-y-4 mb-8 flex-1 text-sm text-slate-300">
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-white mt-0.5">•</span>
+                  <span>Reclutamiento masivo para nearshoring y corredores industriales.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-white mt-0.5">•</span>
+                  <span>Orquestación de workflows ilimitados y prospección B2B automatizada.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-white mt-0.5">•</span>
+                  <span>Infraestructura dedicada con seguridad enterprise (SSO SAML 2.0).</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-white mt-0.5">•</span>
+                  <span>Integración de datos vía API directo a su ERP o ATS corporativo.</span>
+                </li>
+                <li className="flex items-start gap-2 leading-relaxed">
+                  <span className="text-white mt-0.5">•</span>
+                  <span>Atención VIP con Key Account Manager asignado.</span>
+                </li>
               </ul>
-              <Link href="/contacto">
+              <Link href="/contacto" className="mt-auto">
                 <Button variant="outline" className="w-full border-white/20 text-white hover:border-brand-orange hover:text-brand-orange h-12 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5">Hablar con ventas</Button>
               </Link>
             </Card>

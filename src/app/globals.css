@@ -364,3 +364,155 @@
   background-size: 32px 32px;
 }
 
+/* ─────────────────────────────────────────────────────────
+   TECH STACK · Glassmorphism logos with grayscale-to-color
+   ───────────────────────────────────────────────────────── */
+.tech-logo {
+  filter: grayscale(100%) brightness(1.6) contrast(0.8);
+  opacity: 0.55;
+  transition: filter 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 450ms ease,
+              transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-tile:hover .tech-logo {
+  filter: grayscale(0%) brightness(1) contrast(1);
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CLIENTS MARQUEE · Infinite horizontal scroll
+   The track contains two duplicated sets of logos and slides -50%
+   so the loop is seamless. Pauses on hover.
+   ───────────────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee-viewport {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 55s linear infinite;
+  will-change: transform;
+}
+.marquee-set {
+  display: flex;
+  gap: 2rem;
+  padding-right: 2rem;
+}
+.marquee-viewport:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Uniform white card for client logos — works for transparent and
+   white-background logos alike (consistent, intentional look). */
+.client-card {
+  flex: 0 0 auto;
+  width: 168px;
+  height: 88px;
+  background: #FFFFFF;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 22px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.25),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 350ms ease;
+}
+.client-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+.client-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ─────────────────────────────────────────────────────────
+   HERO TOLUCA · Cinematic background with Ken Burns
+   Each layer slowly zooms + pans; crossfades drive variety.
+   ───────────────────────────────────────────────────────── */
+@keyframes ken-burns-1 {
+  0%   { transform: scale(1.05) translate(0, 0); }
+  100% { transform: scale(1.18) translate(-2%, -1.5%); }
+}
+@keyframes ken-burns-2 {
+  0%   { transform: scale(1.08) translate(-1%, 0); }
+  100% { transform: scale(1.22) translate(2%, -2%); }
+}
+@keyframes ken-burns-3 {
+  0%   { transform: scale(1.04) translate(0, -1%); }
+  100% { transform: scale(1.20) translate(-2%, 2%); }
+}
+@keyframes ken-burns-4 {
+  0%   { transform: scale(1.06) translate(1%, 0); }
+  100% { transform: scale(1.18) translate(-1%, 2%); }
+}
+
+@keyframes hero-crossfade {
+  0%, 22%   { opacity: 0; }
+  25%, 47%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.hero-toluca {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-toluca-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform, opacity;
+  animation: hero-crossfade 32s ease-in-out infinite;
+}
+.hero-toluca-layer > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.hero-toluca-layer.layer-1 { animation-delay: 0s; }
+.hero-toluca-layer.layer-1 > div { animation: ken-burns-1 32s linear infinite; }
+.hero-toluca-layer.layer-2 { animation-delay: 8s; }
+.hero-toluca-layer.layer-2 > div { animation: ken-burns-2 32s linear infinite; }
+.hero-toluca-layer.layer-3 { animation-delay: 16s; }
+.hero-toluca-layer.layer-3 > div { animation: ken-burns-3 32s linear infinite; }
+.hero-toluca-layer.layer-4 { animation-delay: 24s; }
+.hero-toluca-layer.layer-4 > div { animation: ken-burns-4 32s linear infinite; }
+
+/* Heavy dark overlay — non-negotiable for text legibility */
+.hero-toluca-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(7,7,15,0.78) 0%, rgba(7,7,15,0.86) 60%, rgba(7,7,15,0.94) 100%),
+    linear-gradient(135deg, rgba(30,58,138,0.12) 0%, transparent 60%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .hero-toluca-layer,
+  .hero-toluca-layer > div {
+    animation: none !important;
+  }
+  .hero-toluca-layer.layer-1 { opacity: 1; }
+}
+
