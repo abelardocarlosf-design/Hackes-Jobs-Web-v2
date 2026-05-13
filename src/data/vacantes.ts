@@ -164,15 +164,16 @@ export const vacantes: Vacante[] = [
     categoria: 'Operativo',
     ubicacion: 'Prologis Park Grande, Estado de México',
     modalidad: 'Presencial',
-    salario: '$1,900 semanales · $8,370 mensuales MXN',
+    salario: '$1,900 netos semanales · $9,480 mensuales brutos',
     descripcion:
-      'Ayudante general dentro del parque industrial Prologis Park Grande. Turnos largos compensados con tres días de descanso a la semana y transporte gratuito desde diversas zonas del Estado de México.',
+      'GONCALVES\n\nLa jornada es de 4 días de trabajo x 3 días de descanso, son turnos de 12 horas.\nLos 4 días de trabajo son rolados (entre lunes a sábado).\nLos horarios son de 6:00 am a 6:30 pm o de 6:30 pm a 6:00 am, cada turno se va rolando un mes.',
     requisitos: [
-      'Hombres y mujeres hasta 50 años',
-      'Disponibilidad para turno de 12 horas (06:00 a 18:30)',
+      'La vacante es solo para personal masculino',
+      'Disponibilidad para turno de 12 horas (06:00 am a 06:30 pm o 06:30 pm a 06:00 am)',
     ],
     ofrecemos: [
-      '$1,900 semanales · $8,370 mensuales',
+      '$1,900 netos libres semanales',
+      '$9,480 Mensual bruto',
       'Tres días de descanso por semana',
       'Prestaciones superiores a las de ley',
       'Transporte gratuito desde Héroes Tecámac, Huehuetoca, Perinorte y otras zonas',
