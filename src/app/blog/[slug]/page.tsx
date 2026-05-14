@@ -46,19 +46,12 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 2);
 
   return (
-    <article className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
-      
+    <article className="flex flex-col min-h-screen font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
+
       {/* 1. ARTICLE HERO */}
-      <header className="relative pt-40 pb-20 overflow-hidden bg-brand-black text-white">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <img 
-            src="/images/hero-bg.gif" 
-            alt="" 
-            className="w-full h-full object-cover opacity-60 mix-blend-screen"
-          />
-          <div className="absolute inset-0 bg-brand-black/60"></div>
-        </div>
-        
+      <header className="relative pt-40 pb-20 overflow-hidden text-white z-10">
         <div className="container relative mx-auto px-4 z-10 max-w-4xl">
            <div className="flex flex-wrap gap-4 mb-8">
               {post.tags.map(tag => (
@@ -87,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* 2. FEATURED IMAGE */}
       <div className="container mx-auto px-4 -mt-16 relative z-20 max-w-5xl">
-         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden shadow-2xl border-8 border-brand-black/40 backdrop-blur-xl">
+         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white/5 backdrop-blur-xl">
             <Image 
               src={post.coverImage || '/images/hero-illustration.png'} 
               alt={post.title}
@@ -99,15 +92,7 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
 
       {/* 3. CONTENT SECTION */}
-      <section className="py-24 container mx-auto px-4 max-w-4xl relative">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <img 
-            src="/images/psicometrias-bg.gif" 
-            alt="" 
-            className="w-full h-full object-cover opacity-[0.05]"
-          />
-        </div>
-        
+      <section className="py-24 container mx-auto px-4 max-w-4xl relative z-10">
         <div className="relative z-10 glass-card-dark p-8 md:p-20 rounded-[3rem] border border-white/10 shadow-3xl">
           <div 
             className="prose prose-invert prose-xl max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase prose-a:text-brand-blue prose-img:rounded-[2rem] prose-strong:text-brand-orange text-white prose-p:text-white prose-headings:text-white prose-li:text-white prose-strong:text-white/90"
@@ -134,7 +119,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* 4. RELATED POSTS */}
       {relatedPosts.length > 0 && (
-        <section className="py-24 bg-brand-black/50 border-y border-white/5">
+        <section className="py-24 border-y border-white/5 z-10 relative">
           <div className="container mx-auto px-4 max-w-7xl">
             <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-12 text-center">Artículos Relacionados</h3>
             <div className="grid md:grid-cols-2 gap-10">
@@ -158,7 +143,7 @@ export default async function BlogPostPage({ params }: Props) {
       )}
 
       {/* 5. BACK TO BLOG */}
-      <div className="py-20 flex justify-center bg-brand-black">
+      <div className="py-20 flex justify-center z-10 relative">
          <Link href="/blog">
            <Button variant="secondary" size="lg" className="h-16 px-12 rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-orange/40">
              Volver al blog

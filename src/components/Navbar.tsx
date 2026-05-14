@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Button } from './Button';
 import { useAuth } from '@/lib/auth-context';
 import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Navbar() {
   const { isAuthenticated } = useAuth();
@@ -86,6 +87,9 @@ export default function Navbar() {
                 </>
               )}
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Mobile Menu Button */}
             <button 

@@ -21,8 +21,14 @@ export async function POST(request: Request) {
         fs.mkdirSync(backupDir, { recursive: true });
       }
 
+      // Check if test is incomplete
+      const esIncompleta = body.metricas?.prueba_incompleta === true || body.prueba_incompleta === true;
+
+      const csvFilename = esIncompleta ? 'directorio_pacientes_incompletos.csv' : 'directorio_pacientes.csv';
+      const jsonFilename = esIncompleta ? 'respuestas_incompletas.json' : 'respuestas_completas.json';
+
       // 1. Respaldo CSV de Contactos (Lead Gen)
-      const csvFile = path.join(backupDir, 'directorio_pacientes.csv');
+      const csvFile = path.join(backupDir, csvFilename);
       const header = 'Fecha,Nombre Completo,Email,Telefono,Test Realizado\n';
       
       const dp = body.datos_paciente || {};
@@ -38,8 +44,8 @@ export async function POST(request: Request) {
         fs.appendFileSync(csvFile, csvLine, 'utf8');
       }
 
-      // 2. Respaldo JSON completo
-      const jsonFile = path.join(backupDir, 'respuestas_completas.json');
+      // 2. Respaldo JSON
+      const jsonFile = path.join(backupDir, jsonFilename);
       const backupEntry = {
         timestamp,
         slug,

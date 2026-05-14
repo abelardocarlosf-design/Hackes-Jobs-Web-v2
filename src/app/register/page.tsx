@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useAuth, type RegisterData } from '@/lib/auth-context';
 import { GoogleLogin } from '@react-oauth/google';
 import { Eye, EyeOff, ArrowRight, Building2, UserCircle, Check, Briefcase, Brain, BarChart3 } from 'lucide-react';
+import { PrivacyCheckbox } from '@/components/PrivacyCheckbox';
 
 type Role = 'company' | 'candidate';
 
@@ -26,6 +27,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -36,6 +38,12 @@ export default function RegisterPage() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    if (!privacyAccepted) {
+      setError('Debes aceptar el Aviso de Privacidad para registrarte.');
+      setIsLoading(false);
+      return;
+    }
 
     if (formData.password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
@@ -88,12 +96,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex font-sans bg-brand-black overflow-hidden relative">
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-40"></div>
+    <div className="min-h-screen flex font-sans overflow-hidden relative">
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
       
       {/* ─── LEFT: VISUAL PANEL ──────────────────────── */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden items-center justify-center p-16">
-        <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
+      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden items-center justify-center p-16 z-10">
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
         <div className="relative z-10 max-w-lg space-y-12">
           <div>
             <div className="relative w-[200px] h-[60px] mb-12">
@@ -135,7 +144,7 @@ export default function RegisterPage() {
 
       {/* ─── RIGHT: REGISTER FORM ────────────────────── */}
       <div className="flex-1 flex items-center justify-center p-8 sm:p-12 relative z-20 overflow-y-auto pt-24 pb-24">
-        <div className="w-full max-w-lg space-y-10 bg-brand-black/40 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
+        <div className="w-full max-w-lg space-y-10 bg-white/5 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
           
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
@@ -328,6 +337,12 @@ export default function RegisterPage() {
               </div>
             )}
 
+            <PrivacyCheckbox 
+              type="reclutamiento" 
+              checked={privacyAccepted} 
+              onChange={setPrivacyAccepted} 
+            />
+
             <button
               type="submit"
               disabled={isLoading}
@@ -356,10 +371,6 @@ export default function RegisterPage() {
               <Link href="/login" className="text-brand-orange font-black hover:text-orange-400 transition-colors uppercase tracking-widest text-[10px] ml-2">
                 Inicia sesión
               </Link>
-            </p>
-            <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest leading-loose">
-              Al registrarte aceptas nuestros <br/> 
-              <span className="text-brand-blue">Términos de Servicio</span> y <span className="text-brand-blue">Privacidad</span>
             </p>
           </div>
         </div>

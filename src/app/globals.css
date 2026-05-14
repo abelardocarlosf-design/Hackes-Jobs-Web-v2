@@ -516,3 +516,253 @@
   .hero-toluca-layer.layer-1 { opacity: 1; }
 }
 
+/* ─────────────────────────────────────────────────────────
+   LIGHT MODE OVERRIDES · Premium White Mode
+   ───────────────────────────────────────────────────────── */
+:root.light body {
+  background-color: #f8fafc !important; /* slate-50 */
+  color: #0f172a !important; /* slate-900 */
+}
+
+:root.light .bg-brand-black {
+  background-color: #f8fafc !important;
+}
+
+:root.light .bg-\[\#0d1422\] {
+  background-color: #ffffff !important;
+}
+
+:root.light .bg-\[\#07070f\]\/80 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+:root.light .bg-\[\#07070f\]\/35 {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+:root.light .text-white {
+  color: #0f172a !important;
+}
+
+:root.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+:root.light .text-slate-200,
+:root.light .text-slate-300,
+:root.light .text-slate-400 {
+  color: #475569 !important; /* slate-600 */
+}
+
+:root.light .text-slate-500 {
+  color: #64748b !important; /* slate-500 */
+}
+
+:root.light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+:root.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+:root.light .border-white\/5,
+:root.light .border-white\/10,
+:root.light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+:root.light .card-premium {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05) !important;
+}
+
+:root.light .card-premium:hover {
+  transform: translateY(-5px);
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1) !important;
+}
+
+:root.light .card-premium::before {
+  display: none !important; /* Turn off the orange gradient border on hover for light mode to keep it clean */
+}
+
+:root.light .page-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 250, 252, 0.88) 0%,
+    rgba(255, 255, 255, 0.82) 50%,
+    rgba(248, 250, 252, 0.75) 100%
+  ) !important;
+}
+
+:root.light .page-dotgrid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.08) 1px, transparent 0) !important;
+}
+
+:root.light .mesh-orb {
+  opacity: 0.3 !important; /* Make orbs softer in light mode */
+}
+
+:root.light .hero-toluca-overlay {
+  background:
+    linear-gradient(180deg, rgba(248,250,252,0.6) 0%, rgba(248,250,252,0.85) 60%, rgba(248,250,252,1) 100%),
+    linear-gradient(135deg, rgba(30,58,138,0.05) 0%, transparent 60%) !important;
+}
+
+/* Fix invert on Logo in light mode */
+:root.light img.invert {
+  filter: none !important;
+}
+
+/* Forms and Inputs Overrides for Light Mode */
+:root.light .bg-black\/50 {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #0f172a !important;
+}
+
+:root.light .bg-\[\#111\] {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+:root.light .focus\:bg-\[\#111\]:focus {
+  background-color: #f8fafc !important;
+  border-color: rgba(30, 64, 175, 0.5) !important; /* brand-blue */
+}
+
+:root.light .bg-zinc-900\/90 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root.light input::placeholder,
+:root.light textarea::placeholder {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+/* Footer */
+:root.light footer {
+  background-color: #f1f5f9 !important; /* slate-100 */
+  border-top-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Glass cards */
+:root.light .glass-card {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05) !important;
+}
+
+:root.light .glass-card-blue {
+  background-color: rgba(30, 64, 175, 0.06) !important;
+  border-color: rgba(30, 64, 175, 0.12) !important;
+}
+
+:root.light .glass-card-dark {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Logo filter: in dark mode, logo is inverted to white.
+   In light mode we need the original (dark) version. */
+:root.light .brightness-0 {
+  filter: none !important;
+}
+
+/* Selection */
+:root.light ::selection {
+  background-color: rgba(249, 115, 22, 0.2) !important;
+  color: #0f172a !important;
+}
+
+/* Scrollbar — light */
+:root.light ::-webkit-scrollbar-track {
+  background: #f8fafc !important;
+}
+
+:root.light ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+:root.light ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Prose overrides for blog content in light mode */
+:root.light .prose-invert {
+  --tw-prose-body: #1e293b !important;
+  --tw-prose-headings: #0f172a !important;
+  --tw-prose-links: #1E40AF !important;
+  --tw-prose-bold: #0f172a !important;
+  --tw-prose-counters: #64748b !important;
+  --tw-prose-bullets: #64748b !important;
+  --tw-prose-hr: rgba(0, 0, 0, 0.08) !important;
+  --tw-prose-quotes: #334155 !important;
+  --tw-prose-code: #0f172a !important;
+  --tw-prose-pre-code: #e2e8f0 !important;
+  --tw-prose-pre-bg: #1e293b !important;
+  --tw-prose-th-borders: rgba(0, 0, 0, 0.12) !important;
+  --tw-prose-td-borders: rgba(0, 0, 0, 0.06) !important;
+}
+
+:root.light .prose p,
+:root.light .prose li,
+:root.light .prose strong {
+  color: #1e293b !important;
+}
+
+:root.light .prose h1,
+:root.light .prose h2,
+:root.light .prose h3,
+:root.light .prose h4 {
+  color: #0f172a !important;
+}
+
+/* Brand blue/orange specific backgrounds — keep untouched for accent */
+:root.light .bg-brand-blue\/10 {
+  background-color: rgba(30, 64, 175, 0.08) !important;
+}
+
+:root.light .bg-brand-orange\/10 {
+  background-color: rgba(249, 115, 22, 0.08) !important;
+}
+
+:root.light .bg-brand-orange\/5 {
+  background-color: rgba(249, 115, 22, 0.04) !important;
+}
+
+:root.light .bg-brand-blue\/5 {
+  background-color: rgba(30, 64, 175, 0.04) !important;
+}
+
+/* Backdrop blur panels (login/register left side) */
+:root.light .bg-black\/30 {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Select dropdowns */
+:root.light select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Ambient glow overrides — soften in light mode */
+:root.light .ambient-glow-orange::before,
+:root.light .ambient-glow-blue::before {
+  opacity: 0.4 !important;
+}
+
+/* Dot grid subtle pattern */
+:root.light .bg-dotgrid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.06) 1px, transparent 0) !important;
+}
+
+/* Text gradient - keep brand colors visible in light mode */
+:root.light .text-gradient-brand {
+  background-image: linear-gradient(to right, #F97316, #1E40AF) !important;
+}

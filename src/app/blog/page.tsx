@@ -7,7 +7,6 @@ import { Card, CardContent } from '@/components/Card';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NewsletterForm } from '@/components/NewsletterForm';
-import { Typewriter } from '@/components/Typewriter';
 
 export const metadata: Metadata = {
   title: 'Blog | Hacke\'s Jobs',
@@ -25,23 +24,16 @@ export default async function BlogPage() {
   const allTags = Array.from(new Set(publishedPosts.flatMap(p => p.tags)));
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden">
-      
+    <div className="flex flex-col min-h-screen font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
+
       {/* 1. HERO SECTION */}
-      <section className="relative pt-40 pb-24 overflow-hidden bg-brand-black text-white">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <img 
-            src="/images/hero-bg.gif" 
-            alt="" 
-            className="w-full h-full object-cover opacity-60 mix-blend-screen"
-          />
-          <div className="absolute inset-0 bg-brand-black/60"></div>
-        </div>
-        
+      <section className="relative pt-40 pb-24 overflow-hidden text-white z-10">
         <div className="container relative mx-auto px-4 z-10 text-center space-y-8">
            <span className="text-brand-orange font-black tracking-[0.4em] uppercase text-xs">Conocimiento y Tendencias</span>
            <h1 className="text-5xl md:text-[6.5rem] font-black tracking-tighter text-white leading-none uppercase flex flex-col items-center gap-2 mb-8">
-              <span className="leading-none"><Typewriter text="Nuestro" speed={70} delay={400} /></span>
+              <span className="leading-none">Nuestro</span>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue leading-[1.2] py-2">
                 Blog.
               </span>
@@ -54,7 +46,7 @@ export default async function BlogPage() {
 
       {/* 2. CATEGORIES SECTION */}
       {allTags.length > 0 && (
-        <section className="relative py-12 bg-brand-black border-y border-white/10 z-30">
+        <section className="relative py-12 border-y border-white/10 z-30">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap items-center justify-center gap-4">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mr-4">Categorías:</span>
@@ -73,11 +65,10 @@ export default async function BlogPage() {
 
       {/* 3. FEATURED POST */}
       {featuredPost && (
-        <section className="relative py-24 bg-brand-black overflow-hidden">
-           <div className="absolute inset-0 bg-[url('/images/psicometrias-bg.gif')] bg-cover bg-center opacity-10 bg-fixed"></div>
+        <section className="relative py-24 overflow-hidden z-10">
            <div className="container relative mx-auto px-4 z-10">
               <Link href={`/blog/${featuredPost.slug}`}>
-                 <div className="group relative bg-brand-black/40 backdrop-blur-xl rounded-[4rem] overflow-hidden border border-white/10 shadow-3xl flex flex-col lg:flex-row items-stretch min-h-[600px] transition-all duration-700 hover:shadow-orange/20 hover:scale-[1.01]">
+                 <div className="group relative bg-white/5 backdrop-blur-xl rounded-[4rem] overflow-hidden border border-white/10 shadow-3xl flex flex-col lg:flex-row items-stretch min-h-[600px] transition-all duration-700 hover:shadow-orange/20 hover:scale-[1.01]">
                     <div className="lg:w-1/2 relative h-[400px] lg:h-auto overflow-hidden">
                        <Image 
                         src={featuredPost.coverImage} 
@@ -85,7 +76,7 @@ export default async function BlogPage() {
                         fill 
                         className="object-cover transition-transform duration-1000 group-hover:scale-110"
                        />
-                       <div className="absolute inset-0 bg-gradient-to-r from-brand-black/60 to-transparent"></div>
+                       <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
                     </div>
                     <div className="lg:w-1/2 p-12 md:p-20 flex flex-col justify-center space-y-8 relative z-10">
                        <div className="flex items-center gap-4 text-[10px] font-black text-brand-orange uppercase tracking-[0.3em]">
@@ -111,8 +102,7 @@ export default async function BlogPage() {
       )}
 
       {/* 4. BLOG LIST */}
-      <section className="relative py-24 bg-brand-black z-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/candidatos-bg.gif')] bg-cover bg-center opacity-10 bg-fixed"></div>
+      <section className="relative py-24 z-20 overflow-hidden">
         <div className="container relative mx-auto px-4 z-10">
           <div className="flex items-center justify-between mb-16 max-w-7xl mx-auto">
              <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Más Artículos</h2>
@@ -180,8 +170,7 @@ export default async function BlogPage() {
       </section>
 
       {/* 5. NEWSLETTER SECTION */}
-      <section className="relative py-32 bg-brand-black overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/empresas-bg.gif')] bg-cover bg-center opacity-20 bg-fixed"></div>
+      <section className="relative py-32 overflow-hidden z-10">
         <div className="container relative mx-auto px-4 z-10">
            <div className="max-w-5xl mx-auto glass-card-blue rounded-[4rem] p-12 md:p-24 text-center space-y-10 relative overflow-hidden border-none">
               <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-[100px] -mr-40 -mt-40"></div>

@@ -159,14 +159,14 @@ export const vacantes: Vacante[] = [
 
   {
     id: 'ayudante-general-prologis-park-grande',
-    titulo: 'Ayudante General de Almacén',
+    titulo: 'Ayudante General',
     empresa: 'Prologis Park Grande',
     categoria: 'Operativo',
     ubicacion: 'Prologis Park Grande, Estado de México',
     modalidad: 'Presencial',
     salario: '$1,900 netos semanales · $9,480 mensuales brutos',
     descripcion:
-      'GONCALVES\n\nLa jornada es de 4 días de trabajo x 3 días de descanso, son turnos de 12 horas.\nLos 4 días de trabajo son rolados (entre lunes a sábado).\nLos horarios son de 6:00 am a 6:30 pm o de 6:30 pm a 6:00 am, cada turno se va rolando un mes.',
+      'La jornada es de 4 días de trabajo x 3 días de descanso, son turnos de 12 horas.\nLos 4 días de trabajo son rolados (entre lunes a sábado).\nLos horarios son de 6:00 am a 6:30 pm o de 6:30 pm a 6:00 am, cada turno se va rolando un mes.',
     requisitos: [
       'La vacante es solo para personal masculino',
       'Disponibilidad para turno de 12 horas (06:00 am a 06:30 pm o 06:30 pm a 06:00 am)',

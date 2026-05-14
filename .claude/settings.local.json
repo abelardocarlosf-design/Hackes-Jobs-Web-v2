@@ -2,7 +2,27 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc *)",
-      "Bash(node scripts/generate-test-data.js)"
+      "Bash(node scripts/generate-test-data.js)",
+      "Bash(powershell -Command \"Get-Content 'WF-001 Lüscher.json' | Select-String -Pattern 'nombre_|email|paciente|sendTo|subject' | Select-Object -First 30\")",
+      "Bash(powershell -Command \"Get-Content 'WF-004 Moss.json' | Select-String -Pattern 'nombre_|email|paciente|sendTo|subject' | Select-Object -First 30\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('WF-002 DISC.json','utf8'\\)\\); console.log\\('OK DISC'\\)\")",
+      "Bash(dir scripts *)",
+      "Bash(node scripts/migrate-n8n-workflows.js)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const files=fs.readdirSync\\('.'\\).filter\\(f=>f.endsWith\\('.json'\\)\\); let ok=0; for\\(const f of files\\){ try { const w=JSON.parse\\(fs.readFileSync\\(f,'utf8'\\)\\); const nodes=w.nodes||[]; const ids=nodes.map\\(n=>n.id\\).filter\\(Boolean\\); const dupes=ids.filter\\(\\(id,i,a\\)=>a.indexOf\\(id\\)!==i\\); if\\(dupes.length\\) throw new Error\\('duplicate ids: '+dupes\\); console.log\\('  ✓ '+f+' — '+nodes.length+' nodes, all unique IDs'\\); ok++; } catch\\(e\\){ console.log\\('  ✗ '+f+' — '+e.message\\); } } console.log\\('\\\\\\\\nResult: '+ok+'/'+files.length+' files valid'\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const files=fs.readdirSync\\('.'\\).filter\\(f=>f.endsWith\\('.json'\\)\\); for\\(const f of files\\){ const w=JSON.parse\\(fs.readFileSync\\(f,'utf8'\\)\\); const names=new Set\\(w.nodes.map\\(n=>n.name\\)\\); const broken=[]; for\\(const [src,connsByOut] of Object.entries\\(w.connections||{}\\)\\){ if\\(!names.has\\(src\\)\\) broken.push\\('SRC: '+src\\); for\\(const conns of connsByOut.main||[]\\){ for\\(const c of conns||[]\\){ if\\(!names.has\\(c.node\\)\\) broken.push\\('TGT: '+c.node\\); } } } const aiNode=w.nodes.find\\(n=>/Gemini|Análisis/.test\\(n.name\\)\\); const prompt=aiNode?.parameters?.messages?.values?.[0]?.content||''; const hasZeroHall=prompt.includes\\('Zero-Hallucination'\\); const hasValidez=prompt.includes\\('REGLA DE VALIDEZ'\\); const recruiterEmail=w.nodes.find\\(n=>n.type==='n8n-nodes-base.gmail' && /RH|abelardo/i.test\\(n.parameters?.sendTo||''\\)\\)?.parameters?.message||''; const hasRec=recruiterEmail.includes\\('recomendacion_contratacion'\\)&&recruiterEmail.includes\\('fortalezas_operativas'\\)&&recruiterEmail.includes\\('riesgos_potenciales'\\); console.log\\(f.padEnd\\(28\\)+' connections:'+\\(broken.length?'BROKEN '+broken.join\\(','\\):'OK'\\)+' | prompt:'+\\(hasZeroHall&&hasValidez?'OK':'FAIL'\\)+' | email:'+\\(hasRec?'OK':'FAIL'\\)\\); }\")",
+      "Bash(dir)",
+      "Bash(dir tecnologia *)",
+      "Bash(dir \"lOGOS Clientes\")",
+      "Bash(dir \"Imagenes Toluca\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path 'Imagenes Toluca','lOGOS Clientes','tecnologia' | Select-Object FullName, Length | Format-Table -AutoSize\")",
+      "Bash(dir public\\\\assets)",
+      "Bash(npm ls *)",
+      "Bash(dir public *)",
+      "Bash(node -e \"try { require\\('sharp'\\); console.log\\('sharp:OK'\\); } catch\\(e\\) { console.log\\('sharp:MISSING'\\); }\")",
+      "Bash(findstr /i \"sharp\")",
+      "Bash(dir node_modules\\\\sharp)",
+      "Bash(node scripts/process-brand-assets.js)",
+      "PowerShell($base = \"C:\\\\Users\\\\santin\\\\Documents\\\\Hackes Jobs\\\\WebSite\\\\Hackes Jobs Web v2\\\\public\\\\assets\"; foreach \\($d in \"tech\",\"clientes\",\"toluca\"\\) { $c = \\(Get-ChildItem \"$base\\\\$d\"\\).Count; Write-Output \"$d : $c files\" })"
     ]
   }
 }

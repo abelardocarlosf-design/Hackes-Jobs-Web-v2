@@ -4,14 +4,17 @@ import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-// Rutas donde NO se muestra Navbar/Footer
-const HIDE_CHROME_ROUTES = ['/login', '/register', '/dashboard'];
+// Rutas donde NO se muestra Navbar/Footer pero SÍ el mesh background
+const HIDE_NAV_ROUTES = ['/login', '/register'];
+// Rutas donde NO se muestra nada del chrome (dashboard tiene su propio layout)
+const HIDE_ALL_ROUTES = ['/dashboard'];
 
 export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideChrome = HIDE_CHROME_ROUTES.some(route => pathname.startsWith(route));
+  const hideAll = HIDE_ALL_ROUTES.some(route => pathname.startsWith(route));
+  const hideNav = HIDE_NAV_ROUTES.some(route => pathname.startsWith(route));
 
-  if (hideChrome) {
+  if (hideAll) {
     return <>{children}</>;
   }
 
@@ -23,11 +26,12 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
         <div className="mesh-orb mesh-orb-2" />
         <div className="mesh-orb mesh-orb-3" />
       </div>
-      <Navbar />
+      {!hideNav && <Navbar />}
       <main className="min-h-screen">
         {children}
       </main>
-      <Footer />
+      {!hideNav && <Footer />}
     </>
   );
 }
+

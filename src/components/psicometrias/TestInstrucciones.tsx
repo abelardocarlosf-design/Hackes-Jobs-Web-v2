@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Clock, Activity, AlertCircle, ArrowRight, ArrowLeft, Hourglass } from 'lucide-react';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
+import { PrivacyCheckbox } from '@/components/PrivacyCheckbox';
 
 export function TestInstrucciones({ config }: { config: TestInfoProps }) {
   const router = useRouter();
@@ -15,6 +16,7 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
     telefono: ''
   });
   const [error, setError] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -25,6 +27,11 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
     e.preventDefault();
     if (!formData.nombre_completo || !formData.email || !formData.telefono) {
       setError('Por favor, completa todos los campos para continuar.');
+      return;
+    }
+    
+    if (!privacyAccepted) {
+      setError('Debes aceptar el Aviso de Privacidad para comenzar la evaluación.');
       return;
     }
     
@@ -178,13 +185,15 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
                 />
               </div>
 
+              <PrivacyCheckbox 
+                type="aplicación de evaluación psicométrica" 
+                checked={privacyAccepted} 
+                onChange={setPrivacyAccepted} 
+              />
+
               <Button type="submit" variant="primary" className="w-full h-14 text-sm font-black rounded-xl uppercase tracking-widest mt-4">
                 Comenzar Evaluación <ArrowRight size={18} className="ml-2" />
               </Button>
-              
-              <p className="text-center text-[10px] text-slate-500 mt-4 uppercase tracking-widest">
-                Tus datos están seguros y no serán compartidos.
-              </p>
             </form>
           </div>
           )}

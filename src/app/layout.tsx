@@ -15,25 +15,25 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Infraestructura HR-Tech y Automatización B2B para Industria | Hacke's Jobs Technologies",
+    default: "Agencia de Reclutamiento Industrial con Tecnología | Hacke's Jobs Technologies",
     template: "%s | Hacke's Jobs Technologies"
   },
-  description: "Proveedor de infraestructura tecnológica para Recursos Humanos y ventas B2B. Plataforma de evaluaciones psicométricas y sistemas de prospección automatizada con n8n para empresas industriales Tier 1 y Tier 2 en Toluca, Lerma, Metepec y CDMX.",
-  keywords: ["Infraestructura HR-Tech", "Evaluaciones psicométricas SaaS", "Automatización B2B", "n8n prospección", "Plataforma RRHH industrial", "Manufactura Tier 1", "Toluca", "Lerma", "Metepec", "CDMX", "Hacke's Jobs Technologies"],
+  description: "Agencia de reclutamiento operada con tecnología propietaria para empresas de manufactura Tier 1 y Tier 2 en el corredor Toluca-Lerma-Metepec. Evaluaciones psicométricas automatizadas, workflows B2B y garantía de reposición de 10 días.",
+  keywords: ["agencia reclutamiento industrial", "evaluaciones psicométricas", "Toluca", "Tier 1", "garantía de reposición", "reclutamiento automatizado", "Hacke's Jobs Technologies"],
   authors: [{ name: "Hacke's Jobs Technologies" }],
   creator: "Hacke's Jobs Technologies",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://hackesjobs.com.mx/",
-    title: "Infraestructura HR-Tech y Automatización B2B para Industria | Hacke's Jobs Technologies",
-    description: "Plataforma de evaluaciones psicométricas y sistemas de prospección B2B automatizada para empresas industriales en el corredor Toluca–Lerma–Metepec–CDMX.",
+    title: "Agencia de Reclutamiento Industrial | Hacke's Jobs Technologies",
+    description: "Reclutamiento industrial operado con tecnología en Toluca y Metepec. Evaluaciones automatizadas y garantía de reposición.",
     siteName: "Hacke's Jobs Technologies",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Infraestructura HR-Tech y Automatización B2B | Hacke's Jobs Technologies",
-    description: "Plataforma de psicometrías y prospección B2B automatizada para industria Tier 1 y Tier 2 en México.",
+    title: "Agencia de Reclutamiento Industrial | Hacke's Jobs Technologies",
+    description: "Reclutamiento industrial operado con tecnología en Toluca y Metepec. Evaluaciones automatizadas y garantía de reposición.",
   },
   robots: {
     index: true,
@@ -49,8 +49,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`scroll-smooth ${inter.variable} ${jakarta.variable}`}>
-      <body className="antialiased font-sans bg-brand-black text-white overflow-x-hidden">
+    <html lang="es" className={`scroll-smooth ${inter.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/assets/toluca/nevado-1-1280.avif" as="image" type="image/avif" media="(max-width: 1280px)" fetchPriority="high" />
+        <link rel="preload" href="/assets/toluca/nevado-1-1920.avif" as="image" type="image/avif" media="(min-width: 1281px)" fetchPriority="high" />
+      </head>
+      <body className="antialiased font-sans bg-brand-black text-slate-200 overflow-x-hidden transition-colors duration-300">
         <Providers>
           <LayoutChrome>
             {children}

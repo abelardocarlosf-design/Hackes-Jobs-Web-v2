@@ -11,6 +11,8 @@
  * Honors prefers-reduced-motion (in globals.css: animations off, layer-1 visible).
  */
 
+import Image from 'next/image';
+
 const PHOTOS = [
   { slug: 'nevado-1', alt: 'Nevado de Toluca' },
   { slug: 'portales-1', alt: 'Portales de Toluca' },
@@ -18,23 +20,21 @@ const PHOTOS = [
   { slug: 'portales-2', alt: 'Portales de Toluca · vista alterna' },
 ];
 
-function bgImageSet(slug: string): string {
-  // Prefer AVIF, fall back to WebP. Browsers ignore unsupported entries.
-  // 1920 is the master; smaller widths used implicitly by browser via the responsive
-  // <picture> elsewhere — for a fixed full-bleed background we serve 1280 which is
-  // the sweet spot for sharpness/weight across most viewports.
-  return `image-set(
-    url('/assets/toluca/${slug}-1920.avif') type('image/avif'),
-    url('/assets/toluca/${slug}-1280.webp') type('image/webp')
-  )`;
-}
-
 export function HeroToluca() {
   return (
     <div className="hero-toluca" aria-hidden="true">
       {PHOTOS.map((p, i) => (
         <div key={p.slug} className={`hero-toluca-layer layer-${i + 1}`}>
-          <div style={{ backgroundImage: bgImageSet(p.slug) }} />
+          <div className="relative w-full h-full">
+            <Image
+              src={`/assets/toluca/${p.slug}-1920.avif`}
+              alt={p.alt}
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority={i === 0}
+            />
+          </div>
         </div>
       ))}
       <div className="hero-toluca-overlay" />

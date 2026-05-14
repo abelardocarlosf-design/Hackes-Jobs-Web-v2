@@ -60,12 +60,13 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex font-sans bg-brand-black overflow-hidden relative">
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center bg-fixed opacity-40"></div>
+    <div className="min-h-screen flex font-sans overflow-hidden relative">
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
       
       {/* ─── LEFT: VISUAL PANEL ──────────────────────── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center p-16">
-        <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-sm"></div>
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center p-16 z-10">
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
         <div className="relative z-10 max-w-lg space-y-12">
           <div>
             <div className="relative w-[200px] h-[60px] mb-12">
@@ -103,7 +104,7 @@ function LoginForm() {
 
       {/* ─── RIGHT: LOGIN FORM ───────────────────────── */}
       <div className="flex-1 flex items-center justify-center p-8 sm:p-12 relative z-20">
-        <div className="w-full max-w-md space-y-10 bg-brand-black/40 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
+        <div className="w-full max-w-md space-y-10 bg-white/5 backdrop-blur-3xl p-10 sm:p-16 rounded-[4rem] border border-white/10 shadow-3xl">
           
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">

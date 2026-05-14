@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/Button';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { PrivacyCheckbox } from './PrivacyCheckbox';
 
 export function NewsletterForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +92,11 @@ export function NewsletterForm() {
               {message}
             </p>
           )}
+          <PrivacyCheckbox 
+            type="contacto comercial" 
+            checked={privacyAccepted} 
+            onChange={setPrivacyAccepted} 
+          />
         </form>
       )}
     </div>

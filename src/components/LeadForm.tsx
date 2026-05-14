@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from './Button';
 import { z } from 'zod';
+import { PrivacyCheckbox } from './PrivacyCheckbox';
 
 // Frontend validation schema
 const formSchema = z.object({
@@ -25,6 +26,7 @@ export function LeadForm() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -190,6 +192,12 @@ export function LeadForm() {
           />
           {errors.vacante && <p className="text-xs text-red-500 font-bold ml-1">{errors.vacante}</p>}
         </div>
+
+        <PrivacyCheckbox 
+          type="contacto comercial" 
+          checked={privacyAccepted} 
+          onChange={setPrivacyAccepted} 
+        />
 
         <Button 
           type="submit" 
