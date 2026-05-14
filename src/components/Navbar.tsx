@@ -103,7 +103,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation Dropdown */}
         {isOpen && (
-          <div className="lg:hidden mt-4 bg-brand-black/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 shadow-[0_32px_64px_rgba(0,0,0,0.8)] flex flex-col gap-8 items-center text-center animate-in fade-in slide-in-from-top-10 duration-500">
+          <div className="mobile-menu-panel lg:hidden mt-4 bg-brand-black/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 shadow-[0_32px_64px_rgba(0,0,0,0.8)] flex flex-col gap-8 items-center text-center animate-in fade-in slide-in-from-top-10 duration-500">
             <nav className="flex flex-col gap-6 text-[12px] font-black uppercase tracking-[0.3em] text-white w-full">
               {navLinks.map((link) => (
                 <Link 
