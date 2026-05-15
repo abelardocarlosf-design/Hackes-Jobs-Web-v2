@@ -13,6 +13,20 @@ const JITTER_MS = 250;
 const REQUEST_TIMEOUT_MS = 15000;
 
 /**
+ * Detecta entornos serverless con filesystem read-only.
+ * En Vercel/Netlify/Cloudflare/AWS Lambda no podemos escribir en `process.cwd()`.
+ * En esos entornos saltamos el backup local — el respaldo durable real es el nodo
+ * `Sheets Respaldar` (Google Sheets) que ejecuta el workflow de n8n.
+ */
+const IS_SERVERLESS = !!(
+  process.env.VERCEL ||
+  process.env.VERCEL_ENV ||
+  process.env.NETLIFY ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.CF_PAGES
+);
+
+/**
  * Calcula el `Idempotency-Key` para un envío. Mismo candidato + misma prueba +
  * misma fecha de aplicación → misma key → n8n puede deduplicar.
  */
@@ -72,87 +86,106 @@ export async function POST(request: Request) {
     const idempotencyKey = computeIdempotencyKey(candidateId, slug, fechaAplicacion);
 
     // ════════════════════════════════════════════════════════════════════════
-    // ACCIÓN 1 — BACKUP LOCAL (FAIL-SAFE). Pasa primero, siempre.
-    // Si el backup local falla, NO enviamos al webhook (regla no negociable).
+    // ACCIÓN 1 — BACKUP LOCAL (FAIL-SAFE).
+    //
+    // En desarrollo local: escribe CSV+JSON en `process.cwd()/backups/`.
+    //   Si falla, abortamos el envío (regla "backup primero").
+    //
+    // En serverless (Vercel/Lambda/etc.): el filesystem es read-only.
+    //   Saltamos el backup local — el respaldo durable real lo hace el nodo
+    //   `Sheets Respaldar` (Google Sheets) dentro de cada workflow n8n.
+    //   Si el filesystem se intenta y falla en cualquier entorno, degradamos
+    //   a "no-fatal" y continuamos al webhook (no perdemos la prueba del usuario).
     // ════════════════════════════════════════════════════════════════════════
     let backupOk = false;
-    try {
-      const backupDir = path.join(process.cwd(), 'backups');
-      if (!fs.existsSync(backupDir)) {
-        fs.mkdirSync(backupDir, { recursive: true });
-      }
+    let backupSkipped = false;
 
-      const esIncompleta = body.metricas?.prueba_incompleta === true || body.prueba_incompleta === true;
-      const csvFilename = esIncompleta ? 'directorio_pacientes_incompletos.csv' : 'directorio_pacientes.csv';
-      const jsonFilename = esIncompleta ? 'respuestas_incompletas.json' : 'respuestas_completas.json';
-
-      // 1.a Respaldo CSV de Contactos (Lead Gen)
-      const csvFile = path.join(backupDir, csvFilename);
-      const header = 'Fecha,Nombre Completo,Email,Telefono,Empresa,Cargo,Test Realizado,IdempotencyKey\n';
-      const safeName = (dp.nombre_completo || '').replace(/"/g, '""');
-      const safeEmail = (dp.email || '').replace(/"/g, '""');
-      const safePhone = (dp.telefono || '').replace(/"/g, '""');
-      const safeEmpresa = (dp.empresa || '').replace(/"/g, '""');
-      const safeCargo = (dp.cargo_postulado || '').replace(/"/g, '""');
-      const timestamp = new Date().toISOString();
-      const csvLine = `"${timestamp}","${safeName}","${safeEmail}","${safePhone}","${safeEmpresa}","${safeCargo}","${slug}","${idempotencyKey}"\n`;
-
-      if (!fs.existsSync(csvFile)) {
-        fs.writeFileSync(csvFile, header + csvLine, 'utf8');
-      } else {
-        fs.appendFileSync(csvFile, csvLine, 'utf8');
-      }
-
-      // 1.b Respaldo JSON íntegro
-      const jsonFile = path.join(backupDir, jsonFilename);
-      const backupEntry = {
-        timestamp,
-        slug,
-        idempotencyKey,
+    if (IS_SERVERLESS) {
+      backupSkipped = true;
+      logStructured('info', 'backup.local.skipped.serverless', {
+        testId: slug,
         candidateId,
-        contractVersion: CONTRACT_VERSION,
-        payload: body,
-      };
-
-      let currentData: any[] = [];
-      if (fs.existsSync(jsonFile)) {
-        const fileContent = fs.readFileSync(jsonFile, 'utf-8');
-        try {
-          if (fileContent.trim()) {
-            currentData = JSON.parse(fileContent);
-          }
-        } catch (e) {
-          console.error('[Backup Error] JSON existente corrupto:', e);
-          // En caso de corrupción del archivo histórico, lo movemos a .bak y empezamos de cero.
-          const corruptCopy = `${jsonFile}.corrupt-${Date.now()}.bak`;
-          try { fs.renameSync(jsonFile, corruptCopy); } catch {}
-          currentData = [];
+        idempotencyKey,
+        attempt: 0,
+      });
+    } else {
+      try {
+        const backupDir = path.join(process.cwd(), 'backups');
+        if (!fs.existsSync(backupDir)) {
+          fs.mkdirSync(backupDir, { recursive: true });
         }
+
+        const esIncompleta = body.metricas?.prueba_incompleta === true || body.prueba_incompleta === true;
+        const csvFilename = esIncompleta ? 'directorio_pacientes_incompletos.csv' : 'directorio_pacientes.csv';
+        const jsonFilename = esIncompleta ? 'respuestas_incompletas.json' : 'respuestas_completas.json';
+
+        // 1.a Respaldo CSV de Contactos (Lead Gen)
+        const csvFile = path.join(backupDir, csvFilename);
+        const header = 'Fecha,Nombre Completo,Email,Telefono,Empresa,Cargo,Test Realizado,IdempotencyKey\n';
+        const safeName = (dp.nombre_completo || '').replace(/"/g, '""');
+        const safeEmail = (dp.email || '').replace(/"/g, '""');
+        const safePhone = (dp.telefono || '').replace(/"/g, '""');
+        const safeEmpresa = (dp.empresa || '').replace(/"/g, '""');
+        const safeCargo = (dp.cargo_postulado || '').replace(/"/g, '""');
+        const timestamp = new Date().toISOString();
+        const csvLine = `"${timestamp}","${safeName}","${safeEmail}","${safePhone}","${safeEmpresa}","${safeCargo}","${slug}","${idempotencyKey}"\n`;
+
+        if (!fs.existsSync(csvFile)) {
+          fs.writeFileSync(csvFile, header + csvLine, 'utf8');
+        } else {
+          fs.appendFileSync(csvFile, csvLine, 'utf8');
+        }
+
+        // 1.b Respaldo JSON íntegro
+        const jsonFile = path.join(backupDir, jsonFilename);
+        const backupEntry = {
+          timestamp,
+          slug,
+          idempotencyKey,
+          candidateId,
+          contractVersion: CONTRACT_VERSION,
+          payload: body,
+        };
+
+        let currentData: any[] = [];
+        if (fs.existsSync(jsonFile)) {
+          const fileContent = fs.readFileSync(jsonFile, 'utf-8');
+          try {
+            if (fileContent.trim()) {
+              currentData = JSON.parse(fileContent);
+            }
+          } catch (e) {
+            console.error('[Backup Error] JSON existente corrupto:', e);
+            // En caso de corrupción del archivo histórico, lo movemos a .bak y empezamos de cero.
+            const corruptCopy = `${jsonFile}.corrupt-${Date.now()}.bak`;
+            try { fs.renameSync(jsonFile, corruptCopy); } catch {}
+            currentData = [];
+          }
+        }
+
+        currentData.push(backupEntry);
+        fs.writeFileSync(jsonFile, JSON.stringify(currentData, null, 2), 'utf8');
+        backupOk = true;
+
+        logStructured('info', 'backup.local.ok', {
+          testId: slug,
+          candidateId,
+          idempotencyKey,
+          attempt: 0,
+        });
+      } catch (backupError) {
+        // Filesystem inesperadamente read-only (p. ej. container con disco lleno o
+        // permisos rotos). NO abortamos: la prueba del usuario debe llegar a n8n,
+        // donde el nodo `Sheets Respaldar` la persistirá en Google Sheets.
+        backupSkipped = true;
+        logStructured('warn', 'backup.local.degraded', {
+          testId: slug,
+          candidateId,
+          idempotencyKey,
+          attempt: 0,
+          errorMessage: backupError instanceof Error ? backupError.message : String(backupError),
+        });
       }
-
-      currentData.push(backupEntry);
-      fs.writeFileSync(jsonFile, JSON.stringify(currentData, null, 2), 'utf8');
-      backupOk = true;
-
-      logStructured('info', 'backup.local.ok', {
-        testId: slug,
-        candidateId,
-        idempotencyKey,
-        attempt: 0,
-      });
-    } catch (backupError) {
-      logStructured('error', 'backup.local.failed', {
-        testId: slug,
-        candidateId,
-        idempotencyKey,
-        attempt: 0,
-        errorMessage: backupError instanceof Error ? backupError.message : String(backupError),
-      });
-      // Política: backup falla → no enviar (regla "Backup local primero, red después").
-      return NextResponse.json(
-        { success: false, message: 'No fue posible respaldar la prueba. Reintenta en unos segundos.' },
-        { status: 500 }
-      );
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -169,7 +202,8 @@ export async function POST(request: Request) {
       // Backup OK pero no hay webhook: consideramos éxito parcial documentado.
       return NextResponse.json({
         success: true,
-        backup: true,
+        backup: backupOk,
+        backupSkipped,
         webhook: 'unmapped',
         idempotencyKey,
         message: 'Respaldo guardado, sin webhook configurado para este slug',
@@ -213,7 +247,8 @@ export async function POST(request: Request) {
           });
           return NextResponse.json({
             success: true,
-            backup: true,
+            backup: backupOk,
+            backupSkipped,
             webhook: 'ok',
             idempotencyKey,
             attempts: attempt,
@@ -232,7 +267,8 @@ export async function POST(request: Request) {
           });
           return NextResponse.json({
             success: true, // el respaldo está OK; reportamos al cliente como éxito de su parte
-            backup: true,
+            backup: backupOk,
+            backupSkipped,
             webhook: 'error',
             n8nStatus: resp.status,
             idempotencyKey,

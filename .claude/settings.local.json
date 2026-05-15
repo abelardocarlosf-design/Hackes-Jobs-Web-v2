@@ -22,7 +22,13 @@
       "Bash(findstr /i \"sharp\")",
       "Bash(dir node_modules\\\\sharp)",
       "Bash(node scripts/process-brand-assets.js)",
-      "PowerShell($base = \"C:\\\\Users\\\\santin\\\\Documents\\\\Hackes Jobs\\\\WebSite\\\\Hackes Jobs Web v2\\\\public\\\\assets\"; foreach \\($d in \"tech\",\"clientes\",\"toluca\"\\) { $c = \\(Get-ChildItem \"$base\\\\$d\"\\).Count; Write-Output \"$d : $c files\" })"
+      "PowerShell($base = \"C:\\\\Users\\\\santin\\\\Documents\\\\Hackes Jobs\\\\WebSite\\\\Hackes Jobs Web v2\\\\public\\\\assets\"; foreach \\($d in \"tech\",\"clientes\",\"toluca\"\\) { $c = \\(Get-ChildItem \"$base\\\\$d\"\\).Count; Write-Output \"$d : $c files\" })",
+      "Bash(node -e ' *)",
+      "Bash(cd \"/c/Users/santin/Documents/Hackes Jobs/WebSite/Hackes Jobs Web v2\" && pwd && ls n8n-workflows | head -5)",
+      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\"; grep -E \"GenericChoiceTest|import.*Questions|export default|return\\\\s+\\(answers|flatAnswers|payload|results|respuestasObj\\)\" \"{}\" | head -20')",
+      "Bash(node -e \"console.log\\(require\\('./package.json'\\).dependencies['server-only']||'NOT INSTALLED'\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./package.json'\\).dependencies.next\\)\")",
+      "Bash(node scratch/fase-d-offline-validation.js)"
     ]
   }
 }
