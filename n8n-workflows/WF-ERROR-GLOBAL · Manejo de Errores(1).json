@@ -1,0 +1,140 @@
+{
+  "name": "WF-ERROR-GLOBAL · Manejo de Errores",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "42f03f85-961b-4ffe-b2b4-656081e05e65",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "workflow_name",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "workflow_id",
+              "value": "={{ $json.workflow.id }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "execution_id",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "execution_url",
+              "value": "={{ $json.execution.url }}",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "last_node",
+              "value": "={{ $json.execution.lastNodeExecuted }}",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "error_message",
+              "value": "={{ $json.execution.error?.message || \"Sin mensaje\" }}",
+              "type": "string"
+            },
+            {
+              "id": "7",
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0942e46c-06df-494a-a5f4-a7e496f55592",
+      "name": "Format Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=[HJ ERROR] {{ $json.workflow_name }} · {{ $json.last_node }}",
+        "message": "=<h2 style=\"color:#B71C1C;\">Workflow fallo: {{ $json.workflow_name }}</h2><p><b>Nodo:</b> {{ $json.last_node }}<br><b>Execution:</b> <a href=\"{{ $json.execution_url }}\">{{ $json.execution_id }}</a><br><b>Cuando:</b> {{ $json.timestamp }}</p><pre style=\"background:#FFEBEE;padding:12px;border-left:4px solid #B71C1C;\">{{ $json.error_message }}</pre>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "2d3f1c79-54c5-4a3c-992e-85fa65e83451",
+      "name": "Alerta Admin",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "retryOnFail": true,
+      "webhookId": "ab2994d3-2ce5-48be-a1ed-b8c360788892",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Format Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Error": {
+      "main": [
+        [
+          {
+            "node": "Alerta Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "e5259f24-e7f4-427d-9201-73e946988629",
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
+  },
+  "id": "JnAQpq1x9spXRBxc",
+  "tags": []
+}

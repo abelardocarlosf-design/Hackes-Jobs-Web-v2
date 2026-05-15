@@ -1,13 +1,13 @@
 {
-  "name": "WF-006 Kostick",
+  "name": "WF-009 MMPI-2",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "wf-006-kostick",
+        "path": "wf-009-mmpi2",
         "options": {}
       },
-      "id": "1401a735-0714-486b-b38a-6114cb5597a7",
+      "id": "0b2e6d3b-d4e9-4159-97f2-e98e3f1a6db9",
       "name": "Webhook Recepcion",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -15,14 +15,14 @@
         -608,
         208
       ],
-      "webhookId": "b6ab77ef-1884-43ea-b3dd-43788a6fbd18"
+      "webhookId": "bc916217-8010-4216-acee-537d059c258c"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
         "jsCode": "const body=($input.item.json.body)||{};const dp=body.datos_paciente||{};const dt=body.datos_prueba||{};const total=Number(dt.total_preguntas||0);const contestadas=Number(dt.preguntas_contestadas||0);const completitud=total>0?Math.round((contestadas/total)*100):0;const es_valido=completitud>=85;const email=(dp.email||'').trim().toLowerCase();const candidate_id=email?email+'::'+(dt.fecha_aplicacion||Date.now()):'anon::'+Date.now();return{json:{candidate_id,nombre:(dp.nombre_completo||'').trim(),email,empresa:dp.empresa||'No especificado',cargo:dp.cargo_postulado||'No especificado',fecha:dt.fecha_aplicacion||new Date().toISOString(),total,contestadas,completitud,es_valido,validez_flag:es_valido?'VALIDO':'INVALIDO_INCOMPLETO',respuestas_str:JSON.stringify(body.respuestas||{})}};"
       },
-      "id": "64067fa9-7604-4bb3-997a-9b748055897f",
+      "id": "8b7ad2dd-a073-47aa-b655-b57668499296",
       "name": "Normalizar y Validar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -56,7 +56,7 @@
         },
         "options": {}
       },
-      "id": "3b0d392d-5901-477f-9003-10ffe6fa4d40",
+      "id": "99c7cc05-8417-40d3-88ff-cb2ad7ac8796",
       "name": "es valido",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
@@ -76,7 +76,7 @@
         "messages": {
           "values": [
             {
-              "content": "=ROL: Analista psicometrico senior Hacke's Jobs. Tono ejecutivo, evidence-based, Zero-Hallucination.\n\nTEST: Kostick. PAPI Kostick (Personality and Preference Inventory). 22 dimensiones agrupadas en 7 areas: 1) Estilo de Trabajo, 2) Liderazgo, 3) Actividad, 4) Sociabilidad, 5) Naturaleza del Trabajo, 6) Subordinacion, 7) Temperamento.\n\nREGLAS DE LECTURA: Cada dimension en escala 0-9. Perfil dominante = combinacion de las 3-4 dimensiones mas altas. Lectura por area: identificar fortalezas (>=7) y debilidades (<=2). Tension entre Necesidad (N) y Rol (R) en una misma dimension = conflicto interno relevante.\n\nLENGUAJE PROHIBIDO: 'excelente/excepcional/sobresaliente/perfecto/ideal' salvo percentil>=95. PROHIBIDO lenguaje clinico o de diagnostico. Solo interpretacion psicometrica de apoyo a decisiones de RH.\n\nDATOS:\n- Candidato: {{ $json.nombre }}\n- Empresa/Cargo: {{ $json.empresa }} - {{ $json.cargo }}\n- Completitud: {{ $json.completitud }}%\n- Respuestas: {{ $json.respuestas_str }}\n\nPUNTAJES A REPORTAR: Grid completo de las 22 dimensiones (0-9) + perfil dominante identificado.\n\nOUTPUT: SOLO JSON valido, sin markdown, sin texto adicional.\n{\"validez\":\"VALIDO\",\"resumen_validez\":\"\",\"resumen_ejecutivo\":\"\",\"fortalezas_operativas\":\"\",\"riesgos_potenciales\":\"\",\"recomendacion_contratacion\":\"\",\"justificacion_recomendacion\":\"\",\"puntajes_crudos\":\"\",\"feedback_candidato\":\"\"}"
+              "content": "=ROL: Analista psicometrico senior Hacke's Jobs. Tono ejecutivo, evidence-based, Zero-Hallucination.\n\nTEST: MMPI-2. Inventario Multifasico de Personalidad de Minnesota - 2 (MMPI-2). ESCALAS DE VALIDEZ: ? (no respuesta), L (mentira), F (infrecuencia), K (correccion defensiva). 10 ESCALAS CLINICAS BASICAS: Hs (Hipocondria), D (Depresion), Hy (Histeria), Pd (Desviacion psicopatica), Mf (Masculinidad-Feminidad), Pa (Paranoia), Pt (Psicastenia), Sc (Esquizofrenia), Ma (Mania), Si (Introversion social).\n\nREGLAS DE LECTURA: VALIDEZ PRIMERO: si L>65 o F>90 o K extremo, el perfil se considera no interpretable para RH. T-scores: 50 media, 65 punto de corte clinico, >=75 elevacion marcada. USO RESTRINGIDO: MMPI-2 NO es para diagnostico clinico desde RH. Solo se reportan elevaciones relevantes para fit laboral y se recomienda evaluacion especializada cuando >=2 escalas >65.\n\nLENGUAJE PROHIBIDO: 'excelente/excepcional/sobresaliente/perfecto/ideal' salvo percentil>=95. PROHIBIDO lenguaje clinico o de diagnostico. Solo interpretacion psicometrica de apoyo a decisiones de RH.\n\nDATOS:\n- Candidato: {{ $json.nombre }}\n- Empresa/Cargo: {{ $json.empresa }} - {{ $json.cargo }}\n- Completitud: {{ $json.completitud }}%\n- Respuestas: {{ $json.respuestas_str }}\n\nPUNTAJES A REPORTAR: T-scores de validez (?, L, F, K) + 10 escalas clinicas basicas (Hs, D, Hy, Pd, Mf, Pa, Pt, Sc, Ma, Si). Marcar elevaciones >=65.\n\nOUTPUT: SOLO JSON valido, sin markdown, sin texto adicional.\n{\"validez\":\"VALIDO\",\"resumen_validez\":\"\",\"resumen_ejecutivo\":\"\",\"fortalezas_operativas\":\"\",\"riesgos_potenciales\":\"\",\"recomendacion_contratacion\":\"\",\"justificacion_recomendacion\":\"\",\"puntajes_crudos\":\"\",\"feedback_candidato\":\"\"}"
             }
           ]
         },
@@ -86,7 +86,7 @@
           "temperature": 0.4
         }
       },
-      "id": "6a93a42e-15a0-4af0-be5a-54ee93415752",
+      "id": "db43c724-a21d-4d60-b934-4ddac98f5085",
       "name": "Gemini Analisis",
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1.2,
@@ -108,7 +108,7 @@
         "mode": "runOnceForEachItem",
         "jsCode": "const REQ=['validez','resumen_validez','resumen_ejecutivo','fortalezas_operativas','riesgos_potenciales','recomendacion_contratacion','justificacion_recomendacion','puntajes_crudos','feedback_candidato'];const errShape=(r)=>({validez:'ERROR_PARSEO',resumen_validez:'No se pudo leer respuesta del modelo.',resumen_ejecutivo:'ERROR DE PARSEO: '+r,fortalezas_operativas:'N/A',riesgos_potenciales:'N/A',recomendacion_contratacion:'Revision Manual Requerida',justificacion_recomendacion:'Respuesta no interpretable.',puntajes_crudos:'PARSEO FALLIDO',feedback_candidato:'Tu evaluacion esta siendo revisada manualmente.',_parse_error:r});function extractText(r){if(r==null)return'';if(typeof r==='string')return r;const c=[r.text,r.output_text,r.response,r.message&&r.message.content,r.content&&typeof r.content==='string'?r.content:null,r.content&&r.content.parts&&r.content.parts[0]&&r.content.parts[0].text,r.candidates&&r.candidates[0]&&r.candidates[0].content&&r.candidates[0].content.parts&&r.candidates[0].content.parts[0]&&r.candidates[0].content.parts[0].text];for(const x of c)if(typeof x==='string'&&x.trim())return x;return JSON.stringify(r);}const raw=$input.item.json;let t;try{t=extractText(raw);if(!t||!t.trim())return{json:errShape('Respuesta vacia')};t=String(t).replace(/^\\s*```(?:json)?\\s*/i,'').replace(/\\s*```\\s*$/i,'').trim();const a=t.indexOf('{'),b=t.lastIndexOf('}');const j=(a===-1||b<=a)?t:t.slice(a,b+1);let p;try{p=JSON.parse(j);}catch(_){p=JSON.parse(j.replace(/,\\s*([}\\]])/g,'$1'));}const miss=REQ.filter(k=>!(k in p));if(miss.length)return{json:Object.assign({},errShape('Claves faltantes: '+miss.join(',')),p,{validez:p.validez||'PARCIAL'})};return{json:p};}catch(e){return{json:errShape(e.message||String(e))};}"
       },
-      "id": "46f869a0-7068-4ee6-92fe-427aaf947ec8",
+      "id": "26285506-6df7-4ccd-b51d-3e0ff6e6e1ca",
       "name": "Parser Blindado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -120,9 +120,9 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const n=$('Normalizar y Validar').item.json;return{json:{validez:'INVALIDO_INCOMPLETO',resumen_validez:'PRUEBA ANULADA: '+n.contestadas+'/'+n.total+' ('+n.completitud+'%). Umbral 85% no alcanzado.',resumen_ejecutivo:'ADVERTENCIA: Prueba Kostick con baja fiabilidad. No se genero interpretacion AI.',fortalezas_operativas:'No aplicable - prueba incompleta',riesgos_potenciales:'Compromiso del candidato; Posible falta de tiempo/atencion',recomendacion_contratacion:'No Recomendado',justificacion_recomendacion:'La prueba no alcanzo el 85% de completitud requerido.',puntajes_crudos:'PRUEBA ANULADA',feedback_candidato:'Notamos que tu evaluacion quedo incompleta. Te invitamos a retomarla.'}};"
+        "jsCode": "const n=$('Normalizar y Validar').item.json;return{json:{validez:'INVALIDO_INCOMPLETO',resumen_validez:'PRUEBA ANULADA: '+n.contestadas+'/'+n.total+' ('+n.completitud+'%). Umbral 85% no alcanzado.',resumen_ejecutivo:'ADVERTENCIA: Prueba MMPI-2 con baja fiabilidad. No se genero interpretacion AI.',fortalezas_operativas:'No aplicable - prueba incompleta',riesgos_potenciales:'Compromiso del candidato; Posible falta de tiempo/atencion',recomendacion_contratacion:'No Recomendado',justificacion_recomendacion:'La prueba no alcanzo el 85% de completitud requerido.',puntajes_crudos:'PRUEBA ANULADA',feedback_candidato:'Notamos que tu evaluacion quedo incompleta. Te invitamos a retomarla.'}};"
       },
-      "id": "fe41a644-539e-46bc-875d-84b431f73e7d",
+      "id": "866ab484-00e8-4852-8481-be4fa0f8dbeb",
       "name": "Reporte Anulado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -141,10 +141,10 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 1548437296,
+          "value": 251248637,
           "mode": "list",
-          "cachedResultName": "  WF-006_Kostick",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit#gid=1548437296"
+          "cachedResultName": "  WF-010_MMPI-2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit#gid=251248637"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -290,7 +290,7 @@
         },
         "options": {}
       },
-      "id": "2f407eed-dc0c-48e8-890d-0d4fdf14252e",
+      "id": "5944b2a1-2902-45df-8314-9db32de70bfa",
       "name": "Sheets Respaldar",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
@@ -310,13 +310,13 @@
     {
       "parameters": {
         "sendTo": "abelardo.carlos@hackesjobs.com.mx",
-        "subject": "=Alerta Hacke's Jobs: Reporte Kostick [ {{ $('Normalizar y Validar').item.json.nombre }} ]",
-        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#059669,#047857);padding:28px 24px;\"><p style=\"color:#FFF;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:0.9;\">HACKES JOBS REPORTE</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">Test Kostick</h2></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Validez: {{ $json.validez }}</p><p style=\"margin:4px 0 0;font-size:13px;color:#555;\">{{ $json.resumen_validez }}</p></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Candidato</p><p style=\"margin:4px 0 0;font-size:20px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.nombre }}</p><p style=\"margin:2px 0 0;font-size:14px;color:#059669;\">{{ $('Normalizar y Validar').item.json.email }}</p><div style=\"margin:20px 0;padding:20px;background:#FAFAFA;border-left:4px solid #059669;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen Ejecutivo</p><p style=\"margin:0;font-size:15px;line-height:1.7;white-space:pre-line;\">{{ $json.resumen_ejecutivo }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Fortalezas</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $json.fortalezas_operativas }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Riesgos</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $json.riesgos_potenciales }}</p></div></td></tr></table><div style=\"margin:20px 0;padding:20px;background:linear-gradient(135deg,#FFF8F0,#FFF);border:2px solid #059669;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Recomendacion</p><p style=\"margin:8px 0 6px;font-size:22px;font-weight:800;color:#059669;\">{{ $json.recomendacion_contratacion }}</p><p style=\"margin:10px 0 0;font-size:13px;color:#555;line-height:1.6;text-align:left;\">{{ $json.justificacion_recomendacion }}</p></div><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Puntajes Crudos</p><pre style=\"margin:0;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $json.puntajes_crudos }}</pre></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
+        "subject": "=Alerta Hacke's Jobs: Reporte MMPI-2 [ {{ $('Normalizar y Validar').item.json.nombre }} ]",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#BE123C,#881337);padding:28px 24px;\"><p style=\"color:#FFF;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:0.9;\">HACKES JOBS REPORTE</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">Test MMPI-2</h2></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Validez: {{ $json.validez }}</p><p style=\"margin:4px 0 0;font-size:13px;color:#555;\">{{ $json.resumen_validez }}</p></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Candidato</p><p style=\"margin:4px 0 0;font-size:20px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.nombre }}</p><p style=\"margin:2px 0 0;font-size:14px;color:#BE123C;\">{{ $('Normalizar y Validar').item.json.email }}</p><div style=\"margin:20px 0;padding:20px;background:#FAFAFA;border-left:4px solid #BE123C;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen Ejecutivo</p><p style=\"margin:0;font-size:15px;line-height:1.7;white-space:pre-line;\">{{ $json.resumen_ejecutivo }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Fortalezas</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $json.fortalezas_operativas }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Riesgos</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $json.riesgos_potenciales }}</p></div></td></tr></table><div style=\"margin:20px 0;padding:20px;background:linear-gradient(135deg,#FFF8F0,#FFF);border:2px solid #BE123C;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Recomendacion</p><p style=\"margin:8px 0 6px;font-size:22px;font-weight:800;color:#BE123C;\">{{ $json.recomendacion_contratacion }}</p><p style=\"margin:10px 0 0;font-size:13px;color:#555;line-height:1.6;text-align:left;\">{{ $json.justificacion_recomendacion }}</p></div><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Puntajes Crudos</p><pre style=\"margin:0;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $json.puntajes_crudos }}</pre></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
         "options": {
           "appendAttribution": false
         }
       },
-      "id": "f1568bb6-8f7c-43c1-93fb-36216ec953fc",
+      "id": "742ae001-aba0-43c3-90da-11be4f4ea188",
       "name": "Gmail RH",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
@@ -325,7 +325,7 @@
         112
       ],
       "retryOnFail": true,
-      "webhookId": "14cb119f-3662-48fa-8de6-207206c04aa5",
+      "webhookId": "05d90c1a-69bb-438d-b2a2-6cced27e0c51",
       "credentials": {
         "gmailOAuth2": {
           "id": "VcaMQBt7yiQIpxiE",
@@ -337,13 +337,13 @@
     {
       "parameters": {
         "sendTo": "={{ $('Normalizar y Validar').item.json.email }}",
-        "subject": "Tu evaluacion Kostick fue recibida - Hacke's Jobs",
-        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#059669,#047857);padding:28px 24px;\"><p style=\"color:rgba(255,255,255,.9);margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;\">Confirmacion de Evaluacion</p><h2 style=\"color:#FFF;margin:8px 0 0;font-size:22px;font-weight:700;\">Test Kostick</h2></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"font-size:16px;line-height:1.6;margin-top:0;\">Hola {{ $('Normalizar y Validar').item.json.nombre.split(' ')[0] }},</p><p style=\"font-size:15px;line-height:1.7;color:#555;\">Recibimos correctamente tu evaluacion <strong>Kostick</strong>. Para liberar la interpretacion completa y el reporte detallado, es necesario completar el pago del servicio.</p><div style=\"margin:24px 0;padding:24px;background:#FFF8F0;border:2px solid #059669;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Inversion del reporte</p><p style=\"margin:8px 0 4px;font-size:32px;font-weight:800;color:#059669;\">$349 MXN</p><p style=\"margin:0 0 18px;font-size:12px;color:#888;\">Pago unico - acceso inmediato al reporte</p><a href=\"https://buy.stripe.com/aFa8wPczz3L7fTn1KO7Vm04?prefilled_email=abelardo.carlos%40hackesjobs.com.mx\" style=\"display:inline-block;background:linear-gradient(135deg,#059669,#047857);color:#FFF;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:1px;text-transform:uppercase;\">Realizar Pago Seguro</a><p style=\"margin:14px 0 0;font-size:11px;color:#999;\">Procesado por Stripe - SSL cifrado</p></div><p style=\"font-size:14px;line-height:1.7;color:#666;\">Una vez confirmado el pago, recibiras tu reporte interpretado por nuestro equipo en un plazo maximo de 24 horas habiles.</p></div><div style=\"background:#000;padding:14px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:1.5px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
+        "subject": "Tu evaluacion MMPI-2 fue recibida - Hacke's Jobs",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#BE123C,#881337);padding:28px 24px;\"><p style=\"color:rgba(255,255,255,.9);margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;\">Confirmacion de Evaluacion</p><h2 style=\"color:#FFF;margin:8px 0 0;font-size:22px;font-weight:700;\">Test MMPI-2</h2></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"font-size:16px;line-height:1.6;margin-top:0;\">Hola {{ $('Normalizar y Validar').item.json.nombre.split(' ')[0] }},</p><p style=\"font-size:15px;line-height:1.7;color:#555;\">Recibimos correctamente tu evaluacion <strong>MMPI-2</strong>. Para liberar la interpretacion completa y el reporte detallado, es necesario completar el pago del servicio.</p><div style=\"margin:24px 0;padding:24px;background:#FFF8F0;border:2px solid #BE123C;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Inversion del reporte</p><p style=\"margin:8px 0 4px;font-size:32px;font-weight:800;color:#BE123C;\">$867 MXN</p><p style=\"margin:0 0 18px;font-size:12px;color:#888;\">Pago unico - acceso inmediato al reporte</p><a href=\"https://buy.stripe.com/cNicN5czza9v5eJ0GK7Vm09?prefilled_email=abelardo.carlos%40hackesjobs.com.mx\" style=\"display:inline-block;background:linear-gradient(135deg,#BE123C,#881337);color:#FFF;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:1px;text-transform:uppercase;\">Realizar Pago Seguro</a><p style=\"margin:14px 0 0;font-size:11px;color:#999;\">Procesado por Stripe - SSL cifrado</p></div><p style=\"font-size:14px;line-height:1.7;color:#666;\">Una vez confirmado el pago, recibiras tu reporte interpretado por nuestro equipo en un plazo maximo de 24 horas habiles.</p></div><div style=\"background:#000;padding:14px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:1.5px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
         "options": {
           "appendAttribution": false
         }
       },
-      "id": "83242141-9b75-4cdf-ba34-42c595a4d81f",
+      "id": "185df587-8fd8-4398-a54a-7c4b1f078e66",
       "name": "Gmail Candidato",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
@@ -352,7 +352,7 @@
         304
       ],
       "retryOnFail": true,
-      "webhookId": "4ec00649-8688-4a2e-b0ae-b73a1f39d0e3",
+      "webhookId": "01debd51-1d75-4c2a-84b7-1b0385af24b6",
       "credentials": {
         "gmailOAuth2": {
           "id": "VcaMQBt7yiQIpxiE",
@@ -466,10 +466,10 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "fceb6590-9aa8-4f57-89fb-ee70792a3a58",
+  "versionId": "f275d2d9-1579-4d76-bf76-e94e5d0cc112",
   "meta": {
     "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
   },
-  "id": "joKM98WBPeEk5kld",
+  "id": "JrjfIj5QxNw4e5Y6",
   "tags": []
 }

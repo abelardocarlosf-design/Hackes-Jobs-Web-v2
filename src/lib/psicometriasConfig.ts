@@ -38,7 +38,7 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: 'Gratis',
     categoria: 'Comportamiento',
     instrucciones: [
-      'Encontrarás 28 grupos de 4 palabras.',
+      'Encontrarás 30 grupos de 4 palabras.',
       'En cada grupo, selecciona la palabra que MÁS te describe (+) y la que MENOS te describe (-).',
       'No hay respuestas correctas o incorrectas. Sé sincero(a) para obtener un resultado preciso.',
       'Responde pensando en tu entorno laboral o académico habitual.'
@@ -126,14 +126,14 @@ export const testsConfig: Record<string, TestInfoProps> = {
     slug: 'terman',
     nombre: 'Test de Inteligencia de Terman-Merrill',
     descripcion: 'Evaluación integral que mide habilidades verbales, lógicas, matemáticas y espaciales para calcular un coeficiente intelectual (CI).',
-    duracion: '50 min',
+    duracion: '44 min',
     nivel: 'Avanzado',
     precio: 519,
     precioFormateado: '$519 MXN',
     categoria: 'Inteligencia Integral',
     instrucciones: [
-      'Esta evaluación está dividida en 10 sub-pruebas o series.',
-      'CADA SERIE tiene un límite de tiempo estricto muy breve (entre 2 y 5 minutos).',
+      'Esta evaluación está dividida en 10 sub-pruebas o series, con un tiempo total aproximado de 44 minutos.',
+      'CADA SERIE tiene un límite de tiempo estricto muy breve (entre 3 y 6 minutos).',
       'El sistema avanzará automáticamente a la siguiente serie cuando se agote el tiempo de la actual.',
       'Asegúrate de estar en un lugar sin distracciones, no podrás pausar la evaluación.'
     ]
@@ -171,18 +171,10 @@ export const testsConfig: Record<string, TestInfoProps> = {
   }
 };
 
-export const webhookUrlMap: Record<string, string> = {
-  disc: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-002-disc',
-  allport: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook-test/wf-003-allport',
-  luscher: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-001-luscher',
-  moss: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-004-moss',
-  zavic: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook-test/wf-005-zavic',
-  kostick: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-006-kostick',
-  raven: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-007-raven',
-  terman: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-008-terman',
-  '16pf': 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-009-16pf',
-  mmpi: 'https://hackesjobs-n8n.3hrktu.easypanel.host/webhook/wf-010-mmpi-2'
-};
+// NOTA (auditoría 2026-05-15): el mapa de URLs de webhook se movió a
+// `src/lib/psicometriasServer.ts` para mantenerlo server-only y permitir
+// configurar la base vía `N8N_BASE_URL`. Antes vivía aquí (`webhookUrlMap`)
+// con 5 paths desincronizados respecto a los workflows reales.
 
 // Helper for grouping tests by level
 export const testsByLevel = {

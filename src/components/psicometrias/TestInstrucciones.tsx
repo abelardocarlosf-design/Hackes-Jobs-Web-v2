@@ -13,7 +13,9 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
   const [formData, setFormData] = useState({
     nombre_completo: '',
     email: '',
-    telefono: ''
+    telefono: '',
+    empresa: '',           // opcional, alimenta datos_paciente.empresa en el contrato n8n v1
+    cargo_postulado: ''    // opcional, alimenta datos_paciente.cargo_postulado en el contrato n8n v1
   });
   const [error, setError] = useState('');
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -173,9 +175,9 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
 
               <div className="space-y-2">
                 <label htmlFor="telefono" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono / WhatsApp</label>
-                <input 
+                <input
                   required
-                  type="tel" 
+                  type="tel"
                   id="telefono"
                   name="telefono"
                   value={formData.telefono}
@@ -185,7 +187,42 @@ export function TestInstrucciones({ config }: { config: TestInfoProps }) {
                 />
               </div>
 
-              <PrivacyCheckbox 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label htmlFor="empresa" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Empresa <span className="text-slate-600 normal-case tracking-normal">(opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="empresa"
+                    name="empresa"
+                    value={formData.empresa}
+                    onChange={handleChange}
+                    className="w-full px-5 py-4 rounded-xl border border-white/10 bg-black/50 text-white placeholder-slate-500 focus:bg-[#111] focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue outline-none transition-all font-medium"
+                    placeholder="Ej. Acme Corp"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="cargo_postulado" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    Cargo postulado <span className="text-slate-600 normal-case tracking-normal">(opcional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="cargo_postulado"
+                    name="cargo_postulado"
+                    value={formData.cargo_postulado}
+                    onChange={handleChange}
+                    className="w-full px-5 py-4 rounded-xl border border-white/10 bg-black/50 text-white placeholder-slate-500 focus:bg-[#111] focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue outline-none transition-all font-medium"
+                    placeholder="Ej. Gerente de Operaciones"
+                  />
+                </div>
+              </div>
+
+              <p className="text-[10px] text-slate-500 leading-relaxed">
+                Empresa y cargo son opcionales pero permiten que el reporte interprete tus resultados en el contexto del puesto al que aspiras.
+              </p>
+
+              <PrivacyCheckbox
                 type="aplicación de evaluación psicométrica" 
                 checked={privacyAccepted} 
                 onChange={setPrivacyAccepted} 

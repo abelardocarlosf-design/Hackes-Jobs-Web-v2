@@ -7,73 +7,137 @@
         "path": "wf-003-allport",
         "options": {}
       },
-      "name": "Webhook Recepción",
+      "id": "d429b48a-60db-448b-b335-511ce220e388",
+      "name": "Webhook Recepcion",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "typeVersion": 2.1,
       "position": [
-        -1536,
-        128
+        -608,
+        208
       ],
-      "id": "04a043be-43c5-4d89-b749-f694364deb9e",
-      "webhookId": "3a0abbc2-abee-4b74-89a5-9646437e70b2"
+      "webhookId": "6efe13b8-a89f-443e-8b9b-cf4fb74f6c25"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const body=($input.item.json.body)||{};const dp=body.datos_paciente||{};const dt=body.datos_prueba||{};const total=Number(dt.total_preguntas||0);const contestadas=Number(dt.preguntas_contestadas||0);const completitud=total>0?Math.round((contestadas/total)*100):0;const es_valido=completitud>=85;const email=(dp.email||'').trim().toLowerCase();const candidate_id=email?email+'::'+(dt.fecha_aplicacion||Date.now()):'anon::'+Date.now();return{json:{candidate_id,nombre:(dp.nombre_completo||'').trim(),email,empresa:dp.empresa||'No especificado',cargo:dp.cargo_postulado||'No especificado',fecha:dt.fecha_aplicacion||new Date().toISOString(),total,contestadas,completitud,es_valido,validez_flag:es_valido?'VALIDO':'INVALIDO_INCOMPLETO',respuestas_str:JSON.stringify(body.respuestas||{})}};"
+      },
+      "id": "6bab660c-5ec1-4e11-9916-258142ac2edb",
+      "name": "Normalizar y Validar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.es_valido }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5d08af58-664b-4b68-ad89-4e345dff9caf",
+      "name": "es valido",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -208,
+        208
+      ]
     },
     {
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-3-flash-preview",
           "mode": "list",
-          "cachedResultName": "models/gemini-3-flash-preview"
+          "value": "models/gemini-2.5-flash",
+          "cachedResultName": "models/gemini-2.5-flash"
         },
         "messages": {
           "values": [
             {
-              "content": "=Eres un Sistema Experto en Psicometría Organizacional de Hackes Jobs Technologies. Tu tono es ejecutivo, analítico y rigurosamente objetivo. Operas bajo doctrina Zero-Hallucination: cada conclusión debe estar respaldada por evidencia numérica observable en las respuestas del candidato.\n\n═══════════════════════════════════════════\nCONTEXTO TEÓRICO — TEST DE VALORES DE ALLPORT\n═══════════════════════════════════════════\nMide el peso relativo de 6 valores fundamentales en la personalidad:\n• TEÓRICO (T) — búsqueda de verdad, conocimiento, análisis lógico, descubrimiento intelectual.\n• ECONÓMICO (E) — utilidad, eficiencia práctica, riqueza, retorno de inversión.\n• ESTÉTICO (A) — forma, armonía, belleza, expresión artística.\n• SOCIAL (S) — altruismo, servicio al prójimo, empatía, contribución comunitaria.\n• POLÍTICO (P) — poder, influencia, autoridad, liderazgo, estatus.\n• RELIGIOSO (R) — unidad, trascendencia, espiritualidad, principios morales.\n\nAnálisis: en condiciones laborales, valores DOMINANTES predicen motivación intrínseca y satisfacción; valores RECHAZADOS pueden generar conflicto en roles que los requieren. Para puestos directivos, P>50 + E>50 es congruente; para roles de servicio, S>50 + R>40 es congruente. Diferencias extremas entre el valor más alto y el más bajo (>40 puntos) indican personalidad fuertemente polarizada — puede ser fortaleza en nichos pero riesgo en roles polifacéticos.\n\n═══════════════════════════════════════════\nDATOS RECIBIDOS\n═══════════════════════════════════════════\n• Candidato: {{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}\n• Empresa / Cargo: {{ $('Webhook Recepción').item.json.body.datos_paciente.empresa || 'No especificado' }} — {{ $('Webhook Recepción').item.json.body.datos_paciente.cargo_postulado || 'No especificado' }}\n• Total de Reactivos: {{ $('Webhook Recepción').item.json.body.datos_prueba.total_preguntas }}\n• Reactivos Contestados: {{ $('Webhook Recepción').item.json.body.datos_prueba.preguntas_contestadas }}\n• Respuestas: {{ JSON.stringify($('Webhook Recepción').item.json.body.respuestas) }}\n\n═══════════════════════════════════════════\nREGLA DE VALIDEZ — OBLIGATORIA\n═══════════════════════════════════════════\nCalcula completitud = (contestadas / total) × 100. Si <85%, marca validez=\"INVÁLIDO_INCOMPLETO\" y antepone en resumen_ejecutivo: \"⚠ ADVERTENCIA: Prueba con baja fiabilidad por falta de datos. Respuestas recibidas: [X] de [Y]. No se pueden extraer conclusiones psicométricamente fiables.\"\n\n═══════════════════════════════════════════\nREGLAS DE LENGUAJE — ZERO TOLERANCIA A SYCOPHANCY\n═══════════════════════════════════════════\n• PROHIBIDO: \"excelente\", \"excepcional\", \"sobresaliente\", \"perfecto\", \"ideal\" salvo que el percentil matemático ≥95.\n• PROHIBIDO: lenguaje complaciente o aspiracional sin evidencia numérica.\n• FORMA OBLIGATORIA: \"El perfil muestra una alta propensión a [X] bajo presión, con un área de oportunidad crítica en [Y] respaldada por [Z evidencia numérica del test]\".\n• Si detectas respuestas planas (todas iguales), patrón inconsistente o índices de validez fuera de rango, repórtalo como bandera roja crítica.\n\n═══════════════════════════════════════════\nOUTPUT — JSON ESTRICTO\n═══════════════════════════════════════════\nDevuelve ÚNICAMENTE este objeto JSON. Sin markdown, sin bloques de código, sin preámbulo. Todos los campos son strings.\n\n{\n  \"validez\": \"VÁLIDO o INVÁLIDO_INCOMPLETO\",\n  \"resumen_validez\": \"Respuestas recibidas: X de Y (Z% completitud)\",\n  \"resumen_ejecutivo\": \"2-3 párrafos con el diagnóstico ejecutivo del perfil Test de Valores de Allport, mencionando dimensiones dominantes y banderas de validez si las hay\",\n  \"fortalezas_operativas\": \"• Fortaleza 1 con evidencia numérica\\n• Fortaleza 2 con evidencia\\n• Fortaleza 3\",\n  \"riesgos_potenciales\": \"• Bandera roja 1 con evidencia\\n• Bandera roja 2\",\n  \"recomendacion_contratacion\": \"Altamente Recomendado o Recomendado con Reservas o No Recomendado\",\n  \"justificacion_recomendacion\": \"1 párrafo fundamentando la decisión basada en datos concretos del test\",\n  \"puntajes_crudos\": \"Teórico (T):    XX/40\\nEconómico (E):  XX/40\\nEstético (A):   XX/40\\nSocial (S):     XX/40\\nPolítico (P):   XX/40\\nReligioso (R):  XX/40\\nValor dominante: [X]\\nValor rechazado: [Y]\\nRango de polarización: XX puntos\",\n  \"feedback_candidato\": \"1 párrafo constructivo y desarrollativo para enviar AL candidato. Sin revelar banderas rojas ni puntajes específicos — enfocado en oportunidades de desarrollo personal y profesional.\"\n}"
+              "content": "=ROL: Analista psicometrico senior Hacke's Jobs. Tono ejecutivo, evidence-based, Zero-Hallucination.\n\nTEST: Allport. Estudio de Valores de Allport-Vernon-Lindzey. Seis valores: T=Teorico (verdad/conocimiento). E=Economico (utilidad/practicidad). A=Estetico (forma/armonia). S=Social (servicio/personas). P=Politico (poder/influencia). R=Religioso (unidad/trascendencia).\n\nREGLAS DE LECTURA: Score por valor + rango relativo entre los 6. POLARIZACION CRITICA: diferencia > 40 puntos entre el valor mas alto y el mas bajo = jerarquia de valores rigida. Congruencia con rol: el perfil de valores debe alinear con la naturaleza del puesto (ej. comercial = P+E altos; investigacion = T alto).\n\nLENGUAJE PROHIBIDO: 'excelente/excepcional/sobresaliente/perfecto/ideal' salvo percentil>=95. PROHIBIDO lenguaje clinico o de diagnostico. Solo interpretacion psicometrica de apoyo a decisiones de RH.\n\nDATOS:\n- Candidato: {{ $json.nombre }}\n- Empresa/Cargo: {{ $json.empresa }} - {{ $json.cargo }}\n- Completitud: {{ $json.completitud }}%\n- Respuestas: {{ $json.respuestas_str }}\n\nPUNTAJES A REPORTAR: Score por cada valor (T/E/A/S/P/R) en escala estandarizada + ranking de los 6.\n\nOUTPUT: SOLO JSON valido, sin markdown, sin texto adicional.\n{\"validez\":\"VALIDO\",\"resumen_validez\":\"\",\"resumen_ejecutivo\":\"\",\"fortalezas_operativas\":\"\",\"riesgos_potenciales\":\"\",\"recomendacion_contratacion\":\"\",\"justificacion_recomendacion\":\"\",\"puntajes_crudos\":\"\",\"feedback_candidato\":\"\"}"
             }
           ]
         },
+        "jsonOutput": true,
+        "builtInTools": {},
         "options": {
-          "temperature": 0.7
+          "temperature": 0.4
         }
       },
-      "name": "Análisis Psicométrico Gemini",
+      "id": "9378b077-3bc7-474f-bba5-731ae0c11c84",
+      "name": "Gemini Analisis",
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
-      "typeVersion": 1,
+      "typeVersion": 1.2,
       "position": [
-        -1136,
-        28
+        0,
+        0
       ],
-      "id": "671b8577-9287-442f-a76c-b86a6133eff4",
+      "retryOnFail": true,
       "credentials": {
         "googlePalmApi": {
           "id": "LFuDxpvMiT0jA4Yu",
           "name": "Google Gemini(PaLM) Api account 2"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// 1. Extracción profunda y específica para Gemini 3.1 Flash Lite\nlet rawData = $input.item.json;\nlet textToParse = \"\";\n\n// Buscamos la ruta exacta donde Gemini 3.1 esconde el texto\nif (rawData.content && rawData.content.parts && rawData.content.parts[0] && rawData.content.parts[0].text) {\n    textToParse = rawData.content.parts[0].text;\n} else if (rawData.message && rawData.message.content) {\n    textToParse = rawData.message.content;\n} else if (rawData.text) {\n    textToParse = rawData.text;\n} else {\n    textToParse = JSON.stringify(rawData);\n}\n\n// 2. Forzar conversión a String\ntextToParse = String(textToParse);\n\n// 3. Extracción Blindada con Regex\nconst match = textToParse.match(/\\{[\\s\\S]*\\}/);\nlet extractedJson = match ? match[0] : textToParse;\n\n// 4. Parseo y salida\ntry {\n    const parsedData = JSON.parse(extractedJson);\n    return { json: parsedData };\n} catch (error) {\n    return {\n        json: {\n            \"valores_dominantes\": \"Error de Parseo\",\n            \"motivador_principal\": \"Fallo al convertir la respuesta.\",\n            \"alineacion_cultural\": \"Revisar logs en n8n.\"\n        }\n    };\n}"
+        "jsCode": "const REQ=['validez','resumen_validez','resumen_ejecutivo','fortalezas_operativas','riesgos_potenciales','recomendacion_contratacion','justificacion_recomendacion','puntajes_crudos','feedback_candidato'];const errShape=(r)=>({validez:'ERROR_PARSEO',resumen_validez:'No se pudo leer respuesta del modelo.',resumen_ejecutivo:'ERROR DE PARSEO: '+r,fortalezas_operativas:'N/A',riesgos_potenciales:'N/A',recomendacion_contratacion:'Revision Manual Requerida',justificacion_recomendacion:'Respuesta no interpretable.',puntajes_crudos:'PARSEO FALLIDO',feedback_candidato:'Tu evaluacion esta siendo revisada manualmente.',_parse_error:r});function extractText(r){if(r==null)return'';if(typeof r==='string')return r;const c=[r.text,r.output_text,r.response,r.message&&r.message.content,r.content&&typeof r.content==='string'?r.content:null,r.content&&r.content.parts&&r.content.parts[0]&&r.content.parts[0].text,r.candidates&&r.candidates[0]&&r.candidates[0].content&&r.candidates[0].content.parts&&r.candidates[0].content.parts[0]&&r.candidates[0].content.parts[0].text];for(const x of c)if(typeof x==='string'&&x.trim())return x;return JSON.stringify(r);}const raw=$input.item.json;let t;try{t=extractText(raw);if(!t||!t.trim())return{json:errShape('Respuesta vacia')};t=String(t).replace(/^\\s*```(?:json)?\\s*/i,'').replace(/\\s*```\\s*$/i,'').trim();const a=t.indexOf('{'),b=t.lastIndexOf('}');const j=(a===-1||b<=a)?t:t.slice(a,b+1);let p;try{p=JSON.parse(j);}catch(_){p=JSON.parse(j.replace(/,\\s*([}\\]])/g,'$1'));}const miss=REQ.filter(k=>!(k in p));if(miss.length)return{json:Object.assign({},errShape('Claves faltantes: '+miss.join(',')),p,{validez:p.validez||'PARCIAL'})};return{json:p};}catch(e){return{json:errShape(e.message||String(e))};}"
       },
-      "name": "Parsear JSON Seguro",
+      "id": "bbfc3e90-1e33-477c-86ae-c0dd03ae68ab",
+      "name": "Parser Blindado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -886,
-        28
-      ],
-      "id": "d5b1283b-ea4e-44da-a5a8-3adc3af5d621"
+        368,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const n=$('Normalizar y Validar').item.json;return{json:{validez:'INVALIDO_INCOMPLETO',resumen_validez:'PRUEBA ANULADA: '+n.contestadas+'/'+n.total+' ('+n.completitud+'%). Umbral 85% no alcanzado.',resumen_ejecutivo:'ADVERTENCIA: Prueba Allport con baja fiabilidad. No se genero interpretacion AI.',fortalezas_operativas:'No aplicable - prueba incompleta',riesgos_potenciales:'Compromiso del candidato; Posible falta de tiempo/atencion',recomendacion_contratacion:'No Recomendado',justificacion_recomendacion:'La prueba no alcanzo el 85% de completitud requerido.',puntajes_crudos:'PRUEBA ANULADA',feedback_candidato:'Notamos que tu evaluacion quedo incompleta. Te invitamos a retomarla.'}};"
+      },
+      "id": "9b2bb37d-a1c3-4eb5-b85e-29d2504d0dd6",
+      "name": "Reporte Anulado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        432
+      ]
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0",
           "mode": "list",
-          "cachedResultName": "Usuarios_Plataforma_test",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0/edit?usp=drivesdk"
+          "value": "1NToEP0_1ne1GD3MzpAJ1WvibXMYQ8Xp-C6-y4Cdu-V0"
         },
         "sheetName": {
           "__rl": true,
@@ -85,11 +149,18 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Valores Dominantes": "={{ $json.valores_dominantes }}",
-            "Motivador Principal": "={{ $json.motivador_principal }}",
-            "Alineacion Cultural": "={{ $json.alineacion_cultural }}",
-            "Nombre": "={{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}",
-            "Email": "={{ $('Webhook Recepción').item.json.body.datos_paciente.email }}"
+            "Nombre": "={{ $('Webhook Recepcion').item.json.body.datos_paciente.nombre_completo }}",
+            "Email": "={{ $('Webhook Recepcion').item.json.body.datos_paciente.email }}",
+            "Fecha": "={{ $('Webhook Recepcion').item.json.body.datos_prueba.fecha_aplicacion }}",
+            "validez": "={{ $json.validez }}",
+            "resumen_validez": "={{ $json.resumen_validez }}",
+            "resumen_ejecutivo": "={{ $json.resumen_ejecutivo }}",
+            "fortalezas_operativas": "={{ $json.fortalezas_operativas }}",
+            "riesgos_potenciales": "={{ $json.riesgos_potenciales }}",
+            "recomendacion_contratacion": "={{ $json.recomendacion_contratacion }}",
+            "justificiacion_recomendacion": "={{ $json.justificacion_recomendacion }}",
+            "puntajes_crudos": "={{ $json.puntajes_crudos }}",
+            "feedback_candidato": "={{ $json.feedback_candidato }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -114,8 +185,8 @@
               "removed": false
             },
             {
-              "id": "Valores Dominantes",
-              "displayName": "Valores Dominantes",
+              "id": "Fecha",
+              "displayName": "Fecha",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -124,8 +195,8 @@
               "removed": false
             },
             {
-              "id": "Motivador Principal",
-              "displayName": "Motivador Principal",
+              "id": "validez",
+              "displayName": "validez",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -134,8 +205,78 @@
               "removed": false
             },
             {
-              "id": "Alineacion Cultural",
-              "displayName": "Alineacion Cultural",
+              "id": "resumen_validez",
+              "displayName": "resumen_validez",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resumen_ejecutivo",
+              "displayName": "resumen_ejecutivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fortalezas_operativas",
+              "displayName": "fortalezas_operativas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "riesgos_potenciales",
+              "displayName": "riesgos_potenciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "recomendacion_contratacion",
+              "displayName": "recomendacion_contratacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "justificiacion_recomendacion",
+              "displayName": "justificiacion_recomendacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puntajes_crudos",
+              "displayName": "puntajes_crudos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "feedback_candidato",
+              "displayName": "feedback_candidato",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -149,14 +290,15 @@
         },
         "options": {}
       },
-      "id": "dcd79296-b108-44ac-823d-eadabe5cd1ac",
-      "name": "Respaldar en Google Sheets",
+      "id": "8d8d02ce-1f4f-426d-9dd9-358741155879",
+      "name": "Sheets Respaldar",
       "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4,
+      "typeVersion": 4.7,
       "position": [
-        -560,
-        128
+        704,
+        208
       ],
+      "retryOnFail": true,
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -168,156 +310,87 @@
     {
       "parameters": {
         "sendTo": "abelardo.carlos@hackesjobs.com.mx",
-        "subject": "=Alerta Hackes Jobs Technologies: Nuevo Reporte Allport Procesado [ {{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }} | {{ $('Webhook Recepción').item.json.body.datos_paciente.email }} ]",
-        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 720px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.08);\">\n\n    <div style=\"background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); padding: 32px 24px;\">\n        <p style=\"color: #FF8C00; margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;\">HACKE'S JOBS · REPORTE EJECUTIVO</p>\n        <h2 style=\"color: #FFFFFF; margin: 8px 0 4px 0; font-size: 26px; font-weight: 800; letter-spacing: -0.3px;\">Test de Valores de Allport</h2>\n        <p style=\"color: #999; margin: 0; font-size: 13px;\">Análisis Psicométrico de Valores · Allport-Vernon-Lindzey</p>\n    </div>\n\n    <div style=\"background-color: #F5F5F5; padding: 14px 24px; border-bottom: 1px solid #E0E0E0;\">\n        <p style=\"margin: 0; font-size: 11px; font-weight: 700; color: #333; text-transform: uppercase; letter-spacing: 1.5px;\">Validez del Reporte: {{ $('Parsear JSON Seguro').item.json.validez }}</p>\n        <p style=\"margin: 4px 0 0 0; font-size: 13px; color: #555;\">{{ $('Parsear JSON Seguro').item.json.resumen_validez }}</p>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 32px; color: #333333;\">\n\n        <div style=\"margin-bottom: 28px;\">\n            <p style=\"margin: 0; font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px;\">Candidato</p>\n            <p style=\"margin: 4px 0 0 0; font-size: 20px; font-weight: 700; color: #000;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo }}</p>\n            <p style=\"margin: 2px 0 0 0; font-size: 14px; color: #FF8C00;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.email }}</p>\n            <p style=\"margin: 6px 0 0 0; font-size: 12px; color: #777;\">{{ $('Webhook Recepción').item.json.body.datos_paciente.empresa || 'Empresa no especificada' }} · {{ $('Webhook Recepción').item.json.body.datos_paciente.cargo_postulado || 'Cargo no especificado' }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 28px; padding: 22px; background-color: #FAFAFA; border-left: 4px solid #000; border-radius: 0 8px 8px 0;\">\n            <p style=\"margin: 0 0 10px 0; font-size: 12px; font-weight: 700; color: #000; text-transform: uppercase; letter-spacing: 1.5px;\">Resumen Ejecutivo</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.7; color: #333; white-space: pre-line;\">{{ $('Parsear JSON Seguro').item.json.resumen_ejecutivo }}</p>\n        </div>\n\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom: 28px;\">\n            <tr>\n                <td valign=\"top\" width=\"50%\" style=\"padding-right: 8px;\">\n                    <div style=\"background-color: #F1F8F4; border: 1px solid #C8E6C9; border-radius: 8px; padding: 18px;\">\n                        <p style=\"margin: 0 0 10px 0; font-size: 11px; font-weight: 700; color: #2E7D32; text-transform: uppercase; letter-spacing: 1.5px;\">✓ Fortalezas Operativas</p>\n                        <p style=\"margin: 0; font-size: 13px; line-height: 1.6; color: #1B5E20; white-space: pre-line;\">{{ $('Parsear JSON Seguro').item.json.fortalezas_operativas }}</p>\n                    </div>\n                </td>\n                <td valign=\"top\" width=\"50%\" style=\"padding-left: 8px;\">\n                    <div style=\"background-color: #FFEBEE; border: 1px solid #FFCDD2; border-radius: 8px; padding: 18px;\">\n                        <p style=\"margin: 0 0 10px 0; font-size: 11px; font-weight: 700; color: #C62828; text-transform: uppercase; letter-spacing: 1.5px;\">⚠ Banderas Rojas</p>\n                        <p style=\"margin: 0; font-size: 13px; line-height: 1.6; color: #B71C1C; white-space: pre-line;\">{{ $('Parsear JSON Seguro').item.json.riesgos_potenciales }}</p>\n                    </div>\n                </td>\n            </tr>\n        </table>\n\n        <div style=\"margin-bottom: 28px; padding: 24px; background: linear-gradient(135deg, #FFF8F0 0%, #FFFFFF 100%); border: 2px solid #FF8C00; border-radius: 12px;\">\n            <p style=\"margin: 0; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 2px; text-align: center;\">Recomendación de Contratación</p>\n            <p style=\"margin: 10px 0 6px 0; font-size: 24px; font-weight: 800; color: #FF8C00; letter-spacing: -0.3px; text-align: center;\">{{ $('Parsear JSON Seguro').item.json.recomendacion_contratacion }}</p>\n            <p style=\"margin: 14px 0 0 0; font-size: 13px; color: #555; line-height: 1.6;\">{{ $('Parsear JSON Seguro').item.json.justificacion_recomendacion }}</p>\n        </div>\n\n        <div style=\"margin-bottom: 16px;\">\n            <p style=\"margin: 0 0 10px 0; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1.5px;\">Puntajes Crudos</p>\n            <pre style=\"margin: 0; font-family: 'Courier New', Consolas, monospace; font-size: 12px; line-height: 1.6; color: #333; background-color: #F5F5F5; padding: 16px; border-radius: 6px; white-space: pre-wrap; border: 1px solid #E0E0E0;\">{{ $('Parsear JSON Seguro').item.json.puntajes_crudos }}</pre>\n        </div>\n\n        <p style=\"font-size: 11px; color: #999; font-style: italic; margin-top: 24px; text-align: center;\">\n            Procesado por Hacke's Jobs Technologies · Datos respaldados en Google Sheets\n        </p>\n    </div>\n\n    <div style=\"background-color: #000; padding: 20px; text-align: center;\">\n        <p style=\"color: #FFFFFF; font-size: 11px; margin: 0; letter-spacing: 2px; font-weight: 700;\">HACKES JOBS TECHNOLOGIES</p>\n        <p style=\"color: #666; font-size: 10px; margin: 4px 0 0 0;\">Infraestructura HR-Tech · Psicometría Organizacional</p>\n    </div>\n</div>",
+        "subject": "=Alerta Hacke's Jobs: Reporte Allport [ {{ $('Normalizar y Validar').item.json.nombre }} ]",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#7C3AED,#5B21B6);padding:28px 24px;\"><p style=\"color:#FFF;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:0.9;\">HACKES JOBS REPORTE</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">Test Allport</h2></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Validez: {{ $json.validez }}</p><p style=\"margin:4px 0 0;font-size:13px;color:#555;\">{{ $json.resumen_validez }}</p></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Candidato</p><p style=\"margin:4px 0 0;font-size:20px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.nombre }}</p><p style=\"margin:2px 0 0;font-size:14px;color:#7C3AED;\">{{ $('Normalizar y Validar').item.json.email }}</p><div style=\"margin:20px 0;padding:20px;background:#FAFAFA;border-left:4px solid #7C3AED;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen Ejecutivo</p><p style=\"margin:0;font-size:15px;line-height:1.7;white-space:pre-line;\">{{ $json.resumen_ejecutivo }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Fortalezas</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $json.fortalezas_operativas }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Riesgos</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $json.riesgos_potenciales }}</p></div></td></tr></table><div style=\"margin:20px 0;padding:20px;background:linear-gradient(135deg,#FFF8F0,#FFF);border:2px solid #7C3AED;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Recomendacion</p><p style=\"margin:8px 0 6px;font-size:22px;font-weight:800;color:#7C3AED;\">{{ $json.recomendacion_contratacion }}</p><p style=\"margin:10px 0 0;font-size:13px;color:#555;line-height:1.6;text-align:left;\">{{ $json.justificacion_recomendacion }}</p></div><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Puntajes Crudos</p><pre style=\"margin:0;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $json.puntajes_crudos }}</pre></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
         "options": {
           "appendAttribution": false
         }
       },
-      "id": "13825e6a-bbda-4a86-960d-9e10cc6c317c",
-      "name": "Gmail Notificación RH",
+      "id": "667c5577-0983-47ce-b6f4-daeef7c8fed5",
+      "name": "Gmail RH",
       "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "typeVersion": 2.2,
       "position": [
-        -240,
-        32
+        960,
+        112
       ],
-      "webhookId": "c1cd76c4-028c-4306-8cbc-581b4e46a6bd",
+      "retryOnFail": true,
+      "webhookId": "ca96f4c2-9957-4b7f-baa5-1c24fb76882f",
       "credentials": {
         "gmailOAuth2": {
           "id": "VcaMQBt7yiQIpxiE",
           "name": "Gmail account"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "sendTo": "={{ $('Webhook Recepción').item.json.body.datos_paciente.email }}",
-        "subject": "=Feedback de Desarrollo · Allport | Hacke's Jobs Technologies",
-        "message": "=<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E0E0E0; border-radius: 12px; overflow: hidden;\">\n\n    <div style=\"background: linear-gradient(135deg, #FF8C00 0%, #FF6F00 100%); padding: 32px 24px;\">\n        <p style=\"color: rgba(255,255,255,0.9); margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;\">Feedback de Desarrollo</p>\n        <h2 style=\"color: #FFFFFF; margin: 8px 0 0 0; font-size: 24px; font-weight: 700;\">Test de Valores de Allport</h2>\n    </div>\n\n    <div style=\"background-color: #FFFFFF; padding: 32px; color: #333;\">\n        <p style=\"font-size: 16px; line-height: 1.6; margin-top: 0;\">Hola {{ $('Webhook Recepción').item.json.body.datos_paciente.nombre_completo.split(' ')[0] }},</p>\n\n        <p style=\"font-size: 15px; line-height: 1.7; color: #555;\">Gracias por completar tu evaluación. Como parte de nuestro compromiso con tu desarrollo profesional, queremos compartirte una reflexión personalizada sobre el ejercicio que acabas de realizar.</p>\n\n        <div style=\"margin: 24px 0; padding: 22px; background-color: #FFF8F0; border-left: 4px solid #FF8C00; border-radius: 0 8px 8px 0;\">\n            <p style=\"margin: 0 0 10px 0; font-size: 11px; font-weight: 700; color: #FF8C00; text-transform: uppercase; letter-spacing: 1.5px;\">Reflexión Profesional</p>\n            <p style=\"margin: 0; font-size: 15px; line-height: 1.7; color: #333;\">{{ $('Parsear JSON Seguro').item.json.feedback_candidato }}</p>\n        </div>\n\n        <p style=\"font-size: 15px; line-height: 1.7; color: #555;\">El equipo de reclutamiento de Hacke's Jobs Technologies revisará tu evaluación junto con tu expediente. Nos pondremos en contacto contigo en breve para los siguientes pasos del proceso.</p>\n\n        <p style=\"font-size: 14px; color: #888; margin-top: 32px;\">Si tienes preguntas, escríbenos a <a href=\"mailto:abelardo.carlos@hackesjobs.com.mx\" style=\"color: #FF8C00; text-decoration: none; font-weight: 600;\">abelardo.carlos@hackesjobs.com.mx</a></p>\n\n        <div style=\"margin-top: 32px; border-top: 1px solid #EEE; padding-top: 20px;\">\n            <p style=\"font-size: 14px; color: #666; margin: 0;\">Saludos,</p>\n            <p style=\"font-size: 16px; color: #000; font-weight: 700; margin: 4px 0 0 0;\">Equipo Hacke's Jobs Technologies</p>\n        </div>\n    </div>\n\n    <div style=\"background-color: #000; padding: 16px; text-align: center;\">\n        <p style=\"color: #FFF; font-size: 11px; margin: 0; letter-spacing: 1.5px; font-weight: 700;\">HACKES JOBS TECHNOLOGIES</p>\n    </div>\n</div>",
+        "sendTo": "={{ $('Normalizar y Validar').item.json.email }}",
+        "subject": "Feedback de Desarrollo - Allport | Hacke's Jobs",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#7C3AED,#5B21B6);padding:28px 24px;\"><p style=\"color:rgba(255,255,255,.9);margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;\">Confirmacion de Evaluacion</p><h2 style=\"color:#FFF;margin:8px 0 0;font-size:22px;font-weight:700;\">Test Allport</h2></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"font-size:16px;line-height:1.6;margin-top:0;\">Hola {{ $('Normalizar y Validar').item.json.nombre.split(' ')[0] }},</p><p style=\"font-size:15px;line-height:1.7;color:#555;\">Gracias por completar tu evaluacion Allport. Te compartimos una reflexion personalizada con base en tus respuestas:</p><div style=\"margin:20px 0;padding:20px;background:#FFF8F0;border-left:4px solid #7C3AED;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1.5px;\">Reflexion Profesional</p><p style=\"margin:0;font-size:15px;line-height:1.7;\">{{ $json.feedback_candidato }}</p></div><p style=\"font-size:15px;line-height:1.7;color:#555;\">El equipo de Hacke's Jobs revisara tu evaluacion y se pondra en contacto contigo.</p></div><div style=\"background:#000;padding:14px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:1.5px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
         "options": {
           "appendAttribution": false
         }
       },
-      "id": "425f3cfb-2b51-4ef3-ba2c-3b1bd42d7c19",
-      "name": "Gmail Confirmación Cliente",
+      "id": "51a0b9f9-b045-4f50-b760-6d7685652181",
+      "name": "Gmail Candidato",
       "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
+      "typeVersion": 2.2,
       "position": [
-        -240,
-        240
+        960,
+        304
       ],
-      "webhookId": "47a0cea3-d1f6-4789-94df-1bab7eead32a",
+      "retryOnFail": true,
+      "webhookId": "3d1023d1-3072-44c7-abab-3f8fcfdc7ece",
       "credentials": {
         "gmailOAuth2": {
           "id": "VcaMQBt7yiQIpxiE",
           "name": "Gmail account"
         }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "c794e05bb6d06c8c-fe5bc55a-82c72bf0-6a0d615a-ac5b94d8869501e56c839182",
-              "leftValue": "={{ $json.body.datos_prueba.preguntas_contestadas }}",
-              "rightValue": "={{ Math.floor($json.body.datos_prueba.total_preguntas * 0.9) }}",
-              "operator": {
-                "type": "number",
-                "operation": "gte"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
       },
-      "id": "2edd2142be1338d3-3427e129-6bfa817d-f1140003-6143797c68cce41ad0f33dc3",
-      "name": "Validar Completitud",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -1336,
-        128
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "return { json: {\n  \"validez\": \"INVÁLIDO_INCOMPLETO\",\n  \"resumen_validez\": \"PRUEBA ANULADA: El candidato no completó el umbral mínimo del 85% de reactivos.\",\n  \"resumen_ejecutivo\": \"⚠ ADVERTENCIA: Prueba con baja fiabilidad por falta de datos. La evaluación no superó el umbral del 85% de reactivos requerido para análisis psicométrico válido. No se generó interpretación.\",\n  \"fortalezas_operativas\": \"• No aplicable — prueba incompleta\",\n  \"riesgos_potenciales\": \"• Compromiso del candidato con el proceso de evaluación\\n• Posible falta de tiempo, atención o motivación\",\n  \"recomendacion_contratacion\": \"No Recomendado\",\n  \"justificacion_recomendacion\": \"La prueba no alcanzó el 85% de completitud requerido para un análisis estadísticamente válido. Se recomienda reaplicación bajo condiciones controladas o decisión basada en otras evaluaciones del expediente.\",\n  \"puntajes_crudos\": \"PRUEBA ANULADA — sin puntajes calculables\",\n  \"feedback_candidato\": \"Notamos que tu evaluación quedó incompleta. Te invitamos a retomarla cuando puedas dedicarle tu atención completa — los resultados serán mucho más útiles para tu proceso.\"\n} };"
-      },
-      "id": "ffb6e2f40a1ce788-fbf1c93d-83af2348-496f7400-70b0b0dc6040bc11d4f1ec46",
-      "name": "Reporte Anulado",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1136,
-        328
-      ]
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
   "connections": {
-    "Webhook Recepción": {
+    "Webhook Recepcion": {
       "main": [
         [
           {
-            "node": "Validar Completitud",
+            "node": "Normalizar y Validar",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Análisis Psicométrico Gemini": {
+    "Normalizar y Validar": {
       "main": [
         [
           {
-            "node": "Parsear JSON Seguro",
+            "node": "es valido",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parsear JSON Seguro": {
+    "es valido": {
       "main": [
         [
           {
-            "node": "Respaldar en Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respaldar en Google Sheets": {
-      "main": [
-        [
-          {
-            "node": "Gmail Notificación RH",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Gmail Confirmación Cliente",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Validar Completitud": {
-      "main": [
-        [
-          {
-            "node": "Análisis Psicométrico Gemini",
+            "node": "Gemini Analisis",
             "type": "main",
             "index": 0
           }
@@ -331,11 +404,56 @@
         ]
       ]
     },
+    "Gemini Analisis": {
+      "main": [
+        [
+          {
+            "node": "Parser Blindado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Parser Blindado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Blindado": {
+      "main": [
+        [
+          {
+            "node": "Sheets Respaldar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Reporte Anulado": {
       "main": [
         [
           {
-            "node": "Respaldar en Google Sheets",
+            "node": "Sheets Respaldar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets Respaldar": {
+      "main": [
+        [
+          {
+            "node": "Gmail RH",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail Candidato",
             "type": "main",
             "index": 0
           }
@@ -343,15 +461,15 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "9504eb89-88c2-4fc5-a8f4-1c89e283fd9f",
+  "versionId": "a6d4fa6b-f396-4f88-83b4-57ae9664f9ec",
   "meta": {
     "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
   },
-  "id": "RSnkE6wKe7hlgwsI",
+  "id": "JJ1PAo0XRB5DQYOe",
   "tags": []
 }

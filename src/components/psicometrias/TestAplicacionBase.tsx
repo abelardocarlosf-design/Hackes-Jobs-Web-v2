@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Clock, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
-import { testsConfig } from '@/lib/psicometriasConfig';
+import { submitPsychometry, registerOnlineFlush, TEST_REGISTRY, type TestId } from '@/lib/psychometryDispatcher';
 
 interface TestAplicacionBaseProps {
   slug: string;
@@ -45,6 +45,10 @@ export function TestAplicacionBase({
     } else {
       setLeadData(JSON.parse(lead));
     }
+    // Engancha el flush de la cola offline para reintentar envíos pendientes
+    // de sesiones previas cuando el navegador recupere conectividad.
+    const unregister = registerOnlineFlush();
+    return unregister;
   }, [slug, router]);
 
   const progressPercentage = Math.round((answeredQuestions / totalQuestions) * 100) || 0;
@@ -74,89 +78,73 @@ export function TestAplicacionBase({
 
   const handleConfirmSubmit = async (timeOut = false) => {
     if (!leadData) return;
-    
+
     setShowConfirmModal(false);
     setIsProcessing(true);
     setErrorMsg(null);
     setProcessStatus('Enviando respuestas...');
 
     try {
-      const testPayload = onFinalSubmit();
+      const respuestas = onFinalSubmit();
       const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
-      const timeSpentMinutes = timeSpentSeconds / 60;
-      const fechaAplicacion = new Date().toISOString().split('T')[0];
+      const fechaAplicacion = new Date().toISOString(); // ISO 8601 UTC completo
 
-      // Sanitizar email para evitar nulos en webhook
-      const safeEmail = leadData.email ? leadData.email.trim() : 'sin_correo@hackes.com';
-      const safeName = leadData.nombre_completo ? leadData.nombre_completo.trim() : 'Candidato Anónimo';
-      const safePhone = leadData.telefono ? leadData.telefono.trim() : 'Sin teléfono';
+      // Sanitización de datos del lead (defaults seguros para que n8n no rompa)
+      const safeEmail = leadData.email ? leadData.email.trim() : '';
+      const safeName  = leadData.nombre_completo ? leadData.nombre_completo.trim() : 'Candidato Anónimo';
+      const safePhone = leadData.telefono ? leadData.telefono.trim() : '';
+      const safeEmpresa = (leadData.empresa || '').trim();
+      const safeCargo   = (leadData.cargo_postulado || '').trim();
 
-      // Datos del test desde el catálogo central
-      const testInfo = testsConfig[slug];
-      const testNombre = testInfo?.nombre || slug;
-      const completitudPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
-      const pruebaIncompleta = answeredQuestions < totalQuestions;
+      // Estado de finalización (alimenta `datos_prueba.estado_finalizacion` del contrato v1)
+      const estado: 'completa' | 'parcial' | 'abandonada' =
+        answeredQuestions === 0
+          ? 'abandonada'
+          : answeredQuestions >= totalQuestions
+            ? 'completa'
+            : 'parcial';
 
-      // Payload JSON estricto requerido por n8n (campos normalizados)
-      // Asunto de correo esperado en n8n:
-      //   Alerta Hackes Jobs Technologies: Nuevo Reporte {{test_nombre}} Procesado [ {{nombre_paciente}} | {{email_paciente}} ]
-      const payload = {
-        body: {
-          // Identificadores top-level para que n8n arme el asunto sin entrar a sub-objetos
-          test_slug: slug,
-          test_nombre: testNombre,
-          nombre_paciente: safeName,
-          email_paciente: safeEmail,
-          telefono_paciente: safePhone,
-
-          // Conteos top-level para validar completitud sin entrar a sub-objetos
-          total_preguntas_test: totalQuestions,
-          total_preguntas_respondidas: answeredQuestions,
-          porcentaje_completitud: completitudPct,
-          prueba_incompleta: pruebaIncompleta,
-          time_out_agotado: timeOut,
-
-          // Sub-objetos legacy mantenidos para compatibilidad con flujos n8n anteriores
-          datos_paciente: {
-            nombre_completo: safeName,
-            email: safeEmail,
-            telefono: safePhone
-          },
-          datos_prueba: {
-            test_slug: slug,
-            test_nombre: testNombre,
-            fecha_aplicacion: fechaAplicacion,
-            tiempo_completado_minutos: timeSpentMinutes,
-            time_out_agotado: timeOut,
-            total_preguntas: totalQuestions,
-            total_preguntas_test: totalQuestions,
-            preguntas_contestadas: answeredQuestions,
-            total_preguntas_respondidas: answeredQuestions,
-            porcentaje_completitud: completitudPct,
-            prueba_incompleta: pruebaIncompleta
-          },
-          respuestas: testPayload
-        }
-      };
-
-      // 1. Enviar POST a nuestra nueva API route
-      const res = await fetch(`/api/psicometrias/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug, ...payload })
-      });
-
-      if (!res.ok) {
-        throw new Error('Error al enviar los datos del test.');
+      // Guard: slugs registrados en el dispatcher.
+      // Si llegamos aquí con un slug fuera del registro, falla duro (ver caso límite 12 del prompt).
+      if (!(slug in TEST_REGISTRY)) {
+        throw new Error(`Psicometría no registrada en el dispatcher: ${slug}`);
       }
 
-      setProcessStatus('¡Test Completado!');
+      const result = await submitPsychometry(slug as TestId, {
+        candidate: {
+          nombre_completo: safeName,
+          email: safeEmail,
+          telefono: safePhone,
+          empresa: safeEmpresa || undefined,
+          cargo_postulado: safeCargo || undefined,
+        },
+        metrics: {
+          total_preguntas: totalQuestions,
+          preguntas_contestadas: answeredQuestions,
+          fecha_aplicacion: fechaAplicacion,
+          duracion_segundos: timeSpentSeconds,
+          estado_finalizacion: estado,
+          time_out_agotado: timeOut,
+        },
+        respuestas,
+      });
 
-      // Limpiar localStorage (respuestas) y sessionStorage (lead)
+      if (!result.ok) {
+        if (result.queued) {
+          // Sin red: el dispatcher encoló para reintentar al recuperar conectividad.
+          setProcessStatus('Sin conexión. Tus respuestas se enviarán automáticamente al recuperar internet.');
+        } else {
+          throw new Error(result.error || 'Error al enviar los datos del test.');
+        }
+      } else {
+        setProcessStatus('¡Test Completado!');
+      }
+
+      // Limpiar localStorage (respuestas) y sessionStorage (lead) — el backup server-side ya está hecho.
       localStorage.removeItem(`hj_test_${slug}`);
       sessionStorage.removeItem(`hj_lead_${slug}`);
-      
-      // Redirigir directamente a la pantalla de éxito genérica o al resultado
+
+      // Redirigir a la pantalla de éxito / resultado
       router.push(`/psicometrias/${slug}/resultado?success=true`);
 
     } catch (err: any) {
