@@ -22,16 +22,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
   if (!post) return { title: 'Post no encontrado' };
 
+  const canonicalUrl = `https://hackesjobs.com.mx/blog/${post.slug}`;
+
   return {
-    title: `${post.title} | Blog HJ`,
+    title: `${post.title} | Blog Hacke's Jobs`,
     description: post.excerpt,
+    keywords: post.tags,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImage],
+      url: canonicalUrl,
+      images: [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }],
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],
+      siteName: "Hacke's Jobs Technologies",
+      locale: 'es_MX',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [post.coverImage],
     },
   };
 }
@@ -45,8 +60,41 @@ export default async function BlogPostPage({ params }: Props) {
     .filter(p => p.slug !== post.slug && p.published && p.tags.some(t => post.tags.includes(t)))
     .slice(0, 2);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage.startsWith('http') ? post.coverImage : `https://hackesjobs.com.mx${post.coverImage}`,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Organization',
+      name: post.author,
+      url: 'https://hackesjobs.com.mx',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: "Hacke's Jobs Technologies",
+      url: 'https://hackesjobs.com.mx',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://hackesjobs.com.mx/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://hackesjobs.com.mx/blog/${post.slug}`,
+    },
+    keywords: post.tags.join(', '),
+  };
+
   return (
     <article className="flex flex-col min-h-screen font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="page-overlay"></div>
       <div className="page-dotgrid"></div>
 
