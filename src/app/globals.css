@@ -771,3 +771,281 @@
 :root.light .text-gradient-brand {
   background-image: linear-gradient(to right, #F97316, #1E40AF) !important;
 }
+
+/* ─────────────────────────────────────────────────────────
+   NAVBAR LIGHT MODE — Comprehensive Overrides
+   Ensures the floating capsule, its links, CTAs, dropdowns,
+   mobile menu, hamburger and ThemeToggle all look premium
+   and uniform in the White/Light theme.
+   ───────────────────────────────────────────────────────── */
+
+/* Capsule container — unscrolled state: soft white glass */
+:root.light .bg-\[\#07070f\]\/35 {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Capsule container — scrolled state: solid white with shadow */
+:root.light .bg-\[\#07070f\]\/90 {
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* All white/transparent ring colors → subtle dark rings */
+:root.light .ring-white\/5 {
+  --tw-ring-color: rgba(0, 0, 0, 0.04) !important;
+}
+:root.light .ring-white\/10 {
+  --tw-ring-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Transparent white borders in navbar → subtle dark borders */
+:root.light .border-white\/8 {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+:root.light .border-white\/12 {
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+/* Nav links in desktop: override slate-300 → rich dark slate */
+:root.light nav.hidden.lg\:flex button,
+:root.light nav.hidden.lg\:flex > a {
+  color: #334155 !important; /* slate-700 */
+}
+:root.light nav.hidden.lg\:flex button:hover,
+:root.light nav.hidden.lg\:flex > a:hover {
+  color: #0f172a !important;
+}
+
+/* Active dropdown button state */
+:root.light nav.hidden.lg\:flex button.text-white {
+  color: #0f172a !important;
+}
+
+/* BOLSA DE TRABAJO pill — keep brand orange, just clean up bg */
+:root.light .bg-orange-500\/5 {
+  background-color: rgba(249, 115, 22, 0.07) !important;
+}
+:root.light .hover\:bg-orange-500\/10:hover {
+  background-color: rgba(249, 115, 22, 0.12) !important;
+}
+:root.light .border-brand-orange\/20 {
+  border-color: rgba(249, 115, 22, 0.3) !important;
+}
+
+/* "Ingresar" ghost button — dark text, clear hover */
+:root.light .ghost-login-btn,
+:root.light a[href="/login"] .inline-flex {
+  color: #334155 !important;
+}
+
+/* Mobile hamburger toggle button */
+:root.light button[aria-label="Abrir navegación móvil"] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+:root.light button[aria-label="Abrir navegación móvil"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ThemeToggle button */
+:root.light button[aria-label="Toggle theme"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+:root.light button[aria-label="Toggle theme"]:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+/* glass-card-dark: clean white glass panel for dropdowns */
+:root.light .glass-card-dark {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.05) !important;
+}
+
+/* Dropdown section headers (orange/blue accents) — keep vivid */
+:root.light .glass-card-dark .text-brand-orange {
+  color: #ea6f0d !important;
+}
+:root.light .glass-card-dark .text-brand-blue {
+  color: #1E3FAA !important;
+}
+
+/* Dropdown card items: title links → dark text, subtitle → medium grey */
+:root.light .glass-card-dark .text-white {
+  color: #0f172a !important;
+}
+:root.light .glass-card-dark .text-slate-300,
+:root.light .glass-card-dark .text-slate-400 {
+  color: #64748b !important;
+}
+:root.light .glass-card-dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Dropdown item hover backgrounds */
+:root.light .glass-card-dark .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Dropdown item hover borders */
+:root.light .glass-card-dark .hover\:border-white\/5:hover {
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Dropdown divider lines */
+:root.light .glass-card-dark .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Dropdown icon pill backgrounds */
+:root.light .glass-card-dark .bg-orange-500\/10 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+}
+:root.light .glass-card-dark .bg-blue-500\/10 {
+  background-color: rgba(30, 64, 175, 0.1) !important;
+}
+:root.light .glass-card-dark .bg-emerald-500\/10 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+:root.light .glass-card-dark .bg-purple-500\/10 {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+}
+:root.light .glass-card-dark .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Dropdown mega-menu footer banner */
+:root.light .glass-card-dark .bg-white\/5.border-white\/5 {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+:root.light .glass-card-dark .hover\:border-brand-orange\/20:hover {
+  border-color: rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Dropdown "Próximamente" pill */
+:root.light .glass-card-dark .bg-brand-orange\/10 {
+  background-color: rgba(249, 115, 22, 0.08) !important;
+}
+:root.light .glass-card-dark .border-brand-orange\/20 {
+  border-color: rgba(249, 115, 22, 0.25) !important;
+}
+:root.light .glass-card-dark .opacity-60 {
+  opacity: 0.55 !important;
+}
+
+/* Mobile menu panel — clean white premium */
+:root.light .mobile-menu-panel {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Mobile menu nav links */
+:root.light .mobile-menu-panel nav.flex.flex-col > *,
+:root.light .mobile-menu-panel nav button,
+:root.light .mobile-menu-panel nav a {
+  color: #334155 !important;
+}
+:root.light .mobile-menu-panel nav button:hover,
+:root.light .mobile-menu-panel nav a:hover {
+  color: #0f172a !important;
+}
+
+/* Mobile menu dividers */
+:root.light .mobile-menu-panel .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+:root.light .mobile-menu-panel .border-b.border-white\/5 {
+  border-bottom-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Mobile sub-menu accordion items */
+:root.light .mobile-menu-panel .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+:root.light .mobile-menu-panel .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+:root.light .mobile-menu-panel .text-slate-200,
+:root.light .mobile-menu-panel .text-slate-300,
+:root.light .mobile-menu-panel .text-slate-400 {
+  color: #475569 !important;
+}
+:root.light .mobile-menu-panel .text-slate-500 {
+  color: #64748b !important;
+}
+:root.light .mobile-menu-panel .text-white {
+  color: #0f172a !important;
+}
+
+/* Mobile CTA buttons in menu panel */
+:root.light .mobile-menu-panel .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+:root.light .mobile-menu-panel .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+:root.light .mobile-menu-panel .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Profile button (authenticated) */
+:root.light .bg-white\/5.border.border-white\/10.rounded-full {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+:root.light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* --- Light Mode Hover & Group-Hover Corrections --- */
+:root.light .group\/item:hover .group-hover\/item\:text-brand-orange {
+  color: #F97316 !important;
+}
+:root.light .group\/item:hover .group-hover\/item\:text-brand-blue {
+  color: #1E40AF !important;
+}
+:root.light .group\/item:hover .group-hover\/item\:text-emerald-400 {
+  color: #10B981 !important;
+}
+:root.light .group\/item:hover .group-hover\/item\:text-purple-400 {
+  color: #A855F7 !important;
+}
+:root.light .group\/cand-item:hover .group-hover\/cand-item\:text-brand-blue {
+  color: #1E40AF !important;
+}
+:root.light .group\/cand-item:hover .group-hover\/cand-item\:text-emerald-400 {
+  color: #10B981 !important;
+}
+:root.light .group\/user-link:hover .group-hover\/user-link\:text-brand-orange {
+  color: #F97316 !important;
+}
+:root.light .group\/user-link:hover .group-hover\/user-link\:text-brand-blue {
+  color: #1E40AF !important;
+}
+:root.light .group\/user-link:hover .group-hover\/user-link\:text-red-400 {
+  color: #EF4444 !important;
+}
+:root.light .group:hover .group-hover\:text-brand-orange {
+  color: #F97316 !important;
+}
+:root.light .hover\:text-brand-orange:hover {
+  color: #F97316 !important;
+}
+:root.light .hover\:text-brand-blue:hover {
+  color: #1E40AF !important;
+}
+:root.light .hover\:text-emerald-400:hover {
+  color: #10B981 !important;
+}
+:root.light .hover\:text-purple-400:hover {
+  color: #A855F7 !important;
+}
+:root.light .group\/item:hover .group-hover\/item\:text-white,
+:root.light .group\/cand-item:hover .group-hover\/cand-item\:text-white,
+:root.light .group\/user-link:hover .group-hover\/user-link\:text-white {
+  color: #ffffff !important;
+}

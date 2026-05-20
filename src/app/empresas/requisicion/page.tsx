@@ -2,31 +2,38 @@ import { Metadata } from 'next';
 import { RequisitionWizard } from '@/components/RequisitionWizard';
 
 export const metadata: Metadata = {
-  title: 'Nueva Requisición de Talento | Hacke\'s Jobs',
+  title: 'Nueva Requisición de Talento | Hacke\'s Jobs Technologies',
   description: 'Inicia el proceso de reclutamiento compartiendo los detalles de tu vacante con nuestro equipo.',
 };
 
 export default function RequisicionPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="flex flex-col min-h-screen bg-brand-black font-sans selection:bg-brand-orange/40 selection:text-white overflow-x-hidden relative">
+      {/* Background ambient overlays & tech dotgrid matching the B2B platform */}
+      <div className="page-overlay"></div>
+      <div className="page-dotgrid"></div>
       
-      <main className="flex-grow py-16 md:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[400px] bg-gradient-to-b from-slate-200/50 to-transparent -z-10 rounded-b-[100px]"></div>
+      <main className="flex-grow py-16 md:py-24 px-4 sm:px-6 lg:px-8 relative z-10 overflow-hidden">
         
-        <div className="max-w-4xl mx-auto text-center mb-12 animate-in slide-in-from-bottom-8 fade-in duration-700">
-          <h1 className="text-4xl md:text-5xl font-black text-brand-black tracking-tight mb-4">
-            Inicia tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-orange">Búsqueda de Talento</span>
+        <div className="max-w-4xl mx-auto text-center mb-12 reveal-on-load">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-bold tracking-[0.25em] uppercase mb-6 shadow-sm">
+            <span className="flex h-2 w-2 rounded-full bg-brand-orange animate-pulse"></span>
+            Reclutamiento inteligente & IA
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4 leading-tight">
+            Levanta tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue">Requisición Empresarial</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
-            Completa este formulario para que nuestros especialistas entiendan exactamente qué perfil necesitas y comiencen la búsqueda de inmediato.
+          <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
+            Completa nuestro perfilador ejecutivo. Nuestro motor de IA y consultores expertos estructurarán tu vacante para iniciar la atracción de la terna idónea de inmediato.
           </p>
         </div>
 
-        <div className="animate-in zoom-in-95 fade-in duration-700 delay-150">
+        <div className="reveal-on-load reveal-delay-200">
           <RequisitionWizard />
         </div>
       </main>
     </div>
   );
 }
+

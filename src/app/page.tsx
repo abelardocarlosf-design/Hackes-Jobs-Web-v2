@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   Plug,
   ArrowRight,
+  Search,
+  UserPlus,
 } from 'lucide-react';
 import { HeroToluca } from '@/components/brand/HeroToluca';
 import { TechStackGrid } from '@/components/brand/TechStackGrid';
@@ -137,6 +139,83 @@ export default function HomePage() {
 
       {/* 2.5 CLIENTS · infinite marquee */}
       <ClientsMarquee />
+
+      {/* 2.8 SECCIÓN CANDIDATOS (BOLSA DE TRABAJO Y PORTAL DE TALENTO) */}
+      <section className="relative py-24 bg-[#07070f] overflow-hidden border-t border-white/5" aria-labelledby="talento-title">
+        {/* Glow decorative element */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-orange/5 rounded-full blur-[140px] pointer-events-none"></div>
+        
+        <div className="container relative mx-auto px-4 max-w-6xl z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/5 border border-brand-orange/15 text-brand-orange text-[10px] font-black tracking-[0.2em] uppercase">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-brand-orange animate-pulse"></span>
+              ¿Buscas empleo? Ecosistema de Talento
+            </div>
+            <h2 id="talento-title" className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+              Encuentra tu próximo <span className="text-brand-orange">reto profesional</span>.
+            </h2>
+            <p className="text-slate-400 text-base md:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+              Conectamos el mejor talento técnico, administrativo y operativo con las plantas de manufactura y empresas más importantes del corredor industrial Toluca-Lerma.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Card 1: Bolsa de Trabajo */}
+            <Card className="group relative overflow-hidden bg-[#0a0a14]/60 backdrop-blur-2xl border border-white/5 hover:border-brand-orange/30 p-8 sm:p-10 rounded-[2rem] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(249,115,22,0.1)] flex flex-col justify-between h-[360px]">
+              {/* Card Glow */}
+              <div className="absolute -right-20 -top-20 w-40 h-40 bg-brand-orange/5 rounded-full blur-3xl group-hover:bg-brand-orange/10 transition-colors duration-500"></div>
+              
+              <div className="space-y-6">
+                <div className="w-14 h-14 rounded-2xl bg-orange-500/10 text-brand-orange flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-all duration-500">
+                  <Search size={26} />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-brand-orange transition-colors">Bolsa de Empleo Activa</h3>
+                  <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                    Explora vacantes reales y validadas directamente con los tomadores de decisiones. Procesos transparentes, ágiles y con feedback claro.
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <Link href="/vacantes">
+                  <Button variant="secondary" className="w-full h-13 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5 border border-white/10 hover:border-brand-orange text-white hover:text-brand-orange hover:bg-brand-orange/5 transition-all flex items-center justify-center gap-2 group/btn">
+                    Explorar Vacantes
+                    <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Card 2: Vinculación con IA */}
+            <Card className="group relative overflow-hidden bg-[#0a0a14]/60 backdrop-blur-2xl border border-white/5 hover:border-brand-blue/30 p-8 sm:p-10 rounded-[2rem] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)] flex flex-col justify-between h-[360px]">
+              {/* Card Glow */}
+              <div className="absolute -right-20 -top-20 w-40 h-40 bg-brand-blue/5 rounded-full blur-3xl group-hover:bg-brand-blue/10 transition-colors duration-500"></div>
+
+              <div className="space-y-6">
+                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-brand-blue flex items-center justify-center group-hover:bg-brand-blue group-hover:text-white transition-all duration-500">
+                  <UserPlus size={26} />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-black text-white tracking-tight group-hover:text-brand-blue transition-colors">Vincúlate con Inteligencia Artificial</h3>
+                  <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                    Registra tu perfil y sube tu CV. Nuestros algoritmos de perfilado avanzado te vincularán automáticamente con vacantes afines a tu experiencia.
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <Link href="/register">
+                  <Button variant="secondary" className="w-full h-13 rounded-xl font-bold text-xs uppercase tracking-widest bg-white/5 border border-white/10 hover:border-brand-blue text-white hover:text-brand-blue hover:bg-brand-blue/5 transition-all flex items-center justify-center gap-2 group/btn">
+                    Subir mi CV / Perfil
+                    <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       {/* 3. STACK TÉCNICO (NUEVO MODELO DE TARJETAS) */}
       <section className="relative py-28 bg-brand-black" aria-labelledby="stack-title">
