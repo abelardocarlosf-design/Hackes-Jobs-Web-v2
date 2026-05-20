@@ -65,24 +65,6 @@
       "original": "racarsa - colors.png",
       "hasAlpha": true,
       "format": "png"
-    },
-    {
-      "slug": "sirga",
-      "original": "sirga - logo.png",
-      "hasAlpha": true,
-      "format": "png"
-    },
-    {
-      "slug": "truper",
-      "original": "truper - logo.png",
-      "hasAlpha": false,
-      "format": "png"
-    },
-    {
-      "slug": "zorro",
-      "original": "zorro - logo.png",
-      "hasAlpha": false,
-      "format": "png"
     }
   ],
   "toluca": [

@@ -86,10 +86,7 @@ const CLIENT_RENAMES = {
   'aura academy -  colors': 'aura-academy',
   'goncalves de mexico - logo': 'goncalves',
   'prisma industrial - logo': 'prisma-industrial',
-  'racarsa - colors': 'racarsa',
-  'sirga - logo': 'sirga',
-  'truper - logo': 'truper',
-  'zorro - logo': 'zorro'
+  'racarsa - colors': 'racarsa'
 };
 
 async function processClientLogos() {

@@ -5,13 +5,14 @@
  * (slow zoom + pan) keyframe. Heavy dark gradient overlay ensures text
  * legibility regardless of which photo is active.
  *
- * Uses CSS background-image with AVIF (modern) and image-set fallback chain.
- * Each photo has 640/1280/1920 widths processed via scripts/process-brand-assets.js.
+ * Uses native HTML <picture> to completely bypass Next.js image optimization endpoint,
+ * serving pre-optimized AVIF/WebP assets instantly in milliseconds.
+ *
+ * Employs responsive media queries to load lightweight resolutions (640/1280/1920)
+ * depending on viewport size, saving bandwidth and optimizing LCP/FCP.
  *
  * Honors prefers-reduced-motion (in globals.css: animations off, layer-1 visible).
  */
-
-import Image from 'next/image';
 
 const PHOTOS = [
   { slug: 'nevado-1', alt: 'Nevado de Toluca' },
@@ -26,14 +27,25 @@ export function HeroToluca() {
       {PHOTOS.map((p, i) => (
         <div key={p.slug} className={`hero-toluca-layer layer-${i + 1}`}>
           <div className="relative w-full h-full">
-            <Image
-              src={`/assets/toluca/${p.slug}-1920.avif`}
-              alt={p.alt}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority={i === 0}
-            />
+            <picture className="absolute inset-0 w-full h-full">
+              {/* AVIF variants (highest modern compression) */}
+              <source media="(max-width: 640px)" srcSet={`/assets/toluca/${p.slug}-640.avif`} type="image/avif" />
+              <source media="(max-width: 1280px)" srcSet={`/assets/toluca/${p.slug}-1280.avif`} type="image/avif" />
+              <source srcSet={`/assets/toluca/${p.slug}-1920.avif`} type="image/avif" />
+
+              {/* WebP fallback */}
+              <source media="(max-width: 640px)" srcSet={`/assets/toluca/${p.slug}-640.webp`} type="image/webp" />
+              <source media="(max-width: 1280px)" srcSet={`/assets/toluca/${p.slug}-1280.webp`} type="image/webp" />
+              <source srcSet={`/assets/toluca/${p.slug}-1920.webp`} type="image/webp" />
+
+              <img
+                src={`/assets/toluca/${p.slug}-1920.webp`}
+                alt={p.alt}
+                className="object-cover w-full h-full"
+                fetchPriority={i === 0 ? "high" : "low"}
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            </picture>
           </div>
         </div>
       ))}
