@@ -1,0 +1,506 @@
+{
+  "name": "WF-002 Requisicion -> Perfil Estructurado",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wf-002-requisicion",
+        "options": {}
+      },
+      "id": "c82ae020-1d19-4696-a958-607c07297278",
+      "name": "Webhook Recepcion",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -688,
+        144
+      ],
+      "webhookId": "b1000000-0000-4000-8000-000000000001"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const body = ($input.item.json.body) || $input.item.json || {};\nconst E = body.empresa    || {};\nconst C = body.contacto   || {};\nconst V = body.vacante    || {};\nconst P = body.perfil     || {};\nconst S = body.estrategia || {};\nconst X = body.extras     || {};\nconst M = body.metadata   || {};\n\nconst txt = (s) => (s == null ? '' : String(s)).trim();\nconst arr = (a) => Array.isArray(a) ? a.filter(Boolean).map(x => String(x).trim()).join(', ') : txt(a);\nconst presente = (v) => Array.isArray(v) ? v.filter(Boolean).length > 0 : txt(v) !== '';\n\nconst obligatorios = {\n  'Empresa': E.nombre, 'Industria': E.industria, 'Tamano': E.tamano, 'Ubicacion': E.ubicacion,\n  'Contacto': C.nombre, 'Email contacto': C.email, 'Telefono': C.telefono,\n  'Titulo vacante': V.titulo, 'Seniority': V.seniority, 'Modalidad': V.modalidad,\n  'Tipo contratacion': V.tipo_contratacion, 'Urgencia': V.urgencia, 'Plazas': V.vacantes,\n  'Skills tecnicas': P.skills_tecnicas, 'Anos experiencia': P.anos_experiencia,\n  'Objetivo del rol': S.objetivo_rol, 'Retos principales': S.retos_principales\n};\nconst claves = Object.keys(obligatorios);\nconst faltantes = claves.filter(k => !presente(obligatorios[k]));\nconst completitud = Math.round(((claves.length - faltantes.length) / claves.length) * 100);\nconst criticos_ok = presente(E.nombre) && presente(C.email) && presente(V.titulo);\nconst es_valido = criticos_ok && completitud >= 80;\n\nconst salario = (V.salario_min || V.salario_max)\n  ? ('MXN ' + (V.salario_min || '?') + ' - ' + (V.salario_max || '?'))\n  : 'No especificado';\n\nconst fecha = new Date().toISOString();\nconst req_id = (txt(E.nombre) || 'empresa') + '::' + (txt(V.titulo) || 'vacante') + '::' + Date.now();\n\nreturn { json: {\n  req_id,\n  empresa: txt(E.nombre) || 'No especificado',\n  industria: txt(E.industria) || 'No especificado',\n  tamano: txt(E.tamano) || 'No especificado',\n  sitio_web: txt(E.sitio_web),\n  ubicacion: txt(E.ubicacion) || 'No especificado',\n  contacto_nombre: txt(C.nombre) || 'No especificado',\n  contacto_cargo: txt(C.cargo),\n  contacto_email: txt(C.email),\n  contacto_tel: txt(C.telefono),\n  contacto_linkedin: txt(C.linkedin),\n  titulo: txt(V.titulo) || 'No especificado',\n  seniority: txt(V.seniority) || 'No especificado',\n  modalidad: txt(V.modalidad) || 'No especificado',\n  salario,\n  tipo_contratacion: txt(V.tipo_contratacion) || 'No especificado',\n  urgencia: txt(V.urgencia) || 'No especificado',\n  vacantes: txt(V.vacantes) || '1',\n  skills_tecnicas: arr(P.skills_tecnicas) || 'No especificado',\n  soft_skills: arr(P.soft_skills) || 'No especificado',\n  anos_experiencia: txt(P.anos_experiencia) || 'No especificado',\n  idiomas: arr(P.idiomas) || 'No especificado',\n  herramientas: arr(P.herramientas) || 'No especificado',\n  certificaciones: arr(P.certificaciones) || 'No especificado',\n  objetivo_rol: txt(S.objetivo_rol) || 'No especificado',\n  retos_principales: txt(S.retos_principales) || 'No especificado',\n  kpis: txt(S.kpis) || 'No especificado',\n  estructura_equipo: txt(S.estructura_equipo) || 'No especificado',\n  reporta_a: txt(S.reporta_a) || 'No especificado',\n  personas_a_cargo: txt(S.personas_a_cargo) || 'No especificado',\n  comentarios: txt(X.comentarios) || 'Ninguno',\n  fecha_contratacion: txt(X.fecha_contratacion) || 'No especificada',\n  adjunto: (X.archivo ? 'Si' : 'No'),\n  source: txt(M.source) || 'hackes_jobs_web',\n  form_version: txt(M.form_version) || 'v2',\n  fecha,\n  completitud,\n  faltantes: faltantes.join('; ') || 'Ninguno',\n  es_valido,\n  validez_flag: es_valido ? 'COMPLETO' : 'INCOMPLETO'\n}};"
+      },
+      "id": "d77932ca-0aa9-4aa3-a638-ea3a01c6cd48",
+      "name": "Normalizar y Validar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.es_valido }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4f64461a-941a-4345-928e-ec2190404fab",
+      "name": "Brief valido",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -240,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-2.5-flash",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=ROL: Analista de reclutamiento de Hacke's Jobs Technologies. Especializado en perfiles para manufactura industrial Tier 1/2 y proveeduria en el corredor Toluca-Lerma-Metepec-CDMX. Tono ejecutivo, evidence-based, Zero-Hallucination.\n\nPRINCIPIO ZERO-HALLUCINATION: trabaja UNICAMENTE con los datos de la requisicion. NO inventes salarios de mercado, nombres de empresas ni requisitos que el cliente no haya pedido. Si un dato falta, decláralo como faltante y recomienda solicitarlo.\n\nOBJETIVO: convertir la requisicion del cliente en un PERFIL DE BUSQUEDA estructurado y accionable para que el equipo de reclutamiento ejecute de inmediato.\n\nREGLAS:\n- Distingue requisitos ELIMINATORIOS (knockout, no negociables) de DESEABLES (suman pero no descartan).\n- Banda salarial: si el cliente la dio, evalua de forma cualitativa si es coherente con el seniority y la zona; si no la dio, indícalo y recomienda definirla antes de salir a mercado. NO inventes cifras.\n- Cumplimiento LFPDPPP por default en el manejo de datos de candidatos.\n- Prohibido lenguaje inflado ('excelente/ideal/perfecto') salvo que el dato lo justifique.\n- terminos_busqueda: cadenas booleanas/keywords listas para LinkedIn y bolsas (sinonimos del puesto + skills clave + zona).\n- preguntas_screening: 5 a 7 preguntas filtro para la primera llamada, enfocadas en los eliminatorios.\n\nDATOS DE LA REQUISICION:\n- Empresa: {{ $json.empresa }} | Industria: {{ $json.industria }} | Tamano: {{ $json.tamano }} | Ubicacion: {{ $json.ubicacion }}\n- Vacante: {{ $json.titulo }} | Seniority: {{ $json.seniority }} | Modalidad: {{ $json.modalidad }} | Plazas: {{ $json.vacantes }}\n- Contratacion: {{ $json.tipo_contratacion }} | Urgencia: {{ $json.urgencia }} | Banda salarial: {{ $json.salario }}\n- Experiencia requerida: {{ $json.anos_experiencia }}\n- Skills tecnicas: {{ $json.skills_tecnicas }}\n- Soft skills: {{ $json.soft_skills }}\n- Idiomas: {{ $json.idiomas }}\n- Herramientas: {{ $json.herramientas }}\n- Certificaciones: {{ $json.certificaciones }}\n- Objetivo del rol: {{ $json.objetivo_rol }}\n- Retos principales: {{ $json.retos_principales }}\n- KPIs: {{ $json.kpis }}\n- Estructura / Reporta a / Personas a cargo: {{ $json.estructura_equipo }} / {{ $json.reporta_a }} / {{ $json.personas_a_cargo }}\n- Comentarios: {{ $json.comentarios }} | Fecha objetivo: {{ $json.fecha_contratacion }}\n- Datos faltantes detectados: {{ $json.faltantes }}\n\nOUTPUT: SOLO JSON valido, sin markdown, sin texto fuera del objeto.\n{\"calidad_brief\":\"COMPLETO\",\"resumen_requisicion\":\"\",\"perfil_ideal\":\"\",\"requisitos_eliminatorios\":\"\",\"requisitos_deseables\":\"\",\"analisis_salarial\":\"\",\"estrategia_atraccion\":\"\",\"terminos_busqueda\":\"\",\"preguntas_screening\":\"\",\"senales_alerta\":\"\",\"prioridad_sla\":\"\"}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "cbbe2080-2866-4f95-9f5d-f8d614c2ae98",
+      "name": "Gemini Perfil",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LFuDxpvMiT0jA4Yu",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const REQ=['calidad_brief','resumen_requisicion','perfil_ideal','requisitos_eliminatorios','requisitos_deseables','analisis_salarial','estrategia_atraccion','terminos_busqueda','preguntas_screening','senales_alerta','prioridad_sla'];\nconst errShape=(r)=>({calidad_brief:'ERROR_PARSEO',resumen_requisicion:'No se pudo leer la respuesta del modelo.',perfil_ideal:'ERROR DE PARSEO: '+r,requisitos_eliminatorios:'N/A',requisitos_deseables:'N/A',analisis_salarial:'N/A',estrategia_atraccion:'N/A',terminos_busqueda:'N/A',preguntas_screening:'N/A',senales_alerta:'Revision manual requerida.',prioridad_sla:'Revision Manual Requerida',_parse_error:r});\nfunction extractText(r){if(r==null)return '';if(typeof r==='string')return r;const c=[r.text,r.output_text,r.response,r.message&&r.message.content,r.content&&typeof r.content==='string'?r.content:null,r.content&&r.content.parts&&r.content.parts[0]&&r.content.parts[0].text,r.candidates&&r.candidates[0]&&r.candidates[0].content&&r.candidates[0].content.parts&&r.candidates[0].content.parts[0]&&r.candidates[0].content.parts[0].text];for(const x of c)if(typeof x==='string'&&x.trim())return x;return JSON.stringify(r);}\nconst raw=$input.item.json;\nlet t;\ntry{\n  t=extractText(raw);\n  if(!t||!t.trim())return{json:errShape('Respuesta vacia')};\n  t=String(t).replace(/^\\s*```(?:json)?\\s*/i,'').replace(/\\s*```\\s*$/i,'').trim();\n  const a=t.indexOf('{'),b=t.lastIndexOf('}');\n  const j=(a===-1||b<=a)?t:t.slice(a,b+1);\n  let p;\n  try{p=JSON.parse(j);}catch(_){p=JSON.parse(j.replace(/,\\s*([}\\]])/g,'$1'));}\n  const miss=REQ.filter(k=>!(k in p));\n  if(miss.length)return{json:Object.assign({},errShape('Claves faltantes: '+miss.join(',')),p,{calidad_brief:p.calidad_brief||'PARCIAL'})};\n  return{json:p};\n}catch(e){return{json:errShape(e.message||String(e))};}"
+      },
+      "id": "e1c20d0f-1ce2-47c2-93a3-ed0de03934e7",
+      "name": "Parser Blindado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const n=$('Normalizar y Validar').item.json;\nreturn{json:{\n  calidad_brief:'INCOMPLETO',\n  resumen_requisicion:'Requisicion incompleta para \"'+n.titulo+'\" en '+n.empresa+'. Completitud '+n.completitud+'%.',\n  perfil_ideal:'No generado: faltan datos obligatorios para construir el perfil de busqueda.',\n  requisitos_eliminatorios:'Pendiente de definir (brief incompleto).',\n  requisitos_deseables:'Pendiente de definir (brief incompleto).',\n  analisis_salarial:'Banda declarada: '+n.salario,\n  estrategia_atraccion:'En espera de completar el brief antes de iniciar atraccion.',\n  terminos_busqueda:'N/A',\n  preguntas_screening:'N/A',\n  senales_alerta:'No iniciar busqueda hasta obtener los datos faltantes.',\n  prioridad_sla:'BLOQUEADO - Faltan: '+n.faltantes\n}};"
+      },
+      "id": "44c40275-32b4-42fa-a827-2c0e90604c31",
+      "name": "Brief Incompleto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6ePqiZ87d3toTgsZx2Mz4jfZz-0D7vGTVFDVoqAn4",
+          "mode": "list",
+          "cachedResultName": "HJT_Requisiciones_WF-002",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6ePqiZ87d3toTgsZx2Mz4jfZz-0D7vGTVFDVoqAn4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 543133572,
+          "mode": "list",
+          "cachedResultName": "Requisiciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6ePqiZ87d3toTgsZx2Mz4jfZz-0D7vGTVFDVoqAn4/edit#gid=543133572"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ReqID",
+              "displayName": "ReqID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Empresa",
+              "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Vacante",
+              "displayName": "Vacante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ubicacion",
+              "displayName": "Ubicacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgencia",
+              "displayName": "Urgencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email_contacto",
+              "displayName": "Email_contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "calidad_brief",
+              "displayName": "calidad_brief",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resumen_requisicion",
+              "displayName": "resumen_requisicion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "perfil_ideal",
+              "displayName": "perfil_ideal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requisitos_eliminatorios",
+              "displayName": "requisitos_eliminatorios",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requisitos_deseables",
+              "displayName": "requisitos_deseables",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "analisis_salarial",
+              "displayName": "analisis_salarial",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estrategia_atraccion",
+              "displayName": "estrategia_atraccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "terminos_busqueda",
+              "displayName": "terminos_busqueda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "preguntas_screening",
+              "displayName": "preguntas_screening",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "senales_alerta",
+              "displayName": "senales_alerta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prioridad_sla",
+              "displayName": "prioridad_sla",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "efc7f6c3-d977-44c2-8eb6-530a264fd93b",
+      "name": "Sheets Respaldar",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        144
+      ],
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rXBYdqJuk2U0W18Y",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "abelardo.carlos@hackesjobs.com.mx",
+        "subject": "=Nueva Requisicion [{{ $json.calidad_brief }}]: {{ $('Normalizar y Validar').item.json.titulo }} - {{ $('Normalizar y Validar').item.json.empresa }}",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:760px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#0a0a0a,#1a1a1a);padding:28px 24px;\"><p style=\"color:#FF8C00;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;\">HACKES JOBS · NUEVA REQUISICION</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">{{ $('Normalizar y Validar').item.json.titulo }}</h2><p style=\"color:#BBB;margin:0;font-size:14px;\">{{ $('Normalizar y Validar').item.json.empresa }} · {{ $('Normalizar y Validar').item.json.industria }}</p></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Calidad del brief: {{ $json.calidad_brief }} · Prioridad: {{ $json.prioridad_sla }}</p></div><div style=\"background:#FFF;padding:24px;color:#333;\"><table width=\"100%\" cellpadding=\"6\" cellspacing=\"0\" style=\"font-size:13px;border-collapse:collapse;margin-bottom:8px;\"><tr><td style=\"color:#888;width:40%;\">Ubicacion</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.ubicacion }}</td></tr><tr><td style=\"color:#888;\">Modalidad / Seniority</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.modalidad }} · {{ $('Normalizar y Validar').item.json.seniority }}</td></tr><tr><td style=\"color:#888;\">Experiencia</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.anos_experiencia }}</td></tr><tr><td style=\"color:#888;\">Urgencia / Plazas</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.urgencia }} · {{ $('Normalizar y Validar').item.json.vacantes }} plaza(s)</td></tr><tr><td style=\"color:#888;\">Banda salarial</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.salario }}</td></tr><tr><td style=\"color:#888;\">Tipo de contratacion</td><td style=\"font-weight:600;\">{{ $('Normalizar y Validar').item.json.tipo_contratacion }}</td></tr></table><div style=\"margin:18px 0;padding:18px;background:#FAFAFA;border-left:4px solid #000;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen</p><p style=\"margin:0;font-size:14px;line-height:1.7;white-space:pre-line;\">{{ $json.resumen_requisicion }}</p></div><div style=\"margin:18px 0;padding:18px;background:#FFF8F0;border-left:4px solid #FF8C00;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#FF8C00;text-transform:uppercase;letter-spacing:1.5px;\">Perfil ideal</p><p style=\"margin:0;font-size:14px;line-height:1.7;white-space:pre-line;\">{{ $json.perfil_ideal }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Eliminatorios</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $json.requisitos_eliminatorios }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Deseables</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $json.requisitos_deseables }}</p></div></td></tr></table><div style=\"margin:18px 0;padding:18px;background:#FAFAFA;border-radius:8px;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Analisis salarial</p><p style=\"margin:0;font-size:13px;line-height:1.6;white-space:pre-line;\">{{ $json.analisis_salarial }}</p></div><div style=\"margin:18px 0;padding:18px;background:#FAFAFA;border-radius:8px;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Estrategia de atraccion</p><p style=\"margin:0;font-size:13px;line-height:1.6;white-space:pre-line;\">{{ $json.estrategia_atraccion }}</p></div><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Terminos de busqueda</p><pre style=\"margin:0 0 16px;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $json.terminos_busqueda }}</pre><div style=\"margin:0 0 16px;padding:18px;background:#FAFAFA;border-radius:8px;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Preguntas de screening</p><p style=\"margin:0;font-size:13px;line-height:1.7;white-space:pre-line;\">{{ $json.preguntas_screening }}</p></div><div style=\"margin:0 0 8px;padding:18px;background:#FFF3E0;border:1px solid #FFE0B2;border-radius:8px;\"><p style=\"margin:0 0 8px;font-size:11px;font-weight:700;color:#E65100;text-transform:uppercase;letter-spacing:1.5px;\">Senales de alerta</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#BF360C;white-space:pre-line;\">{{ $json.senales_alerta }}</p></div><div style=\"margin-top:18px;border-top:1px solid #EEE;padding-top:14px;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Contacto del cliente</p><p style=\"margin:4px 0 0;font-size:14px;\">{{ $('Normalizar y Validar').item.json.contacto_nombre }} ({{ $('Normalizar y Validar').item.json.contacto_cargo }}) · {{ $('Normalizar y Validar').item.json.contacto_email }} · {{ $('Normalizar y Validar').item.json.contacto_tel }}</p></div></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cd5b777d-12ba-4cf1-ad9c-342f0eadcadb",
+      "name": "Gmail Reclutamiento",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        48
+      ],
+      "retryOnFail": true,
+      "webhookId": "b1000000-0000-4000-8000-000000000008",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Normalizar y Validar').item.json.contacto_email }}",
+        "subject": "=Hemos recibido tu requisicion - {{ $('Normalizar y Validar').item.json.titulo }} | Hacke's Jobs",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#FF8C00,#FF6F00);padding:28px 24px;\"><p style=\"color:rgba(255,255,255,.9);margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;\">Requisicion recibida</p><h2 style=\"color:#FFF;margin:8px 0 0;font-size:22px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.titulo }}</h2></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"font-size:16px;line-height:1.6;margin-top:0;\">Hola {{ $('Normalizar y Validar').item.json.contacto_nombre.split(' ')[0] }},</p><p style=\"font-size:15px;line-height:1.7;color:#555;\">Recibimos tu requisicion para la posicion <strong>{{ $('Normalizar y Validar').item.json.titulo }}</strong> en {{ $('Normalizar y Validar').item.json.ubicacion }}. Nuestro equipo ya la tiene en revision.</p><div style=\"margin:20px 0;padding:18px;background:#FFF8F0;border-left:4px solid #FF8C00;border-radius:0 8px 8px 0;\"><p style=\"margin:0;font-size:14px;line-height:1.7;\">Te daremos respuesta en <strong>menos de 24 horas habiles</strong> con los siguientes pasos. Toda contratacion incluye nuestra <strong>garantia de reposicion de 10 dias</strong> sin cargos.</p></div><p style=\"font-size:13px;line-height:1.7;color:#888;\">El tratamiento de los datos de los candidatos se realiza conforme a la LFPDPPP, con informacion cifrada.</p><p style=\"font-size:15px;line-height:1.7;color:#555;\">Cualquier precision, responde directamente a este correo.</p><p style=\"font-size:15px;line-height:1.7;color:#333;margin-bottom:0;\">Abelardo Carlos Flores<br><span style=\"color:#888;font-size:13px;\">Hacke's Jobs Technologies · hackesjobs.com.mx</span></p></div><div style=\"background:#000;padding:14px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:1.5px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "2c1f6592-9991-4140-aa2f-98976aaa2be3",
+      "name": "Gmail Cliente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        240
+      ],
+      "retryOnFail": true,
+      "webhookId": "b1000000-0000-4000-8000-000000000009",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VcaMQBt7yiQIpxiE",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Recepcion": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar y Validar": {
+      "main": [
+        [
+          {
+            "node": "Brief valido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief valido": {
+      "main": [
+        [
+          {
+            "node": "Gemini Perfil",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Brief Incompleto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Perfil": {
+      "main": [
+        [
+          {
+            "node": "Parser Blindado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Parser Blindado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Blindado": {
+      "main": [
+        [
+          {
+            "node": "Sheets Respaldar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Incompleto": {
+      "main": [
+        [
+          {
+            "node": "Sheets Respaldar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets Respaldar": {
+      "main": [
+        [
+          {
+            "node": "Gmail Reclutamiento",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b55b251c-1ea3-410e-a81f-d582f99895a0",
+  "meta": {
+    "instanceId": "ce7793b5fd59e544ae8c0b3b599afea9c4068e487018ad55552691a7cbac0b03"
+  },
+  "id": "PGfJlehhfGeHHMee",
+  "tags": []
+}
