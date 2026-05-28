@@ -108,8 +108,8 @@ export async function POST(req: Request) {
         pass: smtp.pass,
       },
       tls: {
-        // No fallar si el certificado es auto-firmado (común en algunos servidores de hosting)
-        rejectUnauthorized: false
+        // Solo permitir certificados auto-firmados en desarrollo para prevenir Man-in-the-Middle (MITM) en producción
+        rejectUnauthorized: process.env.NODE_ENV !== 'production'
       },
       connectionTimeout: 10000, 
       greetingTimeout: 10000,

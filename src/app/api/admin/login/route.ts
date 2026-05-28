@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { signToken } from '@/lib/jwt';
 
 export async function POST(request: Request) {
   try {
@@ -8,8 +9,26 @@ export async function POST(request: Request) {
     const adminPass = process.env.BLOG_ADMIN_PASS || 'hackesjobs2025';
 
     if (username === adminUser && password === adminPass) {
-      // In a real app, use a proper session/cookie
-      return NextResponse.json({ success: true, token: 'fake-admin-token' });
+      // Firmar token JWT real con rol administrador
+      const token = await signToken({
+        userId: 'admin-id',
+        email: 'admin@hackesjobs.com',
+        role: 'admin',
+        name: 'Administrador Principal',
+      });
+
+      const response = NextResponse.json({ success: true });
+
+      // Configurar cookie segura de administrador HTTP-Only
+      response.cookies.set('hj_admin_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24, // 1 día
+        path: '/',
+      });
+
+      return response;
     }
 
     return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
@@ -17,3 +36,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
+
