@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/Button';
+import { waUrl } from '@/lib/contact';
 
 interface WhatsAppButtonProps {
   label?: string;
@@ -25,7 +26,7 @@ export function WhatsAppButton({
     }).catch(e => console.error(e));
 
     // Redirigir a WhatsApp
-    window.open('https://wa.me/525650405218', '_blank');
+    window.open(waUrl(), '_blank');
   };
 
   return (

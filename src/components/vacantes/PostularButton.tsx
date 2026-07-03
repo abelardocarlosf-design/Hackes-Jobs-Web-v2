@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
+import { waUrl } from '@/lib/contact';
 
 interface Props {
   vacanteId: string;
@@ -9,9 +10,7 @@ interface Props {
 }
 
 export function PostularButton({ vacanteId, vacanteTitulo, vacanteEmpresa }: Props) {
-  const whatsappNumber = '525650405218';
-  const text = encodeURIComponent(`Hola, me interesa la vacante de ${vacanteTitulo} en ${vacanteEmpresa} (${vacanteId})`);
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
+  const whatsappUrl = waUrl(`Hola, me interesa la vacante de ${vacanteTitulo} en ${vacanteEmpresa} (${vacanteId})`);
 
   return (
     <div className="space-y-3">

@@ -17,6 +17,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { HeroToluca } from '@/components/brand/HeroToluca';
+import { waUrl } from '@/lib/contact';
 import { ClientsMarquee } from '@/components/brand/ClientsMarquee';
 import { GuaranteeBadge } from '@/components/brand/GuaranteeBadge';
 import {
@@ -159,6 +160,13 @@ export default function HomePage() {
                       Ver cómo trabajamos
                     </Button>
                   </Link>
+                </Magnetic>
+                <Magnetic strength={0.3} className="w-full sm:w-auto">
+                  <a href={waUrl()} target="_blank" rel="noopener noreferrer" className="block w-full sm:w-auto">
+                    <Button variant="outline" size="xl" className="w-full sm:w-auto border-[#25D366]/40 text-white hover:border-[#25D366] hover:text-[#25D366] bg-white/5 backdrop-blur-md btn-elev font-bold uppercase tracking-widest text-xs h-14 rounded-xl px-8">
+                      Cotizar por WhatsApp
+                    </Button>
+                  </a>
                 </Magnetic>
               </div>
 

@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 
 // Rutas donde NO se muestra Navbar/Footer pero SÍ el mesh background
 const HIDE_NAV_ROUTES = ['/login', '/register'];
@@ -31,6 +32,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {!hideNav && <Footer />}
+      {!hideNav && <FloatingWhatsApp />}
     </>
   );
 }

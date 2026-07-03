@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
+import { waUrl } from '@/lib/contact';
 
 function LinkedinIcon({ size = 28, className }: { size?: number; className?: string }) {
   return (
@@ -54,7 +55,7 @@ export default function ContactoPage() {
             </a>
 
             <a
-              href="https://wa.me/525650405218"
+              href={waUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="card-premium p-8 space-y-4 group"
