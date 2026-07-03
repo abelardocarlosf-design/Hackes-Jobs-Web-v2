@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { RequisitionWizard } from '@/components/RequisitionWizard';
+import { RequisitionViews } from '@/components/QuickRequisitionForm';
 
 export const metadata: Metadata = {
   title: 'Nueva Requisición de Talento | Hacke\'s Jobs Technologies',
@@ -25,12 +25,12 @@ export default function RequisicionPage() {
             Levanta tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-blue">Requisición Empresarial</span>
           </h1>
           <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
-            Completa nuestro perfilador ejecutivo. Nuestro motor de IA y consultores expertos estructurarán tu vacante para iniciar la atracción de la terna idónea de inmediato.
+            Déjanos los datos esenciales de tu vacante en menos de 2 minutos. El perfil completo lo levantamos contigo en una llamada de 30 minutos — respuesta en menos de 24 horas hábiles.
           </p>
         </div>
 
         <div className="reveal-on-load reveal-delay-200">
-          <RequisitionWizard />
+          <RequisitionViews />
         </div>
       </main>
     </div>
