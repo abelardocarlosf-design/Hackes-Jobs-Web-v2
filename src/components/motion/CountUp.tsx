@@ -20,8 +20,9 @@ interface CountUpProps {
 }
 
 /**
- * Counts a number up from 0 → value when it scrolls into view (once).
- * Respects prefers-reduced-motion by showing the final value immediately.
+ * Renders the final value in server/static HTML (SEO + no-JS fallback) and,
+ * as progressive enhancement, replays a 0 → value count when it scrolls into
+ * view (once). Respects prefers-reduced-motion by keeping the final value.
  */
 export function CountUp({
   value,
@@ -35,7 +36,8 @@ export function CountUp({
   const reduce = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' });
-  const [display, setDisplay] = useState(reduce ? value : 0);
+  // Start at the final value so SSR/prerendered HTML never shows "0".
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     if (!inView || reduce) return;
