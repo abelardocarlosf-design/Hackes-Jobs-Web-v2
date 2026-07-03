@@ -15,6 +15,9 @@ import {
   LineChart,
 } from 'lucide-react';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { waUrl } from '@/lib/contact';
+import { Testimonials } from '@/components/Testimonials';
+import { Faq } from '@/components/Faq';
 
 export default function EmpresasPage() {
   return (
@@ -43,7 +46,7 @@ export default function EmpresasPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link href="/empresas/requisicion" className="w-full sm:w-auto">
                   <Button variant="primary" size="xl" className="w-full sm:w-auto btn-elev h-14 rounded-xl px-8 font-bold uppercase tracking-widest text-xs">
-                    Solicitar reclutamiento
+                    Enviar mi vacante
                   </Button>
                 </Link>
                 <WhatsAppButton 
@@ -214,25 +217,15 @@ export default function EmpresasPage() {
                 <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">Casos de uso</span>
                 <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">Resultados medibles, no aspiracionales.</h2>
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                {[
-                  { q: "Reducimos el ciclo de evaluación de candidatos operativos de 5 días a 24 horas con la Suite Psicométrica automatizada.", n: "Operación industrial · Toluca", p: "Manufactura Tier 2" },
-                  { q: "El flujo n8n de prospección B2B nos generó pipeline calificado sin sumar headcount al equipo comercial.", n: "Equipo de ventas · CDMX", p: "Servicios industriales" }
-                ].map((t, i) => (
-                  <div key={i} className="card-premium p-8 space-y-6">
-                    <p className="text-lg text-slate-200 font-medium leading-relaxed">"{t.q}"</p>
-                    <div>
-                      <div className="font-bold text-white text-sm">{t.n}</div>
-                      <div className="text-brand-blue text-[10px] font-bold uppercase tracking-[0.25em] mt-1">{t.p}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <Testimonials />
             </div>
           </div>
         </section>
 
-        {/* 7. CTA */}
+        {/* 7. FAQ */}
+        <Faq />
+
+        {/* 8. CTA */}
         <section className="relative py-28">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="container relative mx-auto px-4 max-w-4xl text-center space-y-8 z-10">
@@ -240,7 +233,7 @@ export default function EmpresasPage() {
               30 minutos para conocer tu operación.
             </h2>
             <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-medium">
-              Sin presentación de PowerPoint. Sin compromiso. Nos cuentas qué necesitas contratar y en qué tiempo; te decimos si podemos ayudarte, cómo y cuánto cuesta. Si no encajamos, te lo decimos en la misma llamada.
+              Diagnóstico sin costo y sin compromiso. Nos cuentas qué necesitas contratar y en qué tiempo; te decimos si podemos ayudarte, cómo y cuánto cuesta. Si no encajamos, te lo decimos en la misma llamada.
             </p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
               <Link href="/empresas/requisicion" className="w-full sm:w-auto">
@@ -248,11 +241,11 @@ export default function EmpresasPage() {
                   Agendar diagnóstico
                 </Button>
               </Link>
-              <Link href="/contacto" className="w-full sm:w-auto">
-                <Button variant="outline" size="xl" className="w-full sm:w-auto border-white/20 text-white hover:border-brand-orange hover:text-brand-orange bg-white/5 h-14 rounded-xl px-10 font-bold uppercase tracking-widest text-xs btn-elev">
-                  Hablar con un consultor
+              <a href={waUrl()} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button variant="outline" size="xl" className="w-full sm:w-auto border-[#25D366]/40 text-white hover:border-[#25D366] hover:text-[#25D366] bg-white/5 h-14 rounded-xl px-10 font-bold uppercase tracking-widest text-xs btn-elev">
+                  Cotizar por WhatsApp
                 </Button>
-              </Link>
+              </a>
             </div>
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 pt-6">
               Cumplimiento LFPDPPP · Datos cifrados · Garantía de reposición de 10 días · Facturación CFDI 4.0 en MXN.
