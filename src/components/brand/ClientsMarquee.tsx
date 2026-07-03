@@ -16,15 +16,13 @@ type Client = {
   name: string;
 };
 
+// Solo clientes reales con asset en public/assets/clientes/.
+// [PENDIENTE Abelardo]: agregar Truper, Sirga y Zorro cuando existan sus logos.
 const CLIENTS: Client[] = [
   { slug: 'aura-academy', name: 'Aura Academy' },
   { slug: 'goncalves', name: 'Goncalves de México' },
   { slug: 'prisma-industrial', name: 'Prisma Industrial' },
   { slug: 'racarsa', name: 'Racarsa' },
-  { slug: 'nuevo-cliente-1', name: 'Nuevo Cliente 1' },
-  { slug: 'nuevo-cliente-2', name: 'Nuevo Cliente 2' },
-  { slug: 'nuevo-cliente-3', name: 'Nuevo Cliente 3' },
-  { slug: 'nuevo-cliente-4', name: 'Nuevo Cliente 4' },
 ];
 
 function LogoCard({ slug, name }: Client) {
@@ -35,7 +33,7 @@ function LogoCard({ slug, name }: Client) {
         <source srcSet={`/assets/clientes/${slug}.webp`} type="image/webp" />
         <Image
           src={`/assets/clientes/${slug}.png`}
-          alt={name}
+          alt={`Logo de ${name}, cliente de Hacke's Jobs`}
           width={140}
           height={56}
           loading="lazy"
