@@ -10,20 +10,23 @@ import {
   Menu,
   X,
   ChevronDown,
-  Sparkles,
-  Cpu,
-  Layers,
   FileText,
   ArrowRight,
   User,
   LogOut,
-  Building,
   LayoutDashboard,
-  BookOpen,
-  TrendingUp,
   UserPlus,
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+
+// Navegación pública simplificada: links directos, sin mega-menús SaaS.
+const NAV_LINKS = [
+  { href: '/empresas', label: 'EMPRESAS' },
+  { href: '/psicometrias', label: 'PSICOMETRÍAS' },
+  { href: '/precios', label: 'PRECIOS' },
+  { href: '/blog', label: 'BLOG' },
+  { href: '/contacto', label: 'CONTACTO' },
+];
 
 /**
  * Animated "tubelight" indicator (21st.dev pattern) — a glowing pill that
@@ -60,13 +63,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   // Estatus de menús desplegables (Desktop)
-  const [activeDropdown, setActiveDropdown] = useState<'soluciones' | 'plataforma' | 'recursos' | 'candidatos' | 'usuario' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'candidatos' | 'usuario' | null>(null);
   // Item resaltado por la lámpara (incluye enlaces sin dropdown)
-  const [hovered, setHovered] = useState<'soluciones' | 'plataforma' | 'precios' | 'recursos' | 'candidatos' | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Estatus de menús expandibles (Mobile Accordion)
-  const [mobileActiveSub, setMobileActiveSub] = useState<'soluciones' | 'plataforma' | 'recursos' | 'candidatos' | null>(null);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -80,7 +80,7 @@ export default function Navbar() {
   }, []);
 
   // Controladores de Hover con Grace Period (Debounce de 120ms para una experiencia física y fluida del mouse)
-  const handleMouseEnter = (menu: 'soluciones' | 'plataforma' | 'recursos' | 'candidatos' | 'usuario') => {
+  const handleMouseEnter = (menu: 'candidatos' | 'usuario') => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setActiveDropdown(menu);
   };
@@ -91,15 +91,10 @@ export default function Navbar() {
     }, 120);
   };
 
-  const toggleMobileSub = (menu: 'soluciones' | 'plataforma' | 'recursos' | 'candidatos') => {
-    setMobileActiveSub(mobileActiveSub === menu ? null : menu);
-  };
-
   // Cierre de todos los menús al navegar
   const handleNavClick = () => {
     setIsOpen(false);
     setActiveDropdown(null);
-    setMobileActiveSub(null);
     setHovered(null);
   };
 
@@ -133,258 +128,25 @@ export default function Navbar() {
             className="hidden lg:flex gap-1.5 xl:gap-4 2xl:gap-7 items-center text-[8px] xl:text-[9.5px] 2xl:text-[10px] font-black uppercase tracking-wider xl:tracking-[0.2em] 2xl:tracking-[0.25em] text-slate-300 flex-shrink"
           >
 
-            {/* SOLUCIONES (Mega Menu Dropdown para Empresas) */}
-            <div
-              className="relative py-6"
-              onMouseEnter={() => { handleMouseEnter('soluciones'); setHovered('soluciones'); }}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button className={`isolate relative flex items-center gap-1.5 rounded-full px-3 py-2 transition-colors duration-300 focus:outline-none whitespace-nowrap hover:text-white ${
-                hovered === 'soluciones' ? 'text-white' : ''
-              }`}>
-                EMPRESAS
-                <ChevronDown size={12} className={`transition-transform duration-300 ${
-                  activeDropdown === 'soluciones' ? 'rotate-180 text-brand-orange' : 'text-slate-400'
-                }`} />
-                {hovered === 'soluciones' && <NavLamp />}
-              </button>
-
-              {/* Soluciones Mega Menu Panel */}
-              <AnimatePresence>
-                {activeDropdown === 'soluciones' && (
-                  <motion.div {...panelMotion} className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-[25%] w-[680px] glass-card-dark rounded-3xl p-6 grid grid-cols-2 gap-4">
-                    <div className="col-span-2 text-[9px] font-black text-brand-orange tracking-[0.3em] pb-2 border-b border-white/5 uppercase">
-                      Servicios de Atracción & Reclutamiento B2B
-                    </div>
-
-                    <Link href="/empresas" onClick={handleNavClick} className="group/item p-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-4">
-                        <div className="p-2.5 rounded-xl bg-orange-500/10 text-brand-orange group-hover/item:bg-brand-orange group-hover/item:text-white transition-colors duration-300">
-                          <Sparkles size={18} />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-black text-white tracking-wider group-hover/item:text-brand-orange transition-colors">HEADHUNTING CON IA</div>
-                          <div className="text-[9px] font-medium text-slate-400 normal-case tracking-normal mt-1 leading-normal">
-                            Atracción estratégica de talento clave respaldada por algoritmos de perfilado avanzado y consultores senior.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/empresas" onClick={handleNavClick} className="group/item p-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-4">
-                        <div className="p-2.5 rounded-xl bg-blue-500/10 text-brand-blue group-hover/item:bg-brand-blue group-hover/item:text-white transition-colors duration-300">
-                          <Cpu size={18} />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-black text-white tracking-wider group-hover/item:text-brand-blue transition-colors">AUTOMATIZACIÓN RPO</div>
-                          <div className="text-[9px] font-medium text-slate-400 normal-case tracking-normal mt-1 leading-normal">
-                            Tercerización completa del pipeline de atracción. Diseñamos tus workflows e integramos pipelines eficientes.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/psicometrias" onClick={handleNavClick} className="group/item p-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-4">
-                        <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-white transition-colors duration-300">
-                          <Layers size={18} />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-black text-white tracking-wider group-hover/item:text-emerald-400 transition-colors">PSICOMETRÍA AVANZADA</div>
-                          <div className="text-[9px] font-medium text-slate-400 normal-case tracking-normal mt-1 leading-normal">
-                            Evaluaciones en lote automatizadas con reportes consolidados y scoring predictivo de candidatos.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/contacto" onClick={handleNavClick} className="group/item p-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-4">
-                        <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 group-hover/item:bg-purple-500 group-hover/item:text-white transition-colors duration-300">
-                          <Building size={18} />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-black text-white tracking-wider group-hover/item:text-purple-400 transition-colors">EMPLOYER BRANDING</div>
-                          <div className="text-[9px] font-medium text-slate-400 normal-case tracking-normal mt-1 leading-normal">
-                            Posiciona la cultura tecnológica de tu compañía y conviértete en un imán para los mejores ingenieros.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    {/* Mega Menu Footer Banner */}
-                    <Link
-                      href="/empresas/requisicion"
-                      onClick={handleNavClick}
-                      className="col-span-2 mt-2 p-3 rounded-2xl bg-white/5 border border-white/5 hover:border-brand-orange/20 flex items-center justify-between text-[9px] font-bold text-slate-300 hover:text-white transition-all group/banner"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-1.5 w-1.5 rounded-full bg-brand-orange animate-pulse"></span>
-                        <span>¿Listo para contratar? Levanta tu perfil de requisición empresarial con IA ahora</span>
-                      </div>
-                      <span className="flex items-center gap-1 text-brand-orange font-black uppercase tracking-widest group-hover/banner:translate-x-1 transition-transform">
-                        Iniciar
-                        <ArrowRight size={10} />
-                      </span>
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* PLATAFORMA (SaaS & Future tech Dropdown) */}
-            <div
-              className="relative py-6"
-              onMouseEnter={() => { handleMouseEnter('plataforma'); setHovered('plataforma'); }}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button className={`isolate relative flex items-center gap-1.5 rounded-full px-3 py-2 transition-colors duration-300 focus:outline-none whitespace-nowrap hover:text-white ${
-                hovered === 'plataforma' ? 'text-white' : ''
-              }`}>
-                PLATAFORMA
-                <ChevronDown size={12} className={`transition-transform duration-300 ${
-                  activeDropdown === 'plataforma' ? 'rotate-180 text-brand-blue' : 'text-slate-400'
-                }`} />
-                {hovered === 'plataforma' && <NavLamp />}
-              </button>
-
-              {/* Plataforma Dropdown Panel */}
-              <AnimatePresence>
-                {activeDropdown === 'plataforma' && (
-                  <motion.div {...panelMotion} className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 w-[340px] glass-card-dark rounded-3xl p-5 flex flex-col gap-3">
-                    <div className="text-[9px] font-black text-brand-blue tracking-[0.3em] pb-1 border-b border-white/5 uppercase">
-                      Ecosistema SaaS & Automatizaciones
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/5 opacity-60 relative group/saas select-none">
-                      <div className="absolute top-3 right-3 px-2 py-0.5 text-[7px] font-black text-brand-orange bg-brand-orange/10 border border-brand-orange/20 rounded-full tracking-widest uppercase">
-                        PROXIMAMENTE
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-white/5 text-slate-400">
-                          <LayoutDashboard size={16} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-slate-300">ATS INTELIGENTE</div>
-                          <div className="text-[8px] font-medium text-slate-500 normal-case tracking-normal mt-0.5 leading-normal">
-                            Gestión y pipeline visual de candidatos.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/5 opacity-60 relative group/saas select-none">
-                      <div className="absolute top-3 right-3 px-2 py-0.5 text-[7px] font-black text-brand-orange bg-brand-orange/10 border border-brand-orange/20 rounded-full tracking-widest uppercase">
-                        PROXIMAMENTE
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-white/5 text-slate-400">
-                          <User size={16} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-slate-300">TALENT CRM & POOLS</div>
-                          <div className="text-[8px] font-medium text-slate-500 normal-case tracking-normal mt-0.5 leading-normal">
-                            Base de datos automatizada y comunicación activa.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Link href="/empresas" onClick={handleNavClick} className="group/item p-3 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-blue-500/10 text-brand-blue group-hover/item:bg-brand-blue group-hover/item:text-white transition-colors duration-300">
-                          <Cpu size={16} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-white group-hover/item:text-brand-blue transition-colors">INTEGRACIONES & API</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5 leading-normal">
-                            Conecta flujos de contratación vía n8n, Slack o ERP.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* PRECIOS (Empresas) */}
-            <div
-              className="relative py-6"
-              onMouseEnter={() => setHovered('precios')}
-            >
-              <Link
-                href="/precios"
-                onClick={handleNavClick}
-                className={`isolate relative flex items-center rounded-full px-3 py-2 transition-colors duration-300 whitespace-nowrap hover:text-white ${
-                  hovered === 'precios' ? 'text-white' : ''
-                }`}
+            {/* LINKS DIRECTOS (Empresas · Psicometrías · Precios · Blog · Contacto) */}
+            {NAV_LINKS.map(({ href, label }) => (
+              <div
+                key={href}
+                className="relative py-6"
+                onMouseEnter={() => setHovered(href)}
               >
-                PRECIOS
-                {hovered === 'precios' && <NavLamp />}
-              </Link>
-            </div>
-
-            {/* RECURSOS */}
-            <div
-              className="relative py-6"
-              onMouseEnter={() => { handleMouseEnter('recursos'); setHovered('recursos'); }}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button className={`isolate relative flex items-center gap-1.5 rounded-full px-3 py-2 transition-colors duration-300 focus:outline-none whitespace-nowrap hover:text-white ${
-                hovered === 'recursos' ? 'text-white' : ''
-              }`}>
-                RECURSOS
-                <ChevronDown size={12} className={`transition-transform duration-300 ${
-                  activeDropdown === 'recursos' ? 'rotate-180 text-brand-orange' : 'text-slate-400'
-                }`} />
-                {hovered === 'recursos' && <NavLamp />}
-              </button>
-
-              {/* Recursos Dropdown Panel */}
-              <AnimatePresence>
-                {activeDropdown === 'recursos' && (
-                  <motion.div {...panelMotion} className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 w-[280px] glass-card-dark rounded-3xl p-4 flex flex-col gap-2.5">
-                    <Link href="/blog" onClick={handleNavClick} className="group/item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-orange-500/10 text-brand-orange group-hover/item:bg-brand-orange group-hover/item:text-white transition-colors duration-300">
-                          <BookOpen size={14} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-white group-hover/item:text-brand-orange transition-colors">BLOG CORPORATIVO</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5">Análisis, reportes salariales y tendencias.</div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/empresas/requisicion" onClick={handleNavClick} className="group/item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-blue-500/10 text-brand-blue group-hover/item:bg-brand-blue group-hover/item:text-white transition-colors duration-300">
-                          <FileText size={14} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-white group-hover/item:text-brand-blue transition-colors">BIBLIOTECA DE PLANTILLAS</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5">Estructura tus vacantes de forma perfecta.</div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/empresas" onClick={handleNavClick} className="group/item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-white transition-colors duration-300">
-                          <TrendingUp size={14} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-black text-white group-hover/item:text-emerald-400 transition-colors">CASOS DE ÉXITO</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5">Cómo startups escalan su equipo técnico.</div>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                <Link
+                  href={href}
+                  onClick={handleNavClick}
+                  className={`isolate relative flex items-center rounded-full px-3 py-2 transition-colors duration-300 whitespace-nowrap hover:text-white ${
+                    hovered === href ? 'text-white' : ''
+                  }`}
+                >
+                  {label}
+                  {hovered === href && <NavLamp />}
+                </Link>
+              </div>
+            ))}
 
             {/* SEPARADOR DE SECCIÓN */}
             <div className="h-4 w-[1px] bg-white/10 mx-1"></div>
@@ -575,131 +337,24 @@ export default function Navbar() {
                   💼 Para Empresas (B2B)
                 </div>
 
-                {/* SOLUCIONES (Mobile B2B) */}
-                <div className="border-b border-white/5 pb-2">
-                  <button
-                    onClick={() => toggleMobileSub('soluciones')}
-                    className="w-full flex items-center justify-between py-2 text-slate-200 hover:text-white"
+                {/* LINKS DIRECTOS (Mobile B2B) */}
+                {[
+                  { href: '/empresas', label: 'Empresas' },
+                  { href: '/psicometrias', label: 'Psicometrías' },
+                  { href: '/precios', label: 'Precios' },
+                  { href: '/blog', label: 'Blog' },
+                  { href: '/contacto', label: 'Contacto' },
+                ].map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={handleNavClick}
+                    className="py-2 text-slate-200 hover:text-white border-b border-white/5 flex justify-between items-center text-left"
                   >
-                    <span>Servicios de Reclutamiento</span>
-                    <ChevronDown size={14} className={`text-brand-orange transition-transform duration-300 ${
-                      mobileActiveSub === 'soluciones' ? 'rotate-180' : ''
-                    }`} />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {mobileActiveSub === 'soluciones' && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="flex flex-col gap-3.5 pl-4 pr-2 pt-2 pb-1 text-[10px] items-start text-left text-slate-400 bg-white/5 rounded-2xl p-4 mt-1 border border-white/5 w-full">
-                          <Link href="/empresas" onClick={handleNavClick} className="hover:text-brand-orange py-1 flex items-center gap-2">
-                            <Sparkles size={12} className="text-brand-orange" /> HEADHUNTING IA
-                          </Link>
-                          <Link href="/empresas" onClick={handleNavClick} className="hover:text-brand-blue py-1 flex items-center gap-2">
-                            <Cpu size={12} className="text-brand-blue" /> AUTOMATIZACIÓN RPO
-                          </Link>
-                          <Link href="/psicometrias" onClick={handleNavClick} className="hover:text-emerald-400 py-1 flex items-center gap-2">
-                            <Layers size={12} className="text-emerald-400" /> PSICOMETRÍA AVANZADA
-                          </Link>
-                          <Link href="/contacto" onClick={handleNavClick} className="hover:text-purple-400 py-1 flex items-center gap-2">
-                            <Building size={12} className="text-purple-400" /> EMPLOYER BRANDING
-                          </Link>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* PLATAFORMA (Mobile B2B) */}
-                <div className="border-b border-white/5 pb-2">
-                  <button
-                    onClick={() => toggleMobileSub('plataforma')}
-                    className="w-full flex items-center justify-between py-2 text-slate-200 hover:text-white"
-                  >
-                    <span>SaaS & Tecnología</span>
-                    <ChevronDown size={14} className={`text-brand-blue transition-transform duration-300 ${
-                      mobileActiveSub === 'plataforma' ? 'rotate-180' : ''
-                    }`} />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {mobileActiveSub === 'plataforma' && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="flex flex-col gap-3.5 pl-4 pr-2 pt-2 pb-1 text-[10px] items-start text-left text-slate-500 bg-white/5 rounded-2xl p-4 mt-1 border border-white/5 w-full">
-                          <div className="py-1 flex items-center justify-between w-full opacity-50">
-                            <span className="flex items-center gap-2"><LayoutDashboard size={12} /> ATS INTELIGENTE</span>
-                            <span className="text-[6px] font-black text-brand-orange border border-brand-orange/20 px-1.5 py-0.5 rounded-full">PRÓX.</span>
-                          </div>
-                          <div className="py-1 flex items-center justify-between w-full opacity-50">
-                            <span className="flex items-center gap-2"><User size={12} /> TALENT CRM & POOLS</span>
-                            <span className="text-[6px] font-black text-brand-orange border border-brand-orange/20 px-1.5 py-0.5 rounded-full">PRÓX.</span>
-                          </div>
-                          <Link href="/empresas" onClick={handleNavClick} className="hover:text-brand-blue py-1 flex items-center gap-2 text-slate-400">
-                            <Cpu size={12} className="text-brand-blue" /> INTEGRACIONES & API
-                          </Link>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* PRECIOS */}
-                <Link
-                  href="/precios"
-                  onClick={handleNavClick}
-                  className="hover:text-brand-orange py-2 text-slate-200 hover:text-white border-b border-white/5 flex justify-between items-center text-left"
-                >
-                  <span>Planes & Precios B2B</span>
-                  <ChevronDown size={14} className="-rotate-90 text-slate-600" />
-                </Link>
-
-                {/* RECURSOS */}
-                <div className="border-b border-white/5 pb-2">
-                  <button
-                    onClick={() => toggleMobileSub('recursos')}
-                    className="w-full flex items-center justify-between py-2 text-slate-200 hover:text-white"
-                  >
-                    <span>Biblioteca & Recursos</span>
-                    <ChevronDown size={14} className={`text-brand-orange transition-transform duration-300 ${
-                      mobileActiveSub === 'recursos' ? 'rotate-180' : ''
-                    }`} />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {mobileActiveSub === 'recursos' && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="flex flex-col gap-3.5 pl-4 pr-2 pt-2 pb-1 text-[10px] items-start text-left text-slate-400 bg-white/5 rounded-2xl p-4 mt-1 border border-white/5 w-full">
-                          <Link href="/blog" onClick={handleNavClick} className="hover:text-brand-orange py-1 flex items-center gap-2">
-                            <BookOpen size={12} className="text-brand-orange" /> BLOG CORPORATIVO
-                          </Link>
-                          <Link href="/empresas/requisicion" onClick={handleNavClick} className="hover:text-brand-blue py-1 flex items-center gap-2">
-                            <FileText size={12} className="text-brand-blue" /> BIBLIOTECA DE PLANTILLAS
-                          </Link>
-                          <Link href="/empresas" onClick={handleNavClick} className="hover:text-emerald-400 py-1 flex items-center gap-2">
-                            <TrendingUp size={12} className="text-emerald-400" /> CASOS DE ÉXITO
-                          </Link>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                    <span>{label}</span>
+                    <ChevronDown size={14} className="-rotate-90 text-slate-600" />
+                  </Link>
+                ))}
 
                 {/* SECTOR CANDIDATOS HEADER */}
                 <div className="text-[9px] font-black text-brand-orange tracking-[0.3em] text-left border-b border-white/5 pb-1 uppercase mt-6">
