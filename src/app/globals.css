@@ -590,6 +590,63 @@
 }
 
 /* ─────────────────────────────────────────────────────────
+   CAPA CINEMÁTICA · secuencia con scrub por scroll y el
+   material de vidrio que vive encima de ella.
+   Tokens únicos para hero + sección de capacidad; se declaran
+   aquí (y no sueltos en el markup) porque necesitan variante
+   de light mode.
+   ───────────────────────────────────────────────────────── */
+
+/* Velo de legibilidad sobre la secuencia de fotos */
+.seq-veil {
+  background:
+    linear-gradient(180deg, rgba(7,7,15,0.72) 0%, rgba(7,7,15,0.80) 55%, rgba(7,7,15,0.92) 100%),
+    linear-gradient(120deg, rgba(30,58,138,0.14) 0%, transparent 55%),
+    radial-gradient(120% 80% at 80% 10%, rgba(249,115,22,0.10), transparent 60%);
+}
+
+/* Badge con barra de acento a la izquierda — el marcador de dato del sitio */
+.badge-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-left: 2px solid #F97316;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.375rem 0.75rem;
+}
+
+/* Panel frosted de capacidades / proceso */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Chip de vidrio (tarjeta de contacto del hero) */
+.glass-chip {
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Fila divisoria dentro del panel */
+.panel-row + .panel-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Titulares editoriales: peso ligero, aire, sin el font-black del resto */
+.headline-editorial {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* ─────────────────────────────────────────────────────────
    LIGHT MODE OVERRIDES · Premium White Mode
    ───────────────────────────────────────────────────────── */
 :root.light body {
@@ -734,6 +791,37 @@
   background-color: rgba(255, 255, 255, 0.7) !important;
   border-color: rgba(0, 0, 0, 0.06) !important;
   box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Capa cinemática en light mode — el velo aclara la foto para que el
+   texto (que ya se invierte a slate-900) mantenga contraste AA. */
+:root.light .seq-veil {
+  background:
+    linear-gradient(180deg, rgba(248,250,252,0.72) 0%, rgba(248,250,252,0.84) 55%, rgba(248,250,252,0.94) 100%),
+    linear-gradient(120deg, rgba(30,58,138,0.05) 0%, transparent 55%) !important;
+}
+
+:root.light .glass-panel,
+:root.light .glass-chip {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* El badge sólo tiene borde izquierdo y es su acento: se le aclara el fondo
+   pero la barra naranja se queda — es el marcador de dato de la marca. */
+:root.light .badge-accent {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-left-color: #F97316 !important;
+}
+
+:root.light .panel-row + .panel-row {
+  border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Los drop-shadows del texto sobre foto sólo tienen sentido en dark */
+:root.light .drop-shadow-md,
+:root.light .drop-shadow-lg {
+  filter: none !important;
 }
 
 :root.light .glass-card-blue {
