@@ -114,6 +114,8 @@ model TestResult {
   testId      String
   test        PsychometricTest @relation(fields: [testId], references: [id], onDelete: Cascade)
 
+  procesos Proceso[]
+
   @@map("test_results")
 }
 
@@ -149,6 +151,132 @@ model Subscription {
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
+}
+
+// ─── CRM INTERNO: CLIENTES, REQUISICIONES, PIPELINE ───────────
+// Separado de User/Company/Candidate porque estos modelos representan
+// registros de agencia (sin login necesariamente), no cuentas del SaaS.
+model Cliente {
+  id             String   @id @default(cuid())
+  razonSocial    String
+  rfc            String?
+  contactoNombre String?
+  contactoEmail  String?
+  contactoTel    String?
+  zona           String?
+  tier           Int      @default(2) // 1 | 2
+  createdAt      DateTime @default(now())
+
+  requisiciones Requisicion[]
+
+  @@map("clientes")
+}
+
+model Requisicion {
+  id                String   @id @default(cuid())
+  puesto            String
+  zona              String?
+  turno             String?
+  bandaSalarialMin  Float?
+  bandaSalarialMax  Float?
+  estatus           String   @default("abierta") // abierta | en_proceso | terna_entregada | cerrada | cancelada
+  fechaSolicitud    DateTime @default(now())
+  fechaLimite       DateTime?
+  createdAt         DateTime @default(now())
+
+  // FK
+  clienteId String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  procesos Proceso[]
+
+  @@map("requisiciones")
+}
+
+model Candidato {
+  id                     String   @id @default(cuid())
+  nombre                 String
+  email                  String?
+  telefono               String?
+  zona                   String?
+  puestoInteres          String?
+  fuente                 String? // whatsapp | scraping | formulario | referido | otro
+  consentimientoLFPDPPP  Boolean  @default(false)
+  createdAt              DateTime @default(now())
+
+  // CV. `cvKey` es una referencia opaca al almacenamiento (ruta local en
+  // desarrollo, URL de Vercel Blob privado en producción). Nunca se expone al
+  // cliente: el archivo se sirve por /api/candidatos/[id]/cv, que exige sesión
+  // de reclutador o admin. Es dato personal bajo LFPDPPP.
+  cvKey            String?
+  cvNombreArchivo  String?
+  cvSubidoEn       DateTime?
+
+  // Datos que el reclutador completa a mano sobre la ficha.
+  linkedin         String?
+  experienciaAnios Int?
+  notas            String?
+
+  procesos     Proceso[]
+  seguimientos Seguimiento[]
+
+  @@map("candidatos")
+}
+
+model Proceso {
+  id           String   @id @default(cuid())
+  etapa        String   @default("atraccion") // atraccion | filtro_cv | psicometria | entrevista | terna | contratado | descartado
+  scoreMatch   Float?
+  notas        String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  // FK
+  requisicionId String
+  requisicion   Requisicion @relation(fields: [requisicionId], references: [id], onDelete: Cascade)
+  candidatoId   String
+  candidato     Candidato   @relation(fields: [candidatoId], references: [id], onDelete: Cascade)
+
+  // Enlace opcional a psicometría ya corrida en la infraestructura existente
+  // (solo aplica si el candidato del pipeline también tiene cuenta Candidate/User)
+  testResultId String?
+  testResult   TestResult? @relation(fields: [testResultId], references: [id], onDelete: SetNull)
+
+  // Resultado de psicometría reportado por n8n para candidatos de pipeline
+  // sin cuenta de plataforma (no se puede usar TestResult porque exige un Candidate).
+  psicometriaTipo          String?
+  psicometriaResultadoJson String?
+  psicometriaScoreGlobal   Float?
+  psicometriaPdfUrl        String?
+
+  seguimientos Seguimiento[]
+
+  @@map("procesos")
+}
+
+// Seguimientos del reclutador sobre un candidato: la tarea pendiente concreta
+// ("llamar el jueves", "enviar psicometría"). `automatico` marca los que crea
+// el sistema al mover una etapa, para distinguirlos de los que agenda una persona.
+model Seguimiento {
+  id           String    @id @default(cuid())
+  tipo         String    @default("llamada") // llamada | whatsapp | correo | psicometria | documentos | entrevista | otro
+  nota         String?
+  fechaLimite  DateTime
+  completado   Boolean   @default(false)
+  completadoEn DateTime?
+  automatico   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  candidatoId String
+  candidato   Candidato @relation(fields: [candidatoId], references: [id], onDelete: Cascade)
+
+  // Opcional: un seguimiento puede colgar de un proceso concreto o del candidato a secas.
+  procesoId String?
+  proceso   Proceso? @relation(fields: [procesoId], references: [id], onDelete: SetNull)
+
+  @@index([completado, fechaLimite])
+  @@map("seguimientos")
 }
 
 // --- CAT (COMPUTERIZED ADAPTIVE TESTING) --------------
