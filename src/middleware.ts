@@ -6,16 +6,14 @@ const SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'hackesjobs-dev-secret-change-in-production-2026'
 );
 
-// Rutas que requieren autenticación
-const PROTECTED_ROUTES = ['/dashboard'];
+// Rutas que requieren autenticación.
+// Las rutas /api/* no pasan por aquí (ver `matcher` al final): cada handler
+// valida su propia sesión con requireAuth() de src/lib/api-helpers.ts.
+const PROTECTED_ROUTES = ['/dashboard', '/crm'];
 
-// Rutas de API que NO requieren autenticación
-const PUBLIC_API_ROUTES = [
-  '/api/auth/login',
-  '/api/auth/register',
-  '/api/auth/logout',
-  '/api/webhooks',
-];
+// El CRM maneja datos personales de candidatos (CV, teléfono, psicometrías),
+// así que además de sesión exige rol de reclutador o admin.
+const CRM_ROLES = ['admin', 'recruiter'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -44,6 +42,12 @@ export async function middleware(request: NextRequest) {
       // ─── RBAC Logic ────────────────────────────────────
       // Restrict /dashboard/admin to only 'admin' role
       if (pathname.startsWith('/dashboard/admin') && role !== 'admin') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+
+      // El CRM es solo para reclutadores y admin. Una empresa o un candidato
+      // con sesión válida no debe ver la cartera de talento.
+      if (pathname.startsWith('/crm') && !CRM_ROLES.includes(role || '')) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
       }
       
@@ -85,6 +89,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/crm/:path*',
     '/login',
     '/register',
   ],

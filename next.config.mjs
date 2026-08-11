@@ -8,7 +8,11 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ['@react-pdf/renderer'],
+  // @react-pdf/renderer necesita el build completo de React (usa React.Component).
+  // Bundlearlo deja `react` resuelto al build de servidor, que no lo expone.
+  experimental: {
+    serverComponentsExternalPackages: ['@react-pdf/renderer'],
+  },
   output: 'standalone',
   async headers() {
     return [
