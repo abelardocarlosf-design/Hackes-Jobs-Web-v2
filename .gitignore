@@ -21,11 +21,23 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+
+# archivos temporales
+*.tmp
 
 # local env files
+# Solo .env.example se versiona; el resto lleva secretos.
+.env
 .env*.local
 .env.local.txt
 
+# base de datos local y sus respaldos
+prisma/*.db-journal
+prisma/*.db.backup-*
+
+# CVs subidos en desarrollo: son datos personales, nunca al repositorio
+/storage
 
 # vercel
 .vercel

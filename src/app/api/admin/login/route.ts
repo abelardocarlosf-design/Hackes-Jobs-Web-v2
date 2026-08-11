@@ -5,8 +5,19 @@ export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
 
-    const adminUser = process.env.BLOG_ADMIN_USER || 'admin';
-    const adminPass = process.env.BLOG_ADMIN_PASS || 'hackesjobs2025';
+    const adminUser = process.env.BLOG_ADMIN_USER;
+    const adminPass = process.env.BLOG_ADMIN_PASS;
+
+    // Falla cerrado: sin credenciales configuradas no se entra.
+    // Antes había valores por defecto ('admin' / 'hackesjobs2025'), lo que dejaba
+    // el panel abierto con credenciales públicas si el entorno no estaba completo.
+    if (!adminUser || !adminPass) {
+      console.error('[Admin Login] BLOG_ADMIN_USER o BLOG_ADMIN_PASS no configuradas.');
+      return NextResponse.json(
+        { error: 'Acceso administrativo no configurado en el servidor.' },
+        { status: 503 }
+      );
+    }
 
     if (username === adminUser && password === adminPass) {
       // Firmar token JWT real con rol administrador
