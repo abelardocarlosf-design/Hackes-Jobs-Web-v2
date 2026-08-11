@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/Button';
+import { CVUploadForm } from '@/components/CVUploadForm';
 import { Eye, Brain, Network, ArrowRight } from 'lucide-react';
 
 export default function CandidatosPage() {
@@ -28,9 +29,9 @@ export default function CandidatosPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-              <Link href="/register?role=candidate">
+              <Link href="#enviar-cv">
                 <Button variant="secondary" size="xl" className="w-full sm:w-auto">
-                  Crear perfil
+                  Enviar mi CV
                 </Button>
               </Link>
               <Link href="/vacantes">
@@ -67,7 +68,25 @@ export default function CandidatosPage() {
         </div>
       </section>
 
-      {/* 3. CTA */}
+      {/* 3. ENVIAR CV */}
+      <section id="enviar-cv" className="relative py-24 z-10 scroll-mt-24">
+        <div className="container relative mx-auto px-4 max-w-3xl">
+          <div className="text-center mb-12 space-y-4">
+            <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">Postúlate</span>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
+              Envíanos tu CV.
+            </h2>
+            <p className="text-slate-400 font-medium leading-relaxed max-w-xl mx-auto">
+              Queda directamente en la bandeja de nuestro equipo de reclutamiento. Si tu perfil
+              coincide con una vacante activa, te contactamos.
+            </p>
+          </div>
+
+          <CVUploadForm />
+        </div>
+      </section>
+
+      {/* 4. CTA */}
       <section className="relative py-24 z-10">
         <div className="container relative mx-auto px-4 max-w-5xl">
           <div className="card-premium p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
