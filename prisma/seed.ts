@@ -1,22 +1,44 @@
 import { prisma } from '../src/lib/prisma';
 import { hashPassword } from '../src/lib/password';
 
+// Cuentas de administración reales del negocio. Se declaran aquí para que al
+// sembrar una base nueva (Neon) nazcan ya con rol `admin`: en la base anterior
+// estaban como `company`, y por eso el middleware les negaba el acceso a /crm.
+const ADMINS = [
+  { email: 'abelardo.carlos@hackesjobs.com.mx', name: 'Abelardo Carlos' },
+  { email: 'abelardo.carlosf@gmail.com', name: 'Abelardo Carlos Flores' },
+];
+
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Crear Admin
-  const adminPassword = await hashPassword('admin2026');
+  // Admin principal. La contraseña sale del entorno para no dejarla escrita en
+  // el repositorio; el fallback solo sirve en desarrollo.
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@hackesjobs.com.mx';
+  const adminPassword = await hashPassword(process.env.SEED_ADMIN_PASSWORD || 'admin2026');
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@hackesjobs.com.mx' },
-    update: {},
+    where: { email: adminEmail },
+    update: { role: 'admin' },
     create: {
       name: 'Administrador Principal',
-      email: 'admin@hackesjobs.com.mx',
+      email: adminEmail,
       passwordHash: adminPassword,
       role: 'admin',
     },
   });
   console.log('✅ Admin creado:', admin.email);
+
+  // Cuentas del dueño. Se crean con una contraseña temporal que debe cambiarse
+  // desde "Mi perfil" en el primer acceso.
+  const passTemporal = await hashPassword(process.env.SEED_ADMIN_PASSWORD || 'admin2026');
+  for (const cuenta of ADMINS) {
+    const u = await prisma.user.upsert({
+      where: { email: cuenta.email },
+      update: { role: 'admin' },
+      create: { ...cuenta, passwordHash: passTemporal, role: 'admin' },
+    });
+    console.log('✅ Admin del negocio:', u.email);
+  }
 
   // Crear Empresa Demo
   const companyPassword = await hashPassword('empresa2026');
@@ -100,11 +122,12 @@ async function main() {
   console.log('✅ Test DISC creado');
 
   console.log('\n🎉 Seed completado exitosamente!');
-  console.log('\n📋 Cuentas de prueba:');
-  console.log('   Admin:      admin@hackesjobs.com.mx / admin2026');
+  console.log('\n📋 Cuentas de prueba (cambia estas contraseñas antes de producción):');
+  console.log(`   Admin:      ${adminEmail}`);
   console.log('   Empresa:    demo@techcorp.mx / empresa2026');
   console.log('   Candidato:  juan@email.com / candidato2026');
   console.log('   Recruiter:  reclutador@hackesjobs.com.mx / recruiter2026');
+  console.log('\n⚠️  Entra a "Mi perfil" y cambia la contraseña de las cuentas admin.');
 }
 
 main()

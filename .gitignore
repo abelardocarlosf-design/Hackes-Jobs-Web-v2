@@ -33,8 +33,15 @@ yarn-error.log*
 .env.local.txt
 
 # base de datos local y sus respaldos
+# prisma/dev.db estuvo versionado por error: viajaba dentro del bundle de Vercel,
+# donde el disco es de solo lectura, así que toda escritura (crear usuarios,
+# candidatos, requisiciones) fallaba en producción.
+prisma/*.db
 prisma/*.db-journal
 prisma/*.db.backup-*
+
+# El antiguo almacén de usuarios en JSON. Guardaba contraseñas en texto plano.
+data/users.json
 
 # CVs subidos en desarrollo: son datos personales, nunca al repositorio
 /storage

@@ -1,22 +1,29 @@
-// Prisma Schema â€” Hacke's Jobs SaaS
-// Local: SQLite | ProducciÃ³n: Supabase PostgreSQL
-// Para migrar a Supabase: cambiar provider a "postgresql" y actualizar DATABASE_URL
+// Prisma Schema - Hacke's Jobs SaaS
+// Base de datos: PostgreSQL (Neon, provisionado desde el Marketplace de Vercel).
+// DATABASE_URL = conexion pooled (-pooler) | DIRECT_URL = sin pooler, para migraciones.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // Pooled (host con `-pooler`): lo usa la app en runtime.
+  url       = env("DATABASE_URL")
+  // Sin pooler: lo exige Prisma para migraciones y introspección.
+  directUrl = env("DIRECT_URL")
 }
 
-// â”€â”€â”€ USERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- USERS -------------------------------------------------------
 model User {
   id           String    @id @default(cuid())
   name         String
   email        String    @unique
-  passwordHash String
+  // Nullable a propósito: las cuentas creadas con Google no tienen contraseña.
+  // `authProvider` distingue el caso para dar mensajes claros en /api/auth/login
+  // y /api/auth/password en vez de un "credenciales inválidas" desconcertante.
+  passwordHash String?
+  authProvider String    @default("local") // local | google
   role         String    @default("candidate") // admin | recruiter | company | candidate
   avatar       String?
   createdAt    DateTime  @default(now())
@@ -25,11 +32,12 @@ model User {
   // Relations
   company   Company?
   candidate Candidate?
+  cliente   Cliente?
 
   @@map("users")
 }
 
-// â”€â”€â”€ COMPANIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- COMPANIES ---------------------------------------------------
 model Company {
   id        String   @id @default(cuid())
   name      String
@@ -53,7 +61,7 @@ model Company {
 // El modelo `Job` y `Application` fueron retirados de Prisma en favor de un
 // catálogo estático versionado en git, optimizado para SEO + Google Jobs.
 
-// â”€â”€â”€ CANDIDATES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- CANDIDATES --------------------------------------------------
 model Candidate {
   id              String   @id @default(cuid())
   cvUrl           String?
@@ -77,10 +85,12 @@ model Candidate {
   @@map("candidates")
 }
 
-// â”€â”€â”€ PSYCHOMETRIC TESTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- PSYCHOMETRIC TESTS ------------------------------------------
 model PsychometricTest {
   id        String   @id @default(cuid())
-  name      String
+  // @unique para que los seeds puedan usar upsert. Sin esto, correr
+  // prisma/seed-tests.ts dos veces duplica el catálogo entero.
+  name      String   @unique
   type      String   // DISC | cognitive | personality | custom
   level     String   @default("basico") // basico | intermedio | avanzado | premium
   price     Float    @default(0.0) // 0 si es gratuito
@@ -99,7 +109,7 @@ model PsychometricTest {
   @@map("psychometric_tests")
 }
 
-// â”€â”€â”€ TEST RESULTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- TEST RESULTS ------------------------------------------------
 model TestResult {
   id        String   @id @default(cuid())
   results   String   // JSON: respuestas del candidato
@@ -119,7 +129,7 @@ model TestResult {
   @@map("test_results")
 }
 
-// â”€â”€â”€ TEST PURCHASES (STRIPE) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- TEST PURCHASES (STRIPE) -------------------------------------
 model TestPurchase {
   id              String   @id @default(cuid())
   stripeSessionId String?  @unique
@@ -137,7 +147,7 @@ model TestPurchase {
   @@map("test_purchases")
 }
 
-// â”€â”€â”€ SUBSCRIPTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- SUBSCRIPTIONS -----------------------------------------------
 model Subscription {
   id        String   @id @default(cuid())
   plan      String   @default("basic") // basic | pro | enterprise
@@ -166,6 +176,12 @@ model Cliente {
   zona           String?
   tier           Int      @default(2) // 1 | 2
   createdAt      DateTime @default(now())
+
+  // Vínculo opcional con una cuenta del SaaS. Nullable porque la mayoría de los
+  // clientes son registros de agencia sin login; cuando existe, es lo que permite
+  // a /mi-empresa listar "mis requisiciones" sin exponer las de otros clientes.
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   requisiciones Requisicion[]
 
@@ -279,7 +295,7 @@ model Seguimiento {
   @@map("seguimientos")
 }
 
-// --- CAT (COMPUTERIZED ADAPTIVE TESTING) --------------
+// --- CAT (COMPUTERIZED ADAPTIVE TESTING) -------------------------
 model CatItem {
   id              String   @id @default(cuid())
   testId          String
@@ -308,6 +324,38 @@ model CatSession {
   status          String   @default("in_progress") // in_progress | completed
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  
+
   @@map("cat_sessions")
+}
+
+// --- CONTENIDO (BLOG Y NEWSLETTER) -------------------------------
+// Antes vivían en `data/blog/*.json` y `data/subscribers.json`, escritos con
+// `fs`. En Vercel el disco es de solo lectura: el CMS no guardaba nada y cada
+// suscripción se perdía en silencio. En local sí escribía, y por eso no se
+// detectó antes.
+model BlogPost {
+  // El slug es la clave: toda la app busca y guarda por slug, nunca por id.
+  slug       String   @id
+  title      String
+  content    String
+  excerpt    String
+  coverImage String
+  author     String
+  date       DateTime // Fecha de publicación que muestra el artículo.
+  tags       String[] // Nativo de Postgres; no hace falta serializar a JSON.
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // El listado público filtra por `published` y ordena por `date` descendente.
+  @@index([published, date])
+  @@map("blog_posts")
+}
+
+model Subscriber {
+  id    String   @id @default(cuid())
+  email String   @unique // La unicidad la impone la base, no una lectura previa.
+  date  DateTime @default(now())
+
+  @@map("subscribers")
 }
