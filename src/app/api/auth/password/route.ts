@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { hashPassword, comparePassword } from '@/lib/password';
 import { getAuthUser } from '@/lib/api-helpers';
+import { consumirIntento, limpiarIntentos } from '@/lib/rate-limit';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -26,6 +27,23 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { success: false, message: parsed.error.issues[0]?.message || 'Datos inválidos' },
       { status: 400 }
+    );
+  }
+
+  // Este endpoint también adivina contraseñas: con una sesión robada se podría
+  // ir probando `actual` hasta acertar. Se limita por usuario, no por IP,
+  // porque la sesión ya identifica a la cuenta.
+  const claveLimite = `password:${sesion.userId}`;
+  const limite = consumirIntento(claveLimite);
+  if (!limite.permitido) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: `Demasiados intentos. Vuelve a intentarlo en ${Math.ceil(
+          limite.reintentarEn / 60
+        )} minutos.`,
+      },
+      { status: 429, headers: { 'Retry-After': String(limite.reintentarEn) } }
     );
   }
 
@@ -60,6 +78,8 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  limpiarIntentos(claveLimite);
 
   await prisma.user.update({
     where: { id: usuario.id },
