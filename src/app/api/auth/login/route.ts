@@ -31,6 +31,16 @@ export async function POST(request: Request) {
       );
     }
 
+    // Cuentas creadas con Google: no tienen contraseña que comparar. Sin este
+    // caso el usuario recibiría "credenciales incorrectas" para siempre, sin
+    // pista de que su cuenta va por Google.
+    if (!user.passwordHash) {
+      return NextResponse.json(
+        { success: false, message: 'Esta cuenta usa Google. Inicia sesión con el botón de Google.' },
+        { status: 401 }
+      );
+    }
+
     // Verificar password
     const isValid = await comparePassword(password, user.passwordHash);
     if (!isValid) {

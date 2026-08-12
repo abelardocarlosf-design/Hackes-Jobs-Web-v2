@@ -2,20 +2,29 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/jwt';
-import { verifyGoogleToken } from '@/lib/googleAuth';
+import { verifyGoogleToken, googleEstaConfigurado } from '@/lib/googleAuth';
 import { triggerWebhookAsync } from '@/lib/webhook';
 
 export async function POST(request: Request) {
   try {
+    // 503 y no 401: el problema es de configuración del servidor, no de las
+    // credenciales de quien intenta entrar.
+    if (!googleEstaConfigurado) {
+      return NextResponse.json(
+        { success: false, message: 'Google Sign-In no está configurado en este entorno.' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const { credential } = body;
 
     if (!credential) {
-      return NextResponse.json({ success: false, message: 'Google credential is required' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'Falta la credencial de Google' }, { status: 400 });
     }
 
     const payload = await verifyGoogleToken(credential);
-    
+
     if (!payload || !payload.email) {
       return NextResponse.json({ success: false, message: 'Token de Google inválido' }, { status: 401 });
     }
@@ -28,13 +37,18 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
-      // Crear nuevo usuario y candidato por defecto
+      // El alta automática es solo como candidato, nunca con más privilegios.
+      // A un usuario que ya existe no se le toca el rol: entra con el suyo.
       user = await prisma.user.create({
         data: {
           email,
           name: name || 'Candidato',
           role: 'candidate',
-          passwordHash: 'GOOGLE_AUTH', // Password dummy ya que usa OAuth
+          // Sin contraseña, no con un centinela 'GOOGLE_AUTH'. Eso rompía
+          // /api/auth/password, que pedía "la contraseña actual" a alguien
+          // que nunca tuvo una.
+          passwordHash: null,
+          authProvider: 'google',
           avatar: picture,
           candidate: {
             create: {} // Crea el perfil de candidato vacío

@@ -5,11 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Briefcase, BellRing, Menu, X, LogOut, UserCircle, ChevronDown } from 'lucide-react';
-
-async function cerrarSesion() {
-  await fetch('/api/auth/logout', { method: 'POST' });
-  window.location.href = '/login';
-}
+import { cerrarSesion } from '@/lib/sesion-cliente';
 
 const NAV = [
   { href: '/crm', label: 'Panel', icon: LayoutDashboard, exact: true },
@@ -90,7 +86,7 @@ export function CrmShell({
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-white/5 hover:text-white font-bold text-sm transition-all">
                     <UserCircle size={17} /> Mi perfil
                   </Link>
-                  <button type="button" onClick={cerrarSesion} role="menuitem"
+                  <button type="button" onClick={() => cerrarSesion()} role="menuitem"
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 font-bold text-sm transition-all">
                     <LogOut size={17} /> Cerrar sesión
                   </button>
@@ -155,17 +151,21 @@ export function CrmShell({
             </div>
 
             <div className="mt-auto pt-6 border-t border-white/5 space-y-1">
-              <Link href="/dashboard" onClick={() => setAbierto(false)}
-                className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-white hover:bg-white/5 font-bold text-sm transition-all">
-                <LayoutDashboard size={18} />
-                Ir al dashboard general
-              </Link>
+              {/* Solo el admin tiene panel de administración; a un reclutador
+                  este enlace le aparecía igual y solo lo rebotaba. */}
+              {rol === 'admin' && (
+                <Link href="/admin" onClick={() => setAbierto(false)}
+                  className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-white hover:bg-white/5 font-bold text-sm transition-all">
+                  <LayoutDashboard size={18} />
+                  Panel de administración
+                </Link>
+              )}
               <Link href="/crm/perfil" onClick={() => setAbierto(false)}
                 className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 hover:text-white hover:bg-white/5 font-bold text-sm transition-all">
                 <UserCircle size={18} />
                 Mi perfil
               </Link>
-              <button type="button" onClick={cerrarSesion}
+              <button type="button" onClick={() => cerrarSesion()}
                 className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 font-bold text-sm transition-all">
                 <LogOut size={18} />
                 Cerrar sesión

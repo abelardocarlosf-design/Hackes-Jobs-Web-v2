@@ -7,26 +7,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './Button';
 import { useAuth } from '@/lib/auth-context';
 import {
-  Menu,
-  X,
-  ChevronDown,
-  FileText,
-  ArrowRight,
-  User,
-  LogOut,
-  LayoutDashboard,
-  UserPlus,
-} from 'lucide-react';
+  NAV_PUBLICO,
+  NAV_CANDIDATO_PUBLICO,
+  ETIQUETA_ROL,
+  menuDeUsuario,
+  ctaDeRol,
+  esRol,
+} from '@/lib/navegacion';
+import { iconoDe } from '@/components/nav/iconos';
+import { Menu, X, ChevronDown, ArrowRight, User, LogOut } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
-// Navegación pública simplificada: links directos, sin mega-menús SaaS.
-const NAV_LINKS = [
-  { href: '/empresas', label: 'EMPRESAS' },
-  { href: '/psicometrias', label: 'PSICOMETRÍAS' },
-  { href: '/precios', label: 'PRECIOS' },
-  { href: '/blog', label: 'BLOG' },
-  { href: '/contacto', label: 'CONTACTO' },
-];
+// Escritorio y móvil se pintan desde los MISMOS arrays de src/lib/navegacion.ts.
+// Antes había dos listas literales duplicadas en este archivo que había que
+// mantener a mano en paralelo, y por eso divergían.
 
 /**
  * Animated "tubelight" indicator (21st.dev pattern) — a glowing pill that
@@ -62,11 +56,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Estatus de menús desplegables (Desktop)
   const [activeDropdown, setActiveDropdown] = useState<'candidatos' | 'usuario' | null>(null);
-  // Item resaltado por la lámpara (incluye enlaces sin dropdown)
   const [hovered, setHovered] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const menuUsuario = menuDeUsuario(user?.role);
+  const cta = ctaDeRol(user?.role);
+  const etiquetaRol = esRol(user?.role) ? ETIQUETA_ROL[user.role] : 'Cuenta';
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -91,7 +87,6 @@ export default function Navbar() {
     }, 120);
   };
 
-  // Cierre de todos los menús al navegar
   const handleNavClick = () => {
     setIsOpen(false);
     setActiveDropdown(null);
@@ -127,9 +122,7 @@ export default function Navbar() {
             onMouseLeave={() => setHovered(null)}
             className="hidden lg:flex gap-1.5 xl:gap-4 2xl:gap-7 items-center text-[8px] xl:text-[9.5px] 2xl:text-[10px] font-black uppercase tracking-wider xl:tracking-[0.2em] 2xl:tracking-[0.25em] text-slate-300 flex-shrink"
           >
-
-            {/* LINKS DIRECTOS (Empresas · Psicometrías · Precios · Blog · Contacto) */}
-            {NAV_LINKS.map(({ href, label }) => (
+            {NAV_PUBLICO.map(({ href, etiqueta }) => (
               <div
                 key={href}
                 className="relative py-6"
@@ -142,7 +135,7 @@ export default function Navbar() {
                     hovered === href ? 'text-white' : ''
                   }`}
                 >
-                  {label}
+                  {etiqueta}
                   {hovered === href && <NavLamp />}
                 </Link>
               </div>
@@ -151,7 +144,7 @@ export default function Navbar() {
             {/* SEPARADOR DE SECCIÓN */}
             <div className="h-4 w-[1px] bg-white/10 mx-1"></div>
 
-            {/* BOLSA DE TRABAJO (Enlace de primer nivel de alta visibilidad para Candidatos) */}
+            {/* BOLSA DE TRABAJO (acción de mayor intención para candidatos) */}
             <Link
               href="/vacantes"
               onClick={handleNavClick}
@@ -161,7 +154,7 @@ export default function Navbar() {
               BOLSA DE TRABAJO
             </Link>
 
-            {/* SECCIÓN CANDIDATOS (Dropdown Dedicado para simplificar la vida de quienes buscan empleo) */}
+            {/* CANDIDATOS (desplegable) */}
             <div
               className="relative py-6"
               onMouseEnter={() => { handleMouseEnter('candidatos'); setHovered('candidatos'); }}
@@ -170,62 +163,51 @@ export default function Navbar() {
               <button className={`isolate relative flex items-center gap-1.5 rounded-full px-3 py-2 transition-colors duration-300 focus:outline-none whitespace-nowrap hover:text-white ${
                 hovered === 'candidatos' ? 'text-white' : ''
               }`}>
-                SOY CANDIDATO
+                CANDIDATOS
                 <ChevronDown size={12} className={`transition-transform duration-300 ${
                   activeDropdown === 'candidatos' ? 'rotate-180 text-brand-orange' : 'text-slate-400'
                 }`} />
                 {hovered === 'candidatos' && <NavLamp />}
               </button>
 
-              {/* Panel de Candidatos Dropdown (Claro y directo) */}
               <AnimatePresence>
                 {activeDropdown === 'candidatos' && (
-                  <motion.div {...panelMotion} className="absolute top-[calc(100%-8px)] right-0 w-[280px] glass-card-dark rounded-3xl p-4 flex flex-col gap-2.5">
+                  <motion.div {...panelMotion} className="absolute top-[calc(100%-8px)] right-0 w-[300px] glass-card-dark rounded-3xl p-4 flex flex-col gap-2.5">
                     <div className="text-[9px] font-black text-brand-orange tracking-[0.3em] pb-1 border-b border-white/5 uppercase text-left">
                       Ecosistema de Talento
                     </div>
 
-                    <Link href="/register" onClick={handleNavClick} className="group/cand-item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-blue-500/10 text-brand-blue group-hover/cand-item:bg-brand-blue group-hover/cand-item:text-white transition-colors duration-300">
-                          <UserPlus size={14} />
-                        </div>
-                        <div className="text-left">
-                          <div className="text-[10px] font-black text-white group-hover/cand-item:text-brand-blue transition-colors">REGISTRAR CV / PERFIL</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5 leading-normal">
-                            Sube tu CV para que nuestra IA te vincule automáticamente a vacantes compatibles.
+                    {NAV_CANDIDATO_PUBLICO.map(({ href, etiqueta, descripcion, icono }) => {
+                      const Icono = iconoDe(icono);
+                      return (
+                        <Link key={href} href={href} onClick={handleNavClick} className="group/cand-item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
+                          <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-blue-500/10 text-brand-blue group-hover/cand-item:bg-brand-blue group-hover/cand-item:text-white transition-colors duration-300">
+                              <Icono size={14} />
+                            </div>
+                            <div className="text-left">
+                              <div className="text-[10px] font-black text-white group-hover/cand-item:text-brand-blue transition-colors uppercase">{etiqueta}</div>
+                              {descripcion && (
+                                <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5 leading-normal">
+                                  {descripcion}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link href="/candidatos" onClick={handleNavClick} className="group/cand-item p-2.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/5">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover/cand-item:bg-emerald-500 group-hover/cand-item:text-white transition-colors duration-300">
-                          <User size={14} />
-                        </div>
-                        <div className="text-left">
-                          <div className="text-[10px] font-black text-white group-hover/cand-item:text-emerald-400 transition-colors">PORTAL DE TALENTO</div>
-                          <div className="text-[8px] font-medium text-slate-400 normal-case tracking-normal mt-0.5 leading-normal">
-                            Conoce los beneficios de la terna inteligente, evaluaciones psicométricas y preparación.
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
+                        </Link>
+                      );
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
-
           </nav>
 
-          {/* Action Area & CTAs (ThemeToggle, Login, primary B2B CTA or Authenticated User Profile) */}
+          {/* Action Area & CTAs */}
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
 
-            {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-2 xl:gap-4">
               {isAuthenticated ? (
-                /* Profile Dropdown for B2B Client / Candidate */
                 <div
                   className="relative py-2"
                   onMouseEnter={() => handleMouseEnter('usuario')}
@@ -246,28 +228,27 @@ export default function Navbar() {
                     }`} />
                   </button>
 
-                  {/* Authenticated User Menu */}
+                  {/* Menú del usuario: se construye desde MENU_POR_ROL, así que
+                      cada rol ve exactamente sus destinos y nada más. */}
                   <AnimatePresence>
                     {activeDropdown === 'usuario' && (
-                      <motion.div {...panelMotion} className="absolute top-[calc(100%-4px)] right-0 w-[240px] glass-card-dark rounded-2xl p-3 flex flex-col gap-1.5">
+                      <motion.div {...panelMotion} className="absolute top-[calc(100%-4px)] right-0 w-[260px] glass-card-dark rounded-2xl p-3 flex flex-col gap-1.5">
                         <div className="px-3.5 py-2 border-b border-white/5 mb-1.5 text-left">
                           <div className="text-[9px] font-black text-brand-orange tracking-widest uppercase">
-                            {user?.role === 'company' ? 'CUENTA EMPRESA' : 'PORTAL TALENTO'}
+                            {etiquetaRol}
                           </div>
                           <div className="text-[7px] font-bold text-slate-500 mt-0.5 uppercase tracking-wider">HACKE&apos;S JOBS PLATFORM</div>
                         </div>
 
-                        <Link href="/dashboard" onClick={handleNavClick} className="group/user-link p-2 rounded-xl hover:bg-white/5 flex items-center gap-3 text-slate-300 hover:text-white transition-all">
-                          <LayoutDashboard size={14} className="text-slate-400 group-hover/user-link:text-brand-orange transition-colors" />
-                          <span className="text-[9px] font-bold tracking-widest uppercase">Mi Dashboard</span>
-                        </Link>
-
-                        {user?.role === 'company' && (
-                          <Link href="/empresas/requisicion" onClick={handleNavClick} className="group/user-link p-2 rounded-xl hover:bg-white/5 flex items-center gap-3 text-slate-300 hover:text-white transition-all">
-                            <FileText size={14} className="text-slate-400 group-hover/user-link:text-brand-blue transition-colors" />
-                            <span className="text-[9px] font-bold tracking-widest uppercase font-black text-brand-blue">Nueva Requisición</span>
-                          </Link>
-                        )}
+                        {menuUsuario.map(({ href, etiqueta, icono }) => {
+                          const Icono = iconoDe(icono);
+                          return (
+                            <Link key={href} href={href} onClick={handleNavClick} className="group/user-link p-2 rounded-xl hover:bg-white/5 flex items-center gap-3 text-slate-300 hover:text-white transition-all">
+                              <Icono size={14} className="text-slate-400 group-hover/user-link:text-brand-orange transition-colors shrink-0" />
+                              <span className="text-[9px] font-bold tracking-widest uppercase">{etiqueta}</span>
+                            </Link>
+                          );
+                        })}
 
                         <button
                           onClick={() => {
@@ -285,29 +266,33 @@ export default function Navbar() {
                 </div>
               ) : (
                 <>
+                  <Link href="/contacto" onClick={handleNavClick} className="hidden min-[1200px]:inline-flex">
+                    <Button variant="ghost" size="sm" className="font-black text-[9px] xl:text-[10px] uppercase tracking-wider xl:tracking-[0.2em] text-white hover:text-brand-orange transition-colors whitespace-nowrap">
+                      Contacto
+                    </Button>
+                  </Link>
                   <Link href="/login" onClick={handleNavClick} className="hidden min-[1200px]:inline-flex">
                     <Button variant="ghost" size="sm" className="font-black text-[9px] xl:text-[10px] uppercase tracking-wider xl:tracking-[0.2em] text-white hover:text-brand-orange transition-colors whitespace-nowrap">
                       Ingresar
                     </Button>
                   </Link>
-                  <Link href="/empresas/requisicion" onClick={handleNavClick}>
-                    {/* CRO-focused glow B2B CTA button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="rounded-2xl px-3 lg:px-3 lg:h-9 lg:text-[7.5px] xl:px-5 xl:h-10 xl:text-[8.5px] 2xl:px-6 2xl:h-11 2xl:text-[9.5px] shadow-[0_4px_20px_rgba(249,115,22,0.25)] hover:shadow-[0_4px_30px_rgba(249,115,22,0.45)] tracking-wider xl:tracking-widest uppercase border-none bg-gradient-to-r from-brand-orange to-orange-600 transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
-                    >
-                      SOLICITAR TALENTO
-                    </Button>
-                  </Link>
                 </>
               )}
+
+              {/* CTA principal: cambia según el rol cuando hay sesión. */}
+              <Link href={cta?.href ?? '/empresas/requisicion'} onClick={handleNavClick}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="rounded-2xl px-3 lg:px-3 lg:h-9 lg:text-[7.5px] xl:px-5 xl:h-10 xl:text-[8.5px] 2xl:px-6 2xl:h-11 2xl:text-[9.5px] shadow-[0_4px_20px_rgba(249,115,22,0.25)] hover:shadow-[0_4px_30px_rgba(249,115,22,0.45)] tracking-wider xl:tracking-widest uppercase border-none bg-gradient-to-r from-brand-orange to-orange-600 transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                >
+                  {cta?.etiqueta ?? 'SOLICITAR TALENTO'}
+                </Button>
+              </Link>
             </div>
 
-            {/* Theme Toggle (Integrates cleanly) */}
             <ThemeToggle />
 
-            {/* Mobile Menu Toggle Button */}
             <button
               onClick={toggleMenu}
               className="lg:hidden text-brand-orange hover:text-orange-400 transition-all duration-300 p-2.5 bg-white/5 rounded-xl border border-white/10 active:scale-95 flex-shrink-0"
@@ -329,41 +314,63 @@ export default function Navbar() {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="mobile-menu-panel lg:hidden mt-4 glass-card-dark rounded-[2.5rem] p-8 flex flex-col gap-6 items-center text-center max-h-[85vh] overflow-y-auto w-full"
             >
-
               <nav className="flex flex-col gap-4 text-[11px] font-black uppercase tracking-[0.25em] text-white w-full">
 
-                {/* SECTOR EMPRESAS HEADER */}
+                {/* Cuando hay sesión, lo primero es el espacio de trabajo. */}
+                {isAuthenticated && menuUsuario.length > 0 && (
+                  <>
+                    <div className="text-[9px] font-black text-brand-orange tracking-[0.3em] text-left border-b border-white/5 pb-1 uppercase mt-2">
+                      {etiquetaRol}
+                    </div>
+                    <div className="flex flex-col gap-2 pt-1 text-left w-full">
+                      {menuUsuario.map(({ href, etiqueta, icono }) => {
+                        const Icono = iconoDe(icono);
+                        return (
+                          <Link
+                            key={href}
+                            href={href}
+                            onClick={handleNavClick}
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 rounded-xl text-slate-200 hover:text-white transition-all text-[10px] font-black tracking-widest uppercase"
+                          >
+                            <Icono size={14} className="text-brand-orange shrink-0" />
+                            <span>{etiqueta}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+
                 <div className="text-[9px] font-black text-brand-blue tracking-[0.3em] text-left border-b border-white/5 pb-1 uppercase mt-2">
                   💼 Para Empresas (B2B)
                 </div>
 
-                {/* LINKS DIRECTOS (Mobile B2B) */}
-                {[
-                  { href: '/empresas', label: 'Empresas' },
-                  { href: '/psicometrias', label: 'Psicometrías' },
-                  { href: '/precios', label: 'Precios' },
-                  { href: '/blog', label: 'Blog' },
-                  { href: '/contacto', label: 'Contacto' },
-                ].map(({ href, label }) => (
+                {NAV_PUBLICO.map(({ href, etiqueta }) => (
                   <Link
                     key={href}
                     href={href}
                     onClick={handleNavClick}
                     className="py-2 text-slate-200 hover:text-white border-b border-white/5 flex justify-between items-center text-left"
                   >
-                    <span>{label}</span>
+                    <span>{etiqueta}</span>
                     <ChevronDown size={14} className="-rotate-90 text-slate-600" />
                   </Link>
                 ))}
+                <Link
+                  href="/contacto"
+                  onClick={handleNavClick}
+                  className="py-2 text-slate-200 hover:text-white border-b border-white/5 flex justify-between items-center text-left"
+                >
+                  <span>Contacto</span>
+                  <ChevronDown size={14} className="-rotate-90 text-slate-600" />
+                </Link>
 
-                {/* SECTOR CANDIDATOS HEADER */}
                 <div className="text-[9px] font-black text-brand-orange tracking-[0.3em] text-left border-b border-white/5 pb-1 uppercase mt-6">
                   👩‍💻 Para Candidatos (Talento)
                 </div>
 
-                {/* ACCESOS DIRECTOS SIN ACORDEONES ANIDADOS */}
                 <div className="flex flex-col gap-3 pt-2 text-left w-full">
-                  {/* BOLSA DE EMPLEO - BOTÓN PRINCIPAL DE ALTA GAMA */}
+                  {/* La bolsa de trabajo mantiene su tratamiento destacado. */}
                   <Link
                     href="/vacantes"
                     onClick={handleNavClick}
@@ -376,27 +383,21 @@ export default function Navbar() {
                     <ArrowRight size={14} className="text-brand-orange group-hover:translate-x-1 transition-transform" />
                   </Link>
 
-                  {/* REGISTRAR MI CV */}
-                  <Link
-                    href="/register"
-                    onClick={handleNavClick}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl text-slate-300 hover:text-white transition-all text-[10px] font-black tracking-widest uppercase"
-                  >
-                    <UserPlus size={14} className="text-brand-blue" />
-                    <span>REGISTRAR MI CV / PERFIL</span>
-                  </Link>
-
-                  {/* PORTAL DE TALENTO */}
-                  <Link
-                    href="/candidatos"
-                    onClick={handleNavClick}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl text-slate-300 hover:text-white transition-all text-[10px] font-black tracking-widest uppercase"
-                  >
-                    <User size={14} className="text-emerald-400" />
-                    <span>PORTAL DE TALENTO (CÓMO FUNCIONA)</span>
-                  </Link>
+                  {NAV_CANDIDATO_PUBLICO.filter(l => l.href !== '/vacantes').map(({ href, etiqueta, icono }) => {
+                    const Icono = iconoDe(icono);
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={handleNavClick}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl text-slate-300 hover:text-white transition-all text-[10px] font-black tracking-widest uppercase"
+                      >
+                        <Icono size={14} className="text-brand-blue shrink-0" />
+                        <span>{etiqueta}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
-
               </nav>
 
               {/* Mobile CTAs */}
@@ -412,12 +413,6 @@ export default function Navbar() {
                         <span className="text-[8px] font-bold text-slate-500 truncate max-w-[170px] lowercase">{user?.email}</span>
                       </div>
                     </div>
-
-                    <Link href="/dashboard" onClick={handleNavClick} className="w-full">
-                      <Button variant="ghost" size="xl" className="w-full rounded-2xl h-14 font-black text-[10px] uppercase tracking-widest border border-white/10 text-white">
-                        MI DASHBOARD
-                      </Button>
-                    </Link>
 
                     <button
                       onClick={() => {

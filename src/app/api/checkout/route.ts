@@ -31,8 +31,10 @@ export async function POST(req: Request) {
         },
       ],
       mode: isCredits ? 'payment' : 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/billing/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/billing`,
+      // Antes apuntaban a /dashboard/billing/success y /dashboard/billing, dos
+      // rutas que nunca existieron: todo checkout terminaba en un 404.
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/exito?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/precios`,
       client_reference_id: tenantId || 'guest',
       metadata: {
         tenantId: tenantId || 'guest',

@@ -34,6 +34,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, message: 'Usuario no encontrado.' }, { status: 404 });
   }
 
+  // Una cuenta de Google no tiene contraseña actual que aportar, así que este
+  // flujo no le aplica: se lo decimos en vez de rechazarlo sin explicación.
+  if (!usuario.passwordHash) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Tu cuenta inicia sesión con Google, así que no tiene contraseña que cambiar.',
+      },
+      { status: 400 }
+    );
+  }
+
   const valida = await comparePassword(parsed.data.actual, usuario.passwordHash);
   if (!valida) {
     return NextResponse.json(
