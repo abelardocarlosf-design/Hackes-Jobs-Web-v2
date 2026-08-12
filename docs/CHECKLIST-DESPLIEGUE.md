@@ -16,11 +16,11 @@ Va primero porque no depende de nada y porque, mientras no se haga, hay cuatro
 credenciales válidas publicadas. El código ya está limpio; lo que sigue expuesto
 es el historial de git, y borrar un commit no revoca una contraseña.
 
-**1. Comprueba si el repositorio es público o privado.**
-Abre `abelardocarlosf-design/Hackes-Jobs-Web-v2` y mira la etiqueta junto al
-nombre. Si es público, los cuatro secretos son legibles por cualquiera ahora
-mismo: haz los pasos 2 a 5 de inmediato y considera ponerlo en privado mientras
-tanto.
+**1. ~~Comprueba si el repositorio es público o privado.~~ RESUELTO: es privado.**
+Comprobado con una lectura anónima: `git ls-remote` sin credenciales devuelve una
+petición de usuario, y un repositorio público responde sin pedir nada. Eso baja la
+urgencia, no la necesidad: los cuatro secretos siguen en el historial y los ve
+cualquiera con acceso al repositorio, hoy o el día que se vuelva público.
 
 **2. Rota la contraseña del buzón de correo** (Hostinger).
 `abelardo.carlos@hackesjobs.com.mx`. Es la más grave de las cuatro: permite
@@ -37,14 +37,11 @@ Actualiza `DEEPSEEK_API_KEY` en `.env.local`.
 Es de modo test (`sk_test_`), así que la gravedad es menor, pero estuvo
 commiteada. Actualiza `STRIPE_SECRET_KEY` en `.env`.
 
-**5. Borra `.env.local.txt`.**
-Ya no lo lee nadie: era el archivo que Next.js nunca cargaba y que un parser
+**5. ~~Borra `.env.local.txt`.~~ HECHO.**
+Ya no lo leía nadie: era el archivo que Next.js nunca cargaba y que un parser
 propio leía a mano del disco, lo que hacía que el formulario de solicitud de
-talento funcionara en local y fallara en Vercel.
-
-```bash
-rm ".env.local.txt"
-```
+talento funcionara en local y fallara en Vercel. Se borró tras comprobar que sus
+cuatro valores —SMTP y DeepSeek— siguen en `.env.local`.
 
 ---
 
@@ -85,15 +82,11 @@ Si usas `vercel env pull`, **no lo dirijas a `.env.local`**: lo sobrescribe y
 perderías SMTP y n8n. Usa `vercel env pull .env.vercel --environment=development`
 y copia a mano.
 
-**11. Borra `.env.development.local`.**
-
-```bash
-rm .env.development.local
-```
-
-Next.js prioriza ese archivo **sobre** `.env` en desarrollo. Ya quedó vaciado de
-variables, pero mientras exista invita a volver a llenarlo, y entonces la cadena
-de Neon que acabas de pegar quedaría ignorada en silencio.
+**11. ~~Borra `.env.development.local`.~~ HECHO.**
+Next.js prioriza ese archivo **sobre** `.env` en desarrollo. Apuntaba a un
+Postgres local en `127.0.0.1:5433` que ya no corre, y mientras existiera, la
+cadena de Neon del paso 10 habría quedado ignorada en silencio. La configuración
+de base de datos vive ahora solo en `.env`.
 
 **12. Crea el esquema en la rama `dev`.**
 
@@ -253,20 +246,32 @@ tumba el despliegue entero y no queda un rollback limpio.
 base de datos y los accesos por rol están solo en la rama. Sin este paso, Vercel
 despliega la versión vieja.
 
-**28. Commitea los arreglos pendientes** (el limitador de intentos, los dos
-arreglos de URL y esta guía):
+**28. ~~Commitea los arreglos pendientes.~~ HECHO.**
+Tres commits en la rama, ya subidos a `origin`. La rama pasó de `8545599` a
+`bbf1a98`.
 
-```bash
-git add -A && git commit -m "fix(seguridad): limite de intentos y URLs de retorno reales" && git push origin feat/crm-reclutadores-y-reparaciones
-```
+| Commit | Contenido |
+|---|---|
+| `e6d20ab` | Límite de intentos en login y cambio de contraseña |
+| `10abb39` | URLs de retorno reales en Stripe y OpenRouter |
+| `bbf1a98` | Esta guía |
+
+> El push habrá disparado un despliegue de Preview en Vercel, y ese build **va a
+> fallar**: todavía no hay `DATABASE_URL`. Es lo esperado y no afecta a
+> producción. Dejará de fallar al terminar la fase 2.
 
 **29. Abre el PR a `main` y mergéalo.**
+La rama ya está subida. `gh` no está instalado en este equipo, así que abre el
+comparador y crea el PR desde ahí:
 
-```bash
-gh pr create --base main --title "CRM de reclutadores, Postgres en Neon y reparaciones"
+```
+https://github.com/abelardocarlosf-design/Hackes-Jobs-Web-v2/compare/main...feat/crm-reclutadores-y-reparaciones
 ```
 
-El merge dispara el despliegue de producción en Vercel automáticamente.
+> **No mergees antes del paso 27.** Crear el PR es seguro y puedes hacerlo ya. El
+> merge no: dispara el despliegue de producción, y si la base de producción aún no
+> tiene esquema, el build se cae al prerenderizar `/blog` y tumba el despliegue
+> entero.
 
 ---
 
