@@ -99,13 +99,18 @@ Debe aplicar dos migraciones: `20260811000000_init_postgres` y
 quedó guardado.
 
 **13. Define `SEED_ADMIN_PASSWORD` antes de sembrar.**
-Si no lo haces, el seed crea tus dos cuentas de administrador con `admin2026`,
-escrito en claro en el repositorio.
+Ya no es un consejo: el seed **aborta con código 1** si falta o si tiene menos de
+8 caracteres, y lo hace antes de tocar la base. Antes caía a `admin2026`, escrito
+en claro en el repositorio.
 
 ```
 SEED_ADMIN_EMAIL=abelardo.carlos@hackesjobs.com.mx
 SEED_ADMIN_PASSWORD="la-que-tú-elijas"
 ```
+
+Si además quieres las tres cuentas de prueba (empresa, candidato y reclutador)
+**solo en local**, añade `SEED_DEMO=true`. Sus contraseñas están escritas en
+`prisma/seed.ts`, y la de reclutador abre `/crm`: nunca la pongas en producción.
 
 **14. Siembra los cuatro conjuntos de datos.**
 
@@ -227,7 +232,7 @@ build falla al prerenderizar `/blog` y el despliegue se cae entero.
 
 **27. Migra y siembra la rama principal de Neon.**
 Cambia temporalmente `DATABASE_URL` y `DIRECT_URL` en tu `.env` por las de la
-rama principal, y repite:
+rama principal, **quita `SEED_DEMO`** si lo habías puesto, y repite:
 
 ```bash
 npx prisma migrate deploy && npx prisma db seed && npx tsx prisma/seed-tests.ts && npx tsx prisma/seed_cat.ts && npx tsx prisma/seed-blog.ts
