@@ -1,5 +1,9 @@
 # Puesta en marcha: Neon, Google y despliegue
 
+> Para ir marcando los pasos uno a uno, usa
+> [CHECKLIST-DESPLIEGUE.md](CHECKLIST-DESPLIEGUE.md). Este documento explica el
+> porqué de cada decisión; aquel es la lista operativa.
+
 Estado: **el código está listo y verificado en local**. Falta provisionar Neon y
 cargar tres variables de entorno. Hasta entonces `npm run dev` **no arranca**,
 porque `DATABASE_URL` está vacía a propósito (antes apuntaba a SQLite, y ese era
