@@ -12,7 +12,7 @@ anterior: saltarse el orden es lo que hace que un paso falle sin motivo aparente
 
 | Fase | Estado |
 |---|---|
-| 1 · Contener la fuga | ⛔ **Bloqueada.** Los pasos 2, 3 y 4 siguen sin hacer, y se comprobó una por una |
+| 1 · Contener la fuga | 🟡 SMTP y DeepSeek **rotadas en el proveedor**, pero los archivos locales siguen con las viejas. Stripe sin rotar |
 | 2 · Base de datos en Neon | ✅ Completada. Rama `dev` migrada y sembrada |
 | 3 · Variables en Vercel | 🟡 **Casi.** 24 variables cargadas en los tres entornos; solo faltan las 3 que dependen de la fase 1 |
 | 4 · Google y n8n | ⬜ Sin empezar |
@@ -22,19 +22,26 @@ anterior: saltarse el orden es lo que hace que un paso falle sin motivo aparente
 
 ### Lo único que te toca a ti ahora
 
-**Rotar las tres credenciales de los pasos 2, 3 y 4.** Son cuentas de terceros
-—Hostinger, DeepSeek, Stripe— y no se pueden tocar desde el repositorio. Todo lo
-demás de la fase 3 ya está cargado; esas tres son las que faltan, y hasta que se
-roten **el correo no sale en producción**.
+Tres cosas, y todas pasan por escribir un valor en un archivo:
 
-En cuanto las tengas, actualiza `.env.local` (SMTP y DeepSeek) y `.env` (Stripe),
-y se cargan en Vercel en un minuto.
+1. **Pega la contraseña nueva del buzón** en `SMTP_PASSWORD`, en `.env.local`. Ya
+   la rotaste en Hostinger, pero el archivo sigue con la vieja, así que **hoy no
+   sale correo ni en local ni en producción**.
+2. **Pega la API key nueva de DeepSeek** en `DEEPSEEK_API_KEY`, en `.env.local`.
+   Mismo caso: revocada en el proveedor, vieja en el archivo.
+3. **Rota la clave de Stripe** y ponla en `STRIPE_SECRET_KEY`, en `.env`. Esta sí
+   sigue sin rotar, y se comprobó que la publicada aún funciona.
+
+En cuanto estén en los archivos, cargarlas en Vercel es un minuto y no hace falta
+que pasen por pantalla.
 
 ### Lo que cambió respecto a la revisión anterior
 
-1. **Las tres credenciales filtradas siguen vivas.** No es una sospecha: se
-   compararon los valores actuales de `.env` y `.env.local` contra los que están
-   en el historial de git, y son **idénticos**. Detalle en la fase 1.
+1. **De las tres credenciales filtradas, dos ya están rotadas** en el proveedor
+   —SMTP y DeepSeek, comprobado probándolas— pero **los archivos locales siguen
+   teniendo las viejas**, así que en la práctica están rotas por partida doble: no
+   valen para el atacante y tampoco para ti. Stripe sigue viva. Detalle en la
+   fase 1.
 2. **Neon no dejó las variables donde la guía suponía.** La integración las creó
    con el prefijo `hackesjobs_`, así que `DATABASE_URL` y `DIRECT_URL` —los dos
    nombres que exige Prisma— no existían. Corregido: los pasos 8 y 9 se
@@ -59,40 +66,53 @@ petición de usuario, y un repositorio público responde sin pedir nada. Eso baj
 urgencia, no la necesidad: los cuatro secretos siguen en el historial y los ve
 cualquiera con acceso al repositorio, hoy o el día que se vuelva público.
 
-> **Comprobado el 2026-08-17: los pasos 2, 3 y 4 siguen pendientes.** Se leyeron
-> los valores de `.env` y `.env.local` y se compararon —por hash, sin imprimir el
-> secreto— contra todas las revisiones de `.env` y `.env.local.txt` del
-> historial. Las tres coinciden. No es que «falte confirmarlo»: son literalmente
-> las mismas cadenas que están publicadas en el repositorio.
+> **Comprobado el 2026-08-17. Hay que separar dos cosas que no van juntas:**
+> rotar la credencial **en el proveedor**, y pegar el valor nuevo **en el archivo
+> local**. Se hizo lo primero en dos de las tres, y lo segundo en ninguna.
 >
-> | Clave | En el historial | Hoy en local | Veredicto |
+> Se midió de dos maneras. Primero por hash: los valores de `.env` y `.env.local`
+> se compararon —sin imprimir el secreto— contra todas las revisiones de `.env` y
+> `.env.local.txt` del historial, y los tres coinciden. Después probando la
+> credencial contra su propio emisor, que es lo que decide:
+>
+> | Clave | En el proveedor | En el archivo local | Qué falta |
 > |---|---|---|---|
-> | `SMTP_PASSWORD` | sí | igual | **sin rotar** |
-> | `DEEPSEEK_API_KEY` | sí | igual | **sin rotar** |
-> | `STRIPE_SECRET_KEY` | sí | igual | **sin rotar** |
-> | `JWT_SECRET` | no | — | limpia (regenerada) |
-> | `N8N_API_KEY`, `WEBHOOK_SECRET` | no | — | limpias, nunca se filtraron |
+> | `SMTP_PASSWORD` | ✅ rotada — la vieja da `535 authentication failed` | ❌ sigue la vieja | Pegar la nueva en `.env.local` |
+> | `DEEPSEEK_API_KEY` | ✅ rotada — la vieja da `401` | ❌ sigue la vieja | Pegar la nueva en `.env.local` |
+> | `STRIPE_SECRET_KEY` | ❌ **sin rotar** — la vieja sigue viva | la vieja | Rotarla en Stripe **y** pegarla en `.env` |
+> | `JWT_SECRET` | — | limpia (regenerada) | nada |
+> | `N8N_API_KEY`, `WEBHOOK_SECRET` | — | limpias, nunca se filtraron | nada |
 >
-> Esto es lo que bloquea la fase 3: cargarlas en Vercel tal como están sería
-> subir a producción tres credenciales que ya son públicas para cualquiera con
-> acceso al repositorio. Los pasos 2, 3 y 4 son cuentas de terceros (Hostinger,
-> DeepSeek, Stripe) y hay que hacerlos a mano; no se pueden automatizar desde
-> aquí.
+> **Consecuencias.** La fuga de SMTP y DeepSeek está cerrada: quien lea el
+> historial se encuentra dos claves muertas. Lo que quedó roto es **tu entorno
+> local**, que guarda esas dos claves muertas — hoy no sale correo ni funciona
+> DeepSeek en local, y por eso tampoco se cargaron en Vercel. Stripe sigue
+> expuesta de verdad.
+>
+> Rotar en Hostinger, DeepSeek y Stripe son cuentas de terceros y hay que hacerlo
+> a mano. Cargar los valores nuevos en Vercel, no: en cuanto estén en el archivo,
+> salen de ahí sin pasar por pantalla.
 
-**2. Rota la contraseña del buzón de correo** (Hostinger).
-`abelardo.carlos@hackesjobs.com.mx`. Es la más grave de las cuatro: permite
-enviar correo en nombre de la empresa. Actualiza `SMTP_PASSWORD` en `.env.local`.
+**2. ~~Rota la contraseña del buzón de correo~~ (Hostinger). 🟡 ROTADA, falta
+pegarla.** `abelardo.carlos@hackesjobs.com.mx`. Era la más grave de las cuatro:
+permite enviar correo en nombre de la empresa. Ya no vale la vieja — **pega la
+nueva en `SMTP_PASSWORD`, en `.env.local`.**
 
 > Si la contraseña lleva `#`, en un `.env` **debe ir entre comillas dobles**. Sin
 > comillas, dotenv corta el valor en el primer `#` y el correo falla con un
-> `535 authentication failed` que no apunta a la causa real.
+> `535 authentication failed` que no apunta a la causa real. Merece la pena
+> tenerlo presente aquí: ese es exactamente el error que da hoy el buzón, así que
+> si tras pegar la nueva sigue fallando, sospecha primero de las comillas.
 
-**3. Revoca y regenera la API key de DeepSeek.**
-Actualiza `DEEPSEEK_API_KEY` en `.env.local`.
+**3. ~~Revoca y regenera la API key de DeepSeek.~~ 🟡 REVOCADA, falta pegarla.**
+La vieja devuelve `401`. **Pega la nueva en `DEEPSEEK_API_KEY`, en `.env.local`.**
+Si no la guardaste al generarla, hay que emitir otra: DeepSeek no la vuelve a
+mostrar.
 
-**4. Rota la clave secreta de Stripe.**
+**4. Rota la clave secreta de Stripe. ⛔ SIN HACER.**
 Es de modo test (`sk_test_`), así que la gravedad es menor, pero estuvo
-commiteada. Actualiza `STRIPE_SECRET_KEY` en `.env`.
+commiteada y **se comprobó que sigue siendo válida**. Actualiza
+`STRIPE_SECRET_KEY` en `.env`.
 
 **5. ~~Borra `.env.local.txt`.~~ HECHO.**
 Ya no lo leía nadie: era el archivo que Next.js nunca cargaba y que un parser
