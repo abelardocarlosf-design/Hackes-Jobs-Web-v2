@@ -14,24 +14,36 @@ anterior: saltarse el orden es lo que hace que un paso falle sin motivo aparente
 |---|---|
 | 1 · Contener la fuga | ⛔ **Bloqueada.** Los pasos 2, 3 y 4 siguen sin hacer, y se comprobó una por una |
 | 2 · Base de datos en Neon | ✅ Completada. Rama `dev` migrada y sembrada |
-| 3 · Variables en Vercel | ⛔ **Sin empezar.** Vercel no tiene ni una sola variable de la aplicación |
+| 3 · Variables en Vercel | 🟡 **Casi.** 24 variables cargadas en los tres entornos; solo faltan las 3 que dependen de la fase 1 |
 | 4 · Google y n8n | ⬜ Sin empezar |
 | 5 · Base de producción | ⬜ Sin empezar |
 | 6 · Publicar | ⬜ Rama subida, PR sin abrir |
 | 7 · Verificar | ⬜ Sin empezar |
 
-Lo que cambió respecto a la revisión anterior, y por qué importa:
+### Lo único que te toca a ti ahora
+
+**Rotar las tres credenciales de los pasos 2, 3 y 4.** Son cuentas de terceros
+—Hostinger, DeepSeek, Stripe— y no se pueden tocar desde el repositorio. Todo lo
+demás de la fase 3 ya está cargado; esas tres son las que faltan, y hasta que se
+roten **el correo no sale en producción**.
+
+En cuanto las tengas, actualiza `.env.local` (SMTP y DeepSeek) y `.env` (Stripe),
+y se cargan en Vercel en un minuto.
+
+### Lo que cambió respecto a la revisión anterior
 
 1. **Las tres credenciales filtradas siguen vivas.** No es una sospecha: se
    compararon los valores actuales de `.env` y `.env.local` contra los que están
    en el historial de git, y son **idénticos**. Detalle en la fase 1.
 2. **Neon no dejó las variables donde la guía suponía.** La integración las creó
    con el prefijo `hackesjobs_`, así que `DATABASE_URL` y `DIRECT_URL` —los dos
-   nombres que exige Prisma— **no existen en Vercel**. Detalle en la fase 3.
-3. **Los tres entornos de Vercel apuntan a la misma rama de Neon**, la principal.
-   Preview y Development escribirían sobre los datos de producción.
+   nombres que exige Prisma— no existían. Corregido: los pasos 8 y 9 se
+   reescribieron como paso 15b, y ya están creados.
+3. **Los tres entornos apuntaban a la misma rama de Neon**, la principal.
+   Corregido: Production va a la principal, Preview y Development a `dev`.
 4. **`gh` ya está instalado** (2.97.0, sesión iniciada). El paso 29 deja de ser
    manual.
+5. **Hay un store de Blob**, privado, y el token en los tres entornos.
 
 ---
 
@@ -226,40 +238,73 @@ cumplan, cierra el servidor y confirma que también compila para producción con
 Todas en los tres entornos. Se hacen ahora, con las credenciales de la fase 1 ya
 rotadas, para no tener que volver a tocarlas.
 
-### Lo que hay hoy en Vercel (comprobado el 2026-08-17)
+### Lo que había, y lo que quedó cargado (2026-08-17)
 
-Proyecto `abelardocarlos-projects/hackes-jobs-web-v2`. **Las únicas 18 variables
-que existen son las que puso la integración de Neon, y todas llevan el prefijo
-`hackesjobs_`.** De la aplicación no hay ninguna: ni `JWT_SECRET`, ni
-`NEXT_PUBLIC_APP_URL`, ni SMTP, ni n8n, ni `BLOB_READ_WRITE_TOKEN`. La fase 3
-está entera por hacer.
+Proyecto `abelardocarlos-projects/hackes-jobs-web-v2`. **Al empezar, las únicas
+18 variables que existían eran las que puso la integración de Neon, todas con el
+prefijo `hackesjobs_`.** De la aplicación no había ninguna.
 
-Tres consecuencias, en orden de gravedad:
+Ya están cargadas 24 variables en los tres entornos. Lo que queda:
 
-**a) `DATABASE_URL` y `DIRECT_URL` no existen.** Prisma exige esos dos nombres
+| Paso | Estado |
+|---|---|
+| 15b · `DATABASE_URL` y `DIRECT_URL` | ✅ Los tres entornos, cada uno a su rama |
+| 16 · `JWT_SECRET` | ✅ Uno **distinto por entorno**, ninguno igual al de `.env` |
+| 17 · `NEXT_PUBLIC_APP_URL` | ✅ Production y Preview al dominio; Development a `localhost:3000` |
+| 18 · Vercel Blob | ✅ Store privado `hackes-jobs-cv`, token en los tres |
+| 19 · Correo | 🟡 `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` cargadas. **Falta `SMTP_PASSWORD`** (paso 2) |
+| 20 · n8n y psicometrías | ✅ Las 14 completas |
+| 21 · DeepSeek y Stripe | ⛔ **Pendiente** (pasos 3 y 4) |
+| 22 · `BLOG_ADMIN_*` | ✅ Nada que hacer, no existían |
+
+Verificado después: `npm run build` compila y `/blog` prerenderiza.
+
+<details>
+<summary>Dos trampas de la CLI con las que se tropezó, por si hay que repetirlo</summary>
+
+**La CLI v52 no sabe añadir variables a Preview sin preguntar.** Devuelve
+`git_branch_required` y sugiere un comando que ella misma vuelve a rechazar. Se
+resuelve con una versión reciente: `npx vercel@latest env add NOMBRE preview
+--value ... --yes`. Production y Development sí funcionan en la v52, y aceptan el
+valor por stdin, que es preferible a `--value` porque no deja el secreto en la
+línea de comandos.
+
+**`vercel blob create-store` reescribe `.env.local` sin avisar** y añade `.env*`
+a `.gitignore`. Lo primero es peligroso aquí: `.env.local` tiene prioridad sobre
+`.env` en Next.js, así que se llevó a local copias de `DATABASE_URL`,
+`DIRECT_URL` y `JWT_SECRET` que habrían pisado a las de `.env` —el mismo problema
+del paso 11—. Lo segundo también ignoraría `.env.example`, que sí se versiona.
+Ambos se revirtieron; queda el respaldo en `.env.local.bak-antes-de-blob`. Si
+vuelves a correr ese comando, revisa los dos archivos después.
+
+</details>
+
+Tres consecuencias de cómo aterrizó Neon, que es lo que obligó a reescribir los
+pasos 8 y 9:
+
+**a) `DATABASE_URL` y `DIRECT_URL` no existían.** Prisma exige esos dos nombres
 exactos (`prisma/schema.prisma` los lee con `env("DATABASE_URL")` y
-`env("DIRECT_URL")`). Lo que hay es `hackesjobs_DATABASE_URL` y
-`hackesjobs_DATABASE_URL_UNPOOLED`. Mientras no se creen los dos nombres sin
-prefijo, **cualquier despliegue falla al prerenderizar `/blog`**, que es
-exactamente el síntoma que la fase 2 pretendía quitar de en medio.
+`env("DIRECT_URL")`). Lo único que había era `hackesjobs_DATABASE_URL` y
+`hackesjobs_DATABASE_URL_UNPOOLED`. Sin los dos nombres sin prefijo, **cualquier
+despliegue falla al prerenderizar `/blog`**, que es exactamente el síntoma que la
+fase 2 pretendía quitar de en medio.
 
-**b) Los tres entornos apuntan a la misma rama de Neon: la principal**
-(`ep-crimson-darkness-au2eh3mj`). Production, Preview y Development comparten
-endpoint. Tal como está, un Preview de una rama a medias escribe sobre los datos
-de producción, y eso es justo la divergencia que describe el paso 7. La rama
-`dev` (`ep-weathered-mode-auotuysy`) solo la usa tu `.env` local.
+**b) Los tres entornos apuntaban a la misma rama de Neon: la principal**
+(`ep-crimson-darkness-au2eh3mj`). Production, Preview y Development compartían
+endpoint, así que un Preview de una rama a medias habría escrito sobre los datos
+de producción — justo la divergencia que describe el paso 7.
 
-**c) Falta el sufijo de PgBouncer.** La cadena que inyectó Neon termina en
+**c) Faltaba el sufijo de PgBouncer.** La cadena que inyectó Neon termina en
 `?channel_binding=require&sslmode=require`, sin `pgbouncer=true` ni
 `connection_limit=1`. Sin ellos Prisma emite sentencias `PREPARE` que PgBouncer
 rechaza en modo transacción: falla de forma intermitente y solo bajo carga, que
 es la peor manera de enterarse.
 
-### 15b. Crea `DATABASE_URL` y `DIRECT_URL` en Vercel
+### 15b. ~~Crea `DATABASE_URL` y `DIRECT_URL` en Vercel.~~ ✅ HECHO
 
-Esto sustituye a los pasos 8 y 9. Toma los valores de las variables con prefijo y
-crea los dos nombres que Prisma espera, **con la rama que le toca a cada
-entorno**:
+Sustituye a los pasos 8 y 9. Se tomaron los valores de las variables con prefijo
+y se crearon los dos nombres que Prisma espera, **cada entorno contra su rama**.
+Las `hackesjobs_*` se dejaron intactas.
 
 | Entorno | `DATABASE_URL` | `DIRECT_URL` |
 |---|---|---|
@@ -267,48 +312,57 @@ entorno**:
 | Preview | rama **`dev`**, pooled | rama **`dev`**, sin pooler |
 | Development | rama **`dev`**, pooled | rama **`dev`**, sin pooler |
 
-A la cadena pooled hay que **añadirle** `&pgbouncer=true&connection_limit=1`. A
-la directa, no: las migraciones no pasan por PgBouncer.
+A la cadena pooled se le **añadió** `&pgbouncer=true&connection_limit=1`. A la
+directa no: las migraciones no pasan por PgBouncer.
 
-Las cadenas de la rama `dev` ya están en tu `.env` local; las de la principal
-salen de `vercel env pull` leyendo `hackesjobs_DATABASE_URL` y
-`hackesjobs_DATABASE_URL_UNPOOLED` del entorno Production.
+> ⚠️ **`DATABASE_URL` es ahora una copia a mano.** Si algún día rotas las
+> credenciales de Neon, la integración actualizará las `hackesjobs_*` pero **no**
+> estas dos. Hay que reeditarlas. Es el precio de que Prisma exija esos nombres.
 
-> No borres las `hackesjobs_*`. Las gestiona la integración y volvería a
-> crearlas; además `DATABASE_URL` copiada a mano es lo que hace que un cambio de
-> contraseña en Neon **no** se propague solo. Si algún día rotas las credenciales
-> de la base, hay que reeditar estas dos a mano.
-
-**16. Genera y carga un `JWT_SECRET` nuevo.**
-Es la variable más urgente de toda la lista. Usa uno **distinto** al de tu `.env`
-local:
-
-```bash
-node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
-```
+**16. ~~Genera y carga un `JWT_SECRET` nuevo.~~ ✅ HECHO**
+Se cargó **uno distinto en cada entorno**, ninguno igual al de tu `.env` local, y
+los tres marcados como sensibles. Que Preview y Production no compartan secreto
+significa que una sesión abierta en un preview no vale en producción.
 
 Antes el código caía a un valor por defecto escrito en el repositorio, así que
 cualquiera que leyera el código podía firmarse un token con `role:'admin'` y
 entrar al CRM a ver CVs y teléfonos de candidatos. Tu `.env` local ya quedó
 regenerado.
 
-**17. Define `NEXT_PUBLIC_APP_URL`** = `https://www.hackesjobs.com.mx`, sin barra
-final. La usan Stripe para las URLs de retorno y OpenRouter para atribuir el
-consumo.
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+```
 
-**18. Provisiona Vercel Blob** (Storage → Blob → Create) y comprueba que quede
-`BLOB_READ_WRITE_TOKEN` en los tres entornos. Sin él, cada CV que suba un
-candidato o un reclutador se descarta en silencio: el disco de Vercel es de solo
-lectura salvo `/tmp`, que además es efímero.
+**17. ~~Define `NEXT_PUBLIC_APP_URL`.~~ ✅ HECHO**
+`https://www.hackesjobs.com.mx`, sin barra final, en Production y Preview. La
+usan Stripe para las URLs de retorno y OpenRouter para atribuir el consumo.
 
-> Comprobado el 2026-08-17: **no hay ningún store de Blob conectado** al
-> proyecto. Desde consola es `npx vercel blob create-store`, que añade solo el
-> `BLOB_READ_WRITE_TOKEN` a los tres entornos.
+En **Development** se puso `http://localhost:3000`, apartándose del «todas en los
+tres entornos» de esta guía. El motivo: ese valor solo se usa si alguien corre
+`vercel env pull`, y si trajera el dominio de producción, un checkout de Stripe
+lanzado en local acabaría redirigiendo al sitio real. Tu `.env` ya tenía
+`localhost:3000`; ahora coinciden.
 
-**19. Carga las variables de correo. ⛔ Depende del paso 2.**
-No cargues `SMTP_PASSWORD` mientras siga siendo la del historial: subirla a
-Vercel es publicar en producción una credencial que ya es pública. Las otras
-cuatro variables de la tabla se pueden cargar desde ya.
+**18. ~~Provisiona Vercel Blob.~~ ✅ HECHO**
+No había ningún store conectado. Se creó **`hackes-jobs-cv` con acceso privado**
+—los CV son datos personales, y `src/lib/cv-storage.ts` ya sube con
+`access: 'private'`— y el `BLOB_READ_WRITE_TOKEN` quedó en los tres entornos. Sin
+él, cada CV que suba un candidato o un reclutador se descarta en silencio: el
+disco de Vercel es de solo lectura salvo `/tmp`, que además es efímero.
+
+```bash
+npx vercel@latest blob create-store hackes-jobs-cv --access private --yes
+```
+
+**19. Carga las variables de correo. 🟡 A medias, depende del paso 2.**
+Ya están cargadas `SMTP_HOST`, `SMTP_PORT` y `SMTP_USER` en los tres entornos.
+**Falta `SMTP_PASSWORD`,** y no se carga mientras siga siendo la del historial:
+subirla a Vercel es publicar en producción una credencial que ya es pública.
+`NOTIFICATION_EMAIL` tampoco se cargó porque no está definida en local; sin ella
+el código usa `SMTP_USER`, que es el comportamiento deseado.
+
+Hasta que se cargue la contraseña, **el correo no sale en producción**: fallan el
+aviso de registro y el PDF de la comprobación 9.
 
 | Variable | Valor |
 |---|---|
@@ -318,7 +372,8 @@ cuatro variables de la tabla se pueden cargar desde ya.
 | `SMTP_PASSWORD` | La contraseña **nueva** del paso 2 |
 | `NOTIFICATION_EMAIL` | Buzón interno que recibe los avisos. Si se omite, usa `SMTP_USER` |
 
-**20. Carga las variables de n8n y psicometrías**, tal cual de tu `.env.local`:
+**20. ~~Carga las variables de n8n y psicometrías.~~ ✅ HECHO** (las 14, en los
+tres entornos) — tal cual de tu `.env.local`:
 `N8N_API_KEY`, `N8N_BASE_URL`, `WEBHOOK_BASE_URL`, `WEBHOOK_SECRET`, los 10
 `WEBHOOK_*` de las psicometrías y los dos `TEST_POLLING_*`. Este bloque es el que
 mantiene vivo lo que ya funciona en producción: requisiciones y psicometrías.

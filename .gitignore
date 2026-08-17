@@ -31,6 +31,9 @@ yarn-error.log*
 .env
 .env*.local
 .env.local.txt
+# respaldos que deja `vercel env pull` o `vercel blob create-store` al reescribir
+.env.local.bak-*
+.env.vercel
 
 # base de datos local y sus respaldos
 # prisma/dev.db estuvo versionado por error: viajaba dentro del bundle de Vercel,
