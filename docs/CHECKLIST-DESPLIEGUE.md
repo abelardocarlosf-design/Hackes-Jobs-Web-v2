@@ -45,7 +45,27 @@ cuatro valores —SMTP y DeepSeek— siguen en `.env.local`.
 
 ---
 
-## Fase 2 · Levantar la base de datos en Neon
+## Fase 2 · Levantar la base de datos en Neon — ✅ COMPLETADA (2026-08-17)
+
+Estado final, verificado contra la base:
+
+| Qué | Resultado |
+|---|---|
+| Proyecto | `neon-beige-lantern` (`delicate-recipe-63339563`), Postgres 17, `aws-us-east-1` |
+| Rama de desarrollo | `dev` (`br-orange-tooth-au3gmzxd`), creada desde `main` |
+| Migraciones | `init_postgres` y `blog_newsletter`, aplicadas |
+| Contenido | 12 psicometrías · 23 ítems CAT · 13 artículos · 2 suscriptores |
+| Cuentas | 2 administradores. **Ninguna cuenta demo** (`SEED_DEMO` sin definir) |
+
+Comprobaciones que pasaron en local: `/blog` lista los 13 artículos · login con
+rol `admin` · `/crm` responde 200 con sesión y 307 sin ella · el límite de
+intentos corta con 429.
+
+Queda una tarea abierta de esta fase: **cambiar la contraseña de administrador
+desde «Mi perfil»**. La inicial es aleatoria y está en `.env`.
+
+<details>
+<summary>Los pasos originales, por si hay que repetirlos</summary>
 
 Es el bloqueo real: sin base de datos el build falla al prerenderizar `/blog` y
 no hay forma de probar nada de punta a punta. Primero la rama de desarrollo, para
@@ -133,6 +153,23 @@ Las tres señales: `/blog` muestra los 13 artículos · entras con tu cuenta y
 aterrizas en `/admin` · el menú lateral incluye «CRM de reclutamiento». Cuando se
 cumplan, cierra el servidor y confirma que también compila para producción con
 `npm run build`.
+
+</details>
+
+> **Nota sobre el traslado de datos, que esta guía no contemplaba.** Los seeds no
+> reproducen el banco de ítems CAT de la base SQLite antigua: `seed_cat.ts` solo
+> crea la prueba de demostración, y las 8 psicometrías reales —que acumulan 46
+> sesiones CAT— quedaban con banco vacío. Se resuelve con
+> `npx tsx prisma/migrar-cat-items.ts --aplicar` (simulacro sin `--aplicar`).
+>
+> Dicho eso, no es un banco valioso: las 43 filas antiguas son 23 duplicadas, y
+> se reducen a 6 textos de pregunta distintos, tres de ellos genéricos y
+> repetidos en las 8 pruebas. Se traslada por paridad con producción. **Escribir
+> ítems reales para esas pruebas es trabajo pendiente de producto.**
+>
+> El resto de datos antiguos no hacía falta trasladarlo: los 10 usuarios de la
+> base vieja eran las 4 cuentas del seed, las 2 de Abelardo y 4 de prueba en
+> `@test.local`.
 
 ---
 
