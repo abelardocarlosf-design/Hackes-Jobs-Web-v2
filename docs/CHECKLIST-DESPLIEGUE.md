@@ -1,12 +1,37 @@
 # Guía de despliegue, paso a paso
 
-**Fecha:** 2026-08-12
+**Fecha:** 2026-08-17 (revisión contra Vercel y contra la base)
 **Estado del código:** compila limpio (`tsc --noEmit` sin errores, 73/73 páginas
 generadas). El único fallo del build es el prerender de `/blog`, y es por no
 tener base de datos todavía. No queda nada pendiente de programar.
 
 Treinta pasos en el orden exacto en que hay que hacerlos. Cada fase depende de la
 anterior: saltarse el orden es lo que hace que un paso falle sin motivo aparente.
+
+## Dónde estamos hoy
+
+| Fase | Estado |
+|---|---|
+| 1 · Contener la fuga | ⛔ **Bloqueada.** Los pasos 2, 3 y 4 siguen sin hacer, y se comprobó una por una |
+| 2 · Base de datos en Neon | ✅ Completada. Rama `dev` migrada y sembrada |
+| 3 · Variables en Vercel | ⛔ **Sin empezar.** Vercel no tiene ni una sola variable de la aplicación |
+| 4 · Google y n8n | ⬜ Sin empezar |
+| 5 · Base de producción | ⬜ Sin empezar |
+| 6 · Publicar | ⬜ Rama subida, PR sin abrir |
+| 7 · Verificar | ⬜ Sin empezar |
+
+Lo que cambió respecto a la revisión anterior, y por qué importa:
+
+1. **Las tres credenciales filtradas siguen vivas.** No es una sospecha: se
+   compararon los valores actuales de `.env` y `.env.local` contra los que están
+   en el historial de git, y son **idénticos**. Detalle en la fase 1.
+2. **Neon no dejó las variables donde la guía suponía.** La integración las creó
+   con el prefijo `hackesjobs_`, así que `DATABASE_URL` y `DIRECT_URL` —los dos
+   nombres que exige Prisma— **no existen en Vercel**. Detalle en la fase 3.
+3. **Los tres entornos de Vercel apuntan a la misma rama de Neon**, la principal.
+   Preview y Development escribirían sobre los datos de producción.
+4. **`gh` ya está instalado** (2.97.0, sesión iniciada). El paso 29 deja de ser
+   manual.
 
 ---
 
@@ -21,6 +46,26 @@ Comprobado con una lectura anónima: `git ls-remote` sin credenciales devuelve u
 petición de usuario, y un repositorio público responde sin pedir nada. Eso baja la
 urgencia, no la necesidad: los cuatro secretos siguen en el historial y los ve
 cualquiera con acceso al repositorio, hoy o el día que se vuelva público.
+
+> **Comprobado el 2026-08-17: los pasos 2, 3 y 4 siguen pendientes.** Se leyeron
+> los valores de `.env` y `.env.local` y se compararon —por hash, sin imprimir el
+> secreto— contra todas las revisiones de `.env` y `.env.local.txt` del
+> historial. Las tres coinciden. No es que «falte confirmarlo»: son literalmente
+> las mismas cadenas que están publicadas en el repositorio.
+>
+> | Clave | En el historial | Hoy en local | Veredicto |
+> |---|---|---|---|
+> | `SMTP_PASSWORD` | sí | igual | **sin rotar** |
+> | `DEEPSEEK_API_KEY` | sí | igual | **sin rotar** |
+> | `STRIPE_SECRET_KEY` | sí | igual | **sin rotar** |
+> | `JWT_SECRET` | no | — | limpia (regenerada) |
+> | `N8N_API_KEY`, `WEBHOOK_SECRET` | no | — | limpias, nunca se filtraron |
+>
+> Esto es lo que bloquea la fase 3: cargarlas en Vercel tal como están sería
+> subir a producción tres credenciales que ya son públicas para cualquiera con
+> acceso al repositorio. Los pasos 2, 3 y 4 son cuentas de terceros (Hostinger,
+> DeepSeek, Stripe) y hay que hacerlos a mano; no se pueden automatizar desde
+> aquí.
 
 **2. Rota la contraseña del buzón de correo** (Hostinger).
 `abelardo.carlos@hackesjobs.com.mx`. Es la más grave de las cuatro: permite
@@ -61,6 +106,11 @@ Comprobaciones que pasaron en local: `/blog` lista los 13 artículos · login co
 rol `admin` · `/crm` responde 200 con sesión y 307 sin ella · el límite de
 intentos corta con 429.
 
+Reconsultado el 2026-08-17 contra la rama `dev`
+(`ep-weathered-mode-auotuysy`): 2 usuarios, los 2 administradores, **23 ítems
+CAT**, 13 artículos y 2 suscriptores. El traslado del banco CAT de la nota de
+abajo ya se aplicó; no hay que volver a correrlo.
+
 Queda una tarea abierta de esta fase: **cambiar la contraseña de administrador
 desde «Mi perfil»**. La inicial es aleatoria y está en `.env`.
 
@@ -81,14 +131,11 @@ Es la base contra la que trabajarás en local. Sin ella acabarías desarrollando
 contra producción, que es la clase de divergencia que originó la avería que se
 reparó.
 
-**8. Crea `DIRECT_URL` a mano en Vercel.**
-Cópiale el valor de `DATABASE_URL_UNPOOLED`. Prisma exige ese nombre exacto para
-las migraciones y la integración de Neon no lo crea.
-
-**9. Revisa el sufijo de `DATABASE_URL` en Vercel.**
-Tiene que terminar exactamente en `?sslmode=require&pgbouncer=true&connection_limit=1`.
-Sin `pgbouncer=true`, Prisma emite sentencias `PREPARE` que PgBouncer rechaza en
-modo transacción: el fallo es intermitente y solo aparece bajo carga.
+**8 y 9. ⚠️ Estos dos pasos quedaron mal planteados.** Suponían que la
+integración de Neon crea `DATABASE_URL` y que solo había que añadir `DIRECT_URL`
+y revisar un sufijo. No fue así: las creó todas con prefijo. Se reescriben al
+principio de la fase 3, que es además donde les toca, porque son variables de
+Vercel y no de la base.
 
 **10. Pega las dos cadenas de la rama `dev` en tu `.env`.**
 Los huecos ya están marcados. Ojo con cuál va en cada una:
@@ -156,11 +203,12 @@ cumplan, cierra el servidor y confirma que también compila para producción con
 
 </details>
 
-> **Nota sobre el traslado de datos, que esta guía no contemplaba.** Los seeds no
-> reproducen el banco de ítems CAT de la base SQLite antigua: `seed_cat.ts` solo
-> crea la prueba de demostración, y las 8 psicometrías reales —que acumulan 46
-> sesiones CAT— quedaban con banco vacío. Se resuelve con
-> `npx tsx prisma/migrar-cat-items.ts --aplicar` (simulacro sin `--aplicar`).
+> **Nota sobre el traslado de datos, que esta guía no contemplaba. ✅ APLICADO en
+> `dev`.** Los seeds no reproducen el banco de ítems CAT de la base SQLite
+> antigua: `seed_cat.ts` solo crea la prueba de demostración, y las 8
+> psicometrías reales —que acumulan 46 sesiones CAT— quedaban con banco vacío. Se
+> resolvió con `npx tsx prisma/migrar-cat-items.ts --aplicar` (simulacro sin
+> `--aplicar`). **Hay que repetirlo en la rama principal, en la fase 5.**
 >
 > Dicho eso, no es un banco valioso: las 43 filas antiguas son 23 duplicadas, y
 > se reducen a 6 textos de pregunta distintos, tres de ellos genéricos y
@@ -177,6 +225,59 @@ cumplan, cierra el servidor y confirma que también compila para producción con
 
 Todas en los tres entornos. Se hacen ahora, con las credenciales de la fase 1 ya
 rotadas, para no tener que volver a tocarlas.
+
+### Lo que hay hoy en Vercel (comprobado el 2026-08-17)
+
+Proyecto `abelardocarlos-projects/hackes-jobs-web-v2`. **Las únicas 18 variables
+que existen son las que puso la integración de Neon, y todas llevan el prefijo
+`hackesjobs_`.** De la aplicación no hay ninguna: ni `JWT_SECRET`, ni
+`NEXT_PUBLIC_APP_URL`, ni SMTP, ni n8n, ni `BLOB_READ_WRITE_TOKEN`. La fase 3
+está entera por hacer.
+
+Tres consecuencias, en orden de gravedad:
+
+**a) `DATABASE_URL` y `DIRECT_URL` no existen.** Prisma exige esos dos nombres
+exactos (`prisma/schema.prisma` los lee con `env("DATABASE_URL")` y
+`env("DIRECT_URL")`). Lo que hay es `hackesjobs_DATABASE_URL` y
+`hackesjobs_DATABASE_URL_UNPOOLED`. Mientras no se creen los dos nombres sin
+prefijo, **cualquier despliegue falla al prerenderizar `/blog`**, que es
+exactamente el síntoma que la fase 2 pretendía quitar de en medio.
+
+**b) Los tres entornos apuntan a la misma rama de Neon: la principal**
+(`ep-crimson-darkness-au2eh3mj`). Production, Preview y Development comparten
+endpoint. Tal como está, un Preview de una rama a medias escribe sobre los datos
+de producción, y eso es justo la divergencia que describe el paso 7. La rama
+`dev` (`ep-weathered-mode-auotuysy`) solo la usa tu `.env` local.
+
+**c) Falta el sufijo de PgBouncer.** La cadena que inyectó Neon termina en
+`?channel_binding=require&sslmode=require`, sin `pgbouncer=true` ni
+`connection_limit=1`. Sin ellos Prisma emite sentencias `PREPARE` que PgBouncer
+rechaza en modo transacción: falla de forma intermitente y solo bajo carga, que
+es la peor manera de enterarse.
+
+### 15b. Crea `DATABASE_URL` y `DIRECT_URL` en Vercel
+
+Esto sustituye a los pasos 8 y 9. Toma los valores de las variables con prefijo y
+crea los dos nombres que Prisma espera, **con la rama que le toca a cada
+entorno**:
+
+| Entorno | `DATABASE_URL` | `DIRECT_URL` |
+|---|---|---|
+| Production | rama **principal**, pooled (`-pooler`) | rama **principal**, sin pooler |
+| Preview | rama **`dev`**, pooled | rama **`dev`**, sin pooler |
+| Development | rama **`dev`**, pooled | rama **`dev`**, sin pooler |
+
+A la cadena pooled hay que **añadirle** `&pgbouncer=true&connection_limit=1`. A
+la directa, no: las migraciones no pasan por PgBouncer.
+
+Las cadenas de la rama `dev` ya están en tu `.env` local; las de la principal
+salen de `vercel env pull` leyendo `hackesjobs_DATABASE_URL` y
+`hackesjobs_DATABASE_URL_UNPOOLED` del entorno Production.
+
+> No borres las `hackesjobs_*`. Las gestiona la integración y volvería a
+> crearlas; además `DATABASE_URL` copiada a mano es lo que hace que un cambio de
+> contraseña en Neon **no** se propague solo. Si algún día rotas las credenciales
+> de la base, hay que reeditar estas dos a mano.
 
 **16. Genera y carga un `JWT_SECRET` nuevo.**
 Es la variable más urgente de toda la lista. Usa uno **distinto** al de tu `.env`
@@ -200,7 +301,14 @@ consumo.
 candidato o un reclutador se descarta en silencio: el disco de Vercel es de solo
 lectura salvo `/tmp`, que además es efímero.
 
-**19. Carga las variables de correo.**
+> Comprobado el 2026-08-17: **no hay ningún store de Blob conectado** al
+> proyecto. Desde consola es `npx vercel blob create-store`, que añade solo el
+> `BLOB_READ_WRITE_TOKEN` a los tres entornos.
+
+**19. Carga las variables de correo. ⛔ Depende del paso 2.**
+No cargues `SMTP_PASSWORD` mientras siga siendo la del historial: subirla a
+Vercel es publicar en producción una credencial que ya es pública. Las otras
+cuatro variables de la tabla se pueden cargar desde ya.
 
 | Variable | Valor |
 |---|---|
@@ -215,12 +323,15 @@ lectura salvo `/tmp`, que además es efímero.
 `WEBHOOK_*` de las psicometrías y los dos `TEST_POLLING_*`. Este bloque es el que
 mantiene vivo lo que ya funciona en producción: requisiciones y psicometrías.
 
-**21. Carga DeepSeek y, si aplica, Stripe.** `DEEPSEEK_API_KEY` con la clave nueva
-del paso 3. Los `STRIPE_*` solo si vas a dejar viva la página de precios.
+**21. Carga DeepSeek y, si aplica, Stripe. ⛔ Depende de los pasos 3 y 4.**
+`DEEPSEEK_API_KEY` con la clave nueva del paso 3. Los `STRIPE_*` solo si vas a
+dejar viva la página de precios, y con la clave nueva del paso 4. Mismo criterio
+que el paso 19: las de hoy están publicadas, no se suben.
 
-**22. Elimina `BLOG_ADMIN_USER` y `BLOG_ADMIN_PASS`.**
-Ya no queda ni una referencia en el código. Eran el segundo sistema de login del
-panel del blog, que guardaba contraseñas en texto plano.
+**22. ~~Elimina `BLOG_ADMIN_USER` y `BLOG_ADMIN_PASS`.~~ NADA QUE HACER.**
+Comprobado el 2026-08-17: no existen en Vercel; nunca llegaron a cargarse.
+Tampoco queda ni una referencia en el código. Eran el segundo sistema de login
+del panel del blog, que guardaba contraseñas en texto plano.
 
 ---
 
@@ -272,8 +383,12 @@ Cambia temporalmente `DATABASE_URL` y `DIRECT_URL` en tu `.env` por las de la
 rama principal, **quita `SEED_DEMO`** si lo habías puesto, y repite:
 
 ```bash
-npx prisma migrate deploy && npx prisma db seed && npx tsx prisma/seed-tests.ts && npx tsx prisma/seed_cat.ts && npx tsx prisma/seed-blog.ts
+npx prisma migrate deploy && npx prisma db seed && npx tsx prisma/seed-tests.ts && npx tsx prisma/seed_cat.ts && npx tsx prisma/seed-blog.ts && npx tsx prisma/migrar-cat-items.ts --aplicar
 ```
+
+El último comando es el añadido de esta revisión: traslada el banco de ítems CAT,
+que ningún seed reproduce. En la rama `dev` dejó 23 ítems; aquí debería dejar los
+mismos.
 
 **Después vuelve a dejar en `.env` las cadenas de la rama `dev`.**
 
@@ -303,8 +418,14 @@ Tres commits en la rama, ya subidos a `origin`. La rama pasó de `8545599` a
 > producción. Dejará de fallar al terminar la fase 2.
 
 **29. Abre el PR a `main` y mergéalo.**
-La rama ya está subida. `gh` no está instalado en este equipo, así que abre el
-comparador y crea el PR desde ahí:
+La rama ya está subida. `gh` **sí está instalado** (2.97.0, con sesión iniciada
+como `abelardocarlosf-design`), al contrario de lo que decía esta guía:
+
+```bash
+gh pr create --base main --head feat/crm-reclutadores-y-reparaciones --fill
+```
+
+O a mano, desde el comparador:
 
 ```
 https://github.com/abelardocarlosf-design/Hackes-Jobs-Web-v2/compare/main...feat/crm-reclutadores-y-reparaciones
