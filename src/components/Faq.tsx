@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: '¿Qué zonas cubren?',
-    a: 'El corredor industrial Toluca–Lerma–Metepec–CDMX, con foco en plantas Tier 1 y Tier 2: volúmenes altos, rotación operativa y evaluaciones en piso.',
+    a: 'Operación directa en Ciudad de México, Toluca–Lerma y Querétaro, y búsquedas coordinadas en Guadalajara, Monterrey, el Bajío, Puebla y Saltillo. Cubrimos desde perfiles operativos con evaluación en piso hasta posiciones de mando.',
   },
 ];
 

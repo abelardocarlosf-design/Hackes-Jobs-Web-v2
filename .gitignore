@@ -39,4 +39,7 @@ next-env.d.ts
 # Material crudo de video/foto descargado a mano. Se procesa con
 # `npm run assets:hero`; lo que se versiona es la salida en public/assets/hero/
 # y src/data/hero-media.ts, no los archivos pesados de origen.
-/media-src/
+/media-src/*
+!/media-src/hero/
+/media-src/hero/*
+!/media-src/hero/LEEME.md
