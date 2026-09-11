@@ -152,7 +152,24 @@ async function processHeroPhotos() {
     const srcPath = path.join(srcDir, file);
     const sizes = {};
 
-    for (const w of HERO_WIDTHS) {
+    // `withoutEnlargement: true` convierte en no-op cualquier ancho mayor que el
+    // original, y sharp escribía igualmente el archivo — por eso los `-1920`
+    // salían byte-idénticos a los `-1280` cuando la fuente medía 1280 px. Filtrar
+    // contra el ancho real evita emitir (y anunciar en el manifest) un tamaño que
+    // no existe.
+    const { width: srcWidth } = await sharp(srcPath).metadata();
+    const widths = HERO_WIDTHS.filter((w) => w <= srcWidth);
+    if (widths.length === 0) widths.push(srcWidth);
+
+    if (widths.length < HERO_WIDTHS.length) {
+      const skipped = HERO_WIDTHS.filter((w) => !widths.includes(w));
+      console.warn(
+        `  ⚠ ${file} mide ${srcWidth}px — se omiten los anchos ${skipped.join(', ')}. ` +
+        `Sustituye el original por uno de mayor resolución si necesitas esos tamaños.`
+      );
+    }
+
+    for (const w of widths) {
       await sharp(srcPath)
         .resize({ width: w, withoutEnlargement: true })
         .webp({ quality: 78 })
@@ -165,7 +182,9 @@ async function processHeroPhotos() {
 
       sizes[w] = { webp: `${slug}-${w}.webp`, avif: `${slug}-${w}.avif` };
     }
-    manifest.push({ slug, original: file, sizes });
+    // `widths` viaja al manifest para que ningún consumidor pueda construir una
+    // URL a un ancho que no se emitió.
+    manifest.push({ slug, original: file, widths, sizes });
   }
   return manifest;
 }

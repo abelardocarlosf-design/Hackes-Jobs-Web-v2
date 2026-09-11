@@ -10,3 +10,10 @@ data/
 ai-engine/
 n8n-workflows/
 .env*.local
+
+# Originales de marca y material crudo: sólo alimentan los scripts de assets,
+# nunca se sirven. Sin esto, `COPY . .` los mete en la imagen de runtime.
+docs/
+media-src/
+scratch/
+backups/

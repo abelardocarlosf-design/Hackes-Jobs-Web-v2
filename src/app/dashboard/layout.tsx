@@ -33,13 +33,9 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-brand-black flex font-sans selection:bg-brand-orange/40 selection:text-white overflow-hidden relative">
-      {/* Background GIF layer */}
+      {/* Capa ambiental de fondo */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img 
-          src="/images/hero-bg.gif" 
-          alt="" 
-          className="w-full h-full object-cover opacity-10"
-        />
+        <div className="surface-backdrop h-full w-full" />
         <div className="absolute inset-0 bg-brand-black/60"></div>
       </div>
 

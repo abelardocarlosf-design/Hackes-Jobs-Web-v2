@@ -99,7 +99,7 @@ export default function AdminBlogPage() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-brand-black px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-10 bg-fixed pointer-events-none"></div>
+        <div className="surface-backdrop absolute inset-0 bg-fixed pointer-events-none"></div>
         <Card className="w-full max-w-lg p-12 bg-brand-black/60 backdrop-blur-3xl border-white/10 rounded-[3rem] shadow-2xl relative z-10">
            <div className="flex justify-center mb-10">
               <img src="/logo.png" alt="Logo" className="h-16 w-auto drop-shadow-2xl" />
@@ -135,7 +135,7 @@ export default function AdminBlogPage() {
 
   return (
     <div className="min-h-screen bg-brand-black p-8 pt-40 relative">
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-[0.05] bg-fixed pointer-events-none"></div>
+      <div className="surface-backdrop absolute inset-0 bg-fixed pointer-events-none opacity-60"></div>
       
       <div className="max-w-7xl mx-auto space-y-12 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
         

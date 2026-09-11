@@ -353,6 +353,17 @@
   );
 }
 
+/* Fondo ambiental de pantallas internas (login, admin, dashboard).
+   Sustituye a `/images/hero-bg.gif` (44.8 MB) que se servía a opacity 0.05–0.10:
+   a esa opacidad el detalle del GIF nunca llegaba a percibirse, sólo su peso.
+   Las alfas ya vienen bajas, así que este bloque NO lleva una clase opacity-*. */
+.surface-backdrop {
+  background-image:
+    radial-gradient(60% 50% at 15% 8%, rgba(30, 64, 175, 0.20), transparent 62%),
+    radial-gradient(48% 44% at 86% 18%, rgba(249, 115, 22, 0.10), transparent 64%),
+    radial-gradient(72% 60% at 50% 104%, rgba(49, 46, 129, 0.18), transparent 66%);
+}
+
 /* Dotgrid overlay — sits above page-overlay */
 .page-dotgrid {
   position: fixed;
@@ -439,81 +450,10 @@
   object-fit: contain;
 }
 
-/* ─────────────────────────────────────────────────────────
-   HERO TOLUCA · Cinematic background with Ken Burns
-   Each layer slowly zooms + pans; crossfades drive variety.
-   ───────────────────────────────────────────────────────── */
-@keyframes ken-burns-1 {
-  0%   { transform: scale(1.05) translate(0, 0); }
-  100% { transform: scale(1.18) translate(-2%, -1.5%); }
-}
-@keyframes ken-burns-2 {
-  0%   { transform: scale(1.08) translate(-1%, 0); }
-  100% { transform: scale(1.22) translate(2%, -2%); }
-}
-@keyframes ken-burns-3 {
-  0%   { transform: scale(1.04) translate(0, -1%); }
-  100% { transform: scale(1.20) translate(-2%, 2%); }
-}
-@keyframes ken-burns-4 {
-  0%   { transform: scale(1.06) translate(1%, 0); }
-  100% { transform: scale(1.18) translate(-1%, 2%); }
-}
-
-@keyframes hero-crossfade {
-  0%, 22%   { opacity: 0; }
-  25%, 47%  { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-.hero-toluca {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-}
-.hero-toluca-layer {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  background-size: cover;
-  background-position: center;
-  will-change: transform, opacity;
-  animation: hero-crossfade 32s ease-in-out infinite;
-}
-.hero-toluca-layer > div {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  will-change: transform;
-}
-.hero-toluca-layer.layer-1 { animation-delay: 0s; }
-.hero-toluca-layer.layer-1 > div { animation: ken-burns-1 32s linear infinite; }
-.hero-toluca-layer.layer-2 { animation-delay: 8s; }
-.hero-toluca-layer.layer-2 > div { animation: ken-burns-2 32s linear infinite; }
-.hero-toluca-layer.layer-3 { animation-delay: 16s; }
-.hero-toluca-layer.layer-3 > div { animation: ken-burns-3 32s linear infinite; }
-.hero-toluca-layer.layer-4 { animation-delay: 24s; }
-.hero-toluca-layer.layer-4 > div { animation: ken-burns-4 32s linear infinite; }
-
-/* Heavy dark overlay — non-negotiable for text legibility */
-.hero-toluca-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(7,7,15,0.78) 0%, rgba(7,7,15,0.86) 60%, rgba(7,7,15,0.94) 100%),
-    linear-gradient(135deg, rgba(30,58,138,0.12) 0%, transparent 60%);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track,
-  .hero-toluca-layer,
-  .hero-toluca-layer > div {
+  .marquee-track {
     animation: none !important;
   }
-  .hero-toluca-layer.layer-1 { opacity: 1; }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -739,12 +679,6 @@
 
 :root.light .mesh-orb {
   opacity: 0.3 !important; /* Make orbs softer in light mode */
-}
-
-:root.light .hero-toluca-overlay {
-  background:
-    linear-gradient(180deg, rgba(248,250,252,0.6) 0%, rgba(248,250,252,0.85) 60%, rgba(248,250,252,1) 100%),
-    linear-gradient(135deg, rgba(30,58,138,0.05) 0%, transparent 60%) !important;
 }
 
 /* Fix invert on Logo in light mode */

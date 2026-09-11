@@ -42,7 +42,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-black px-4 py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/images/hero-bg.gif')] bg-cover bg-center opacity-10 bg-fixed pointer-events-none"></div>
+      <div className="surface-backdrop absolute inset-0 bg-fixed pointer-events-none"></div>
       
       <Card className="w-full max-w-xl p-12 md:p-20 bg-brand-black/60 backdrop-blur-3xl border border-white/10 rounded-[4rem] shadow-2xl relative z-10 overflow-hidden">
          {/* Decoration */}

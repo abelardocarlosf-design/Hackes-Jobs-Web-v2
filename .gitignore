@@ -35,3 +35,8 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Material crudo de video/foto descargado a mano. Se procesa con
+# `npm run assets:hero`; lo que se versiona es la salida en public/assets/hero/
+# y src/data/hero-media.ts, no los archivos pesados de origen.
+/media-src/
