@@ -537,12 +537,116 @@
    de light mode.
    ───────────────────────────────────────────────────────── */
 
-/* Velo de legibilidad sobre la secuencia de fotos */
-.seq-veil {
+/* ─────────────────────────────────────────────────────────
+   MOTOR DE EVALUACIÓN · el fondo del hero
+   Todo el color pasa por custom properties para que el modo
+   claro se resuelva en un solo bloque y no con quince
+   overrides `!important` elemento a elemento.
+   ───────────────────────────────────────────────────────── */
+.hero-backdrop {
+  background-color: #07070f;
+}
+
+.hero-engine {
+  --eng-line: rgba(255, 255, 255, 0.22);
+  --eng-edge: rgba(255, 255, 255, 0.42);
+  --eng-node: rgba(255, 255, 255, 0.92);
+  --eng-card: rgba(255, 255, 255, 0.07);
+  --eng-label: rgba(255, 255, 255, 0.64);
+  --eng-label-dim: rgba(255, 255, 255, 0.38);
+  --eng-accent: #f97316;
+
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* Cada partícula cae con su propio vector (`--p-dx`/`--p-dy`) hasta la cintura
+   de la membrana que la descarta. El adelgazamiento del caudal es el mensaje. */
+.eng-particle {
+  animation-name: eng-descend;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.7, 1);
+  animation-iteration-count: infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@keyframes eng-descend {
+  0%        { opacity: 0; transform: translate(0, 0); }
+  8%        { opacity: var(--p-op, 0.5); }
+  86%       { opacity: var(--p-op, 0.5); }
+  100%      { opacity: 0; transform: translate(var(--p-dx, 0px), var(--p-dy, 260px)); }
+}
+
+/* Barrido del filtro: recorre la zona de entrada y muere en la membrana. */
+.eng-scan {
+  animation: eng-scan 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  opacity: 0;
+}
+
+@keyframes eng-scan {
+  0%         { opacity: 0;    transform: translateY(-268px); }
+  14%        { opacity: 0.55; }
+  72%        { opacity: 0.18; }
+  92%, 100%  { opacity: 0;    transform: translateY(0); }
+}
+
+/* Los finalistas se materializan ya avanzado el ciclo. */
+.eng-finalist {
+  animation-name: eng-finalist;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-iteration-count: infinite;
+  opacity: 0;
+}
+
+@keyframes eng-finalist {
+  0%         { opacity: 0; transform: translateY(7px); }
+  12%, 88%   { opacity: 1; transform: translateY(0); }
+  100%       { opacity: 0; transform: translateY(7px); }
+}
+
+/* ─────────────────────────────────────────────────────────
+   MAPA DE COBERTURA
+   Mismo criterio que el motor: el color pasa por custom
+   properties y el modo claro se resuelve en un bloque.
+   ───────────────────────────────────────────────────────── */
+.coverage-map {
+  --map-line: rgba(255, 255, 255, 0.20);
+  --map-dot: rgba(255, 255, 255, 0.13);
+  --map-node: rgba(255, 255, 255, 0.62);
+  --map-arc: rgba(255, 255, 255, 0.34);
+  --map-accent: #f97316;
+}
+
+/* Pulso del nodo principal. Sólo CDMX lo lleva: si pulsaran todos dejaría de
+   señalar nada. */
+.cov-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cov-ping 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes cov-ping {
+  0%        { opacity: 0.55; transform: scale(1); }
+  70%, 100% { opacity: 0;    transform: scale(3.6); }
+}
+
+/* Velo de legibilidad del hero. El texto blanco vive encima de esto; el peso
+   cae a la izquierda, que es donde está el titular, y deja respirar el motor
+   a la derecha. */
+.hero-veil {
   background:
-    linear-gradient(180deg, rgba(7,7,15,0.72) 0%, rgba(7,7,15,0.80) 55%, rgba(7,7,15,0.92) 100%),
-    linear-gradient(120deg, rgba(30,58,138,0.14) 0%, transparent 55%),
-    radial-gradient(120% 80% at 80% 10%, rgba(249,115,22,0.10), transparent 60%);
+    linear-gradient(100deg, rgba(7,7,15,0.94) 0%, rgba(7,7,15,0.80) 34%, rgba(7,7,15,0.30) 62%, rgba(7,7,15,0.34) 100%),
+    linear-gradient(180deg, rgba(7,7,15,0.55) 0%, rgba(7,7,15,0.16) 42%, rgba(7,7,15,0.72) 100%),
+    radial-gradient(120% 80% at 78% 8%, rgba(249,115,22,0.07), transparent 58%);
+}
+
+/* Capa de video opcional: sólo existe si `npm run assets:hero` generó material.
+   Va muy atenuada — es ambiente detrás del motor, nunca protagonista. */
+.hero-video {
+  opacity: 0.34;
+  filter: saturate(0.55) contrast(1.06);
 }
 
 /* Badge con barra de acento a la izquierda — el marcador de dato del sitio */
@@ -622,6 +726,24 @@
 :root.light .hover\:text-white:hover {
   color: #0f172a !important;
 }
+
+/* Variantes de opacidad del blanco.
+
+   `text-white/70` no es `.text-white` con opacidad: Tailwind emite una clase
+   distinta con su propio `color: rgb(255 255 255 / .7)`, que el override de
+   arriba no alcanza. Sin estas reglas, todo el texto secundario quedaba blanco
+   sobre blanco en modo claro. Las alfas están escalonadas para conservar la
+   misma jerarquía que en oscuro, no aplanadas a un solo tono. */
+:root.light .text-white\/90 { color: rgba(15, 23, 42, 0.92) !important; }
+:root.light .text-white\/85 { color: rgba(15, 23, 42, 0.88) !important; }
+:root.light .text-white\/80 { color: rgba(15, 23, 42, 0.84) !important; }
+:root.light .text-white\/75 { color: rgba(15, 23, 42, 0.8) !important; }
+:root.light .text-white\/70 { color: rgba(15, 23, 42, 0.74) !important; }
+:root.light .text-white\/60 { color: rgba(15, 23, 42, 0.66) !important; }
+:root.light .text-white\/55 { color: rgba(15, 23, 42, 0.62) !important; }
+:root.light .text-white\/50 { color: rgba(15, 23, 42, 0.58) !important; }
+:root.light .text-white\/45 { color: rgba(15, 23, 42, 0.54) !important; }
+:root.light .text-white\/40 { color: rgba(15, 23, 42, 0.5) !important; }
 
 :root.light .text-slate-200,
 :root.light .text-slate-300,
@@ -727,12 +849,42 @@
   box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Capa cinemática en light mode — el velo aclara la foto para que el
-   texto (que ya se invierte a slate-900) mantenga contraste AA. */
-:root.light .seq-veil {
+/* Hero en light mode. El motor se re-tinta redefiniendo sus custom properties
+   —cuatro líneas en lugar de un override por elemento— y el velo se aclara
+   para que el texto, que ya se invierte a slate-900, mantenga contraste AA. */
+:root.light .hero-backdrop {
+  background-color: #f8fafc;
+}
+
+:root.light .hero-engine {
+  --eng-line: rgba(15, 23, 42, 0.26);
+  --eng-edge: rgba(15, 23, 42, 0.46);
+  --eng-node: rgba(15, 23, 42, 0.82);
+  --eng-card: rgba(15, 23, 42, 0.05);
+  --eng-label: rgba(15, 23, 42, 0.68);
+  --eng-label-dim: rgba(15, 23, 42, 0.44);
+}
+
+:root.light .coverage-map {
+  --map-line: rgba(15, 23, 42, 0.22);
+  --map-dot: rgba(15, 23, 42, 0.12);
+  --map-node: rgba(15, 23, 42, 0.55);
+  --map-arc: rgba(15, 23, 42, 0.20);
+}
+
+:root.light .hero-veil {
   background:
-    linear-gradient(180deg, rgba(248,250,252,0.72) 0%, rgba(248,250,252,0.84) 55%, rgba(248,250,252,0.94) 100%),
-    linear-gradient(120deg, rgba(30,58,138,0.05) 0%, transparent 55%) !important;
+    linear-gradient(100deg, rgba(248,250,252,0.92) 0%, rgba(248,250,252,0.78) 34%, rgba(248,250,252,0.26) 62%, rgba(248,250,252,0.30) 100%),
+    linear-gradient(180deg, rgba(248,250,252,0.50) 0%, rgba(248,250,252,0.12) 42%, rgba(248,250,252,0.68) 100%) !important;
+}
+
+/* Un clip rodado en interior oscuro pelea con la UI blanca: en claro se atenúa
+   y se dessatura todavía más. Se resuelve aquí y no en el JSX porque
+   `next-themes` devuelve undefined en servidor y ramificar el markup por tema
+   rompería la hidratación. */
+:root.light .hero-video {
+  opacity: 0.2 !important;
+  filter: saturate(0.35) contrast(1.02) !important;
 }
 
 :root.light .glass-panel,

@@ -22,6 +22,16 @@ interface RevealProps {
   repeat?: boolean;
   /** Render as a different tag (e.g. 'li', 'span'). */
   as?: 'div' | 'section' | 'span' | 'li' | 'article';
+  /**
+   * Render statically, sin animación de entrada. Para contenido above-the-fold.
+   *
+   * El SSR de framer-motion serializa el estado `initial`, así que un hijo
+   * envuelto en Reveal llega al HTML con `style="opacity:0"` — y el algoritmo
+   * de Largest Contentful Paint descarta los elementos a opacidad cero. En un
+   * hero cuyo elemento más grande es el titular, eso deja la página sin
+   * candidato a LCP hasta que hidrata. `eager` lo evita.
+   */
+  eager?: boolean;
 }
 
 const offset = (dir: Direction, d: number) => {
@@ -49,11 +59,12 @@ export function Reveal({
   blur = true,
   repeat = false,
   as = 'div',
+  eager = false,
 }: RevealProps) {
   const reduce = useReducedMotion();
   const MotionTag = motion[as] as typeof motion.div;
 
-  if (reduce) {
+  if (reduce || eager) {
     const Tag = as as any;
     return <Tag className={className}>{children}</Tag>;
   }

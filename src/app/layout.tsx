@@ -54,8 +54,6 @@ export default function RootLayout({
   return (
     <html lang="es" className={`scroll-smooth ${inter.variable} ${jakarta.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/assets/toluca/nevado-1-1280.avif" as="image" type="image/avif" media="(max-width: 1280px)" fetchPriority="high" />
-        <link rel="preload" href="/assets/toluca/nevado-1-1920.avif" as="image" type="image/avif" media="(min-width: 1281px)" fetchPriority="high" />
         {/* Sin JS, framer-motion nunca dispara su animación de entrada y los
             bloques se quedan en el opacity:0 que el SSR ya serializó — la página
             se vería vacía. Esto los devuelve a su estado final. */}
