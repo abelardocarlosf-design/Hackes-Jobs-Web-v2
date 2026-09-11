@@ -18,25 +18,25 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Agencia de Reclutamiento Industrial con Tecnología | Hacke's Jobs Technologies",
+    default: "Agencia de Reclutamiento Especializado en CDMX | Hacke's Jobs Technologies",
     template: "%s | Hacke's Jobs Technologies"
   },
-  description: "Agencia de reclutamiento operada con tecnología propietaria para empresas de manufactura Tier 1 y Tier 2 en el corredor Toluca-Lerma-Metepec. Evaluaciones psicométricas automatizadas, workflows B2B y garantía de reposición de 10 días.",
-  keywords: ["agencia reclutamiento industrial", "evaluaciones psicométricas", "Toluca", "Tier 1", "garantía de reposición", "reclutamiento automatizado", "Hacke's Jobs Technologies"],
+  description: "Agencia de reclutamiento operada con tecnología propietaria para empresas en Ciudad de México y las principales plazas del país. Evaluaciones psicométricas automatizadas, terna evaluada en 7-10 días y garantía de reposición de 10 días.",
+  keywords: ["agencia de reclutamiento CDMX", "reclutamiento especializado México", "evaluaciones psicométricas", "reclutamiento industrial", "headhunting México", "garantía de reposición", "reclutamiento con inteligencia artificial", "Hacke's Jobs Technologies"],
   authors: [{ name: "Hacke's Jobs Technologies" }],
   creator: "Hacke's Jobs Technologies",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://hackesjobs.com.mx/",
-    title: "Agencia de Reclutamiento Industrial | Hacke's Jobs Technologies",
-    description: "Reclutamiento industrial operado con tecnología en Toluca y Metepec. Evaluaciones automatizadas y garantía de reposición.",
+    title: "Agencia de Reclutamiento Especializado en CDMX | Hacke's Jobs Technologies",
+    description: "Reclutamiento operado con tecnología propia para empresas en Ciudad de México y las principales plazas del país. Terna evaluada y garantía de reposición.",
     siteName: "Hacke's Jobs Technologies",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agencia de Reclutamiento Industrial | Hacke's Jobs Technologies",
-    description: "Reclutamiento industrial operado con tecnología en Toluca y Metepec. Evaluaciones automatizadas y garantía de reposición.",
+    title: "Agencia de Reclutamiento Especializado en CDMX | Hacke's Jobs Technologies",
+    description: "Reclutamiento operado con tecnología propia para empresas en Ciudad de México y las principales plazas del país. Terna evaluada y garantía de reposición.",
   },
   robots: {
     index: true,

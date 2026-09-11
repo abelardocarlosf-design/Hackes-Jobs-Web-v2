@@ -4,7 +4,8 @@ export default function Footer() {
   return (
     <footer className="bg-brand-black text-white pt-32 pb-16 overflow-hidden relative border-t border-white/5">
       {/* Decorative background element */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none opacity-50"></div>
+      {/* Un solo halo, y en azul: el naranja queda reservado para el CTA
+          primario y los marcadores de dato. */}
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-blue/10 rounded-full blur-[120px] -ml-64 -mb-64 pointer-events-none opacity-50"></div>
       
       <div className="container relative mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20 z-10">
@@ -13,7 +14,8 @@ export default function Footer() {
              <img src="/logo.png" alt="Hacke's Jobs" className="h-12 w-auto drop-shadow-2xl brightness-0 invert" />
           </Link>
           <p className="text-slate-400 text-base leading-relaxed max-w-xs font-medium">
-            Infraestructura tecnológica de RRHH y ventas B2B para empresas industriales en México.
+            Reclutamiento especializado y evaluación psicométrica para empresas en Ciudad de México y
+            las principales plazas del país.
           </p>
         </div>
 
@@ -74,7 +76,7 @@ export default function Footer() {
       <div className="container relative mx-auto px-4 mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] text-slate-500 font-bold uppercase tracking-[0.2em]">
         <p>&copy; {new Date().getFullYear()} Hacke&apos;s Jobs Technologies. Todos los derechos reservados.</p>
         <div className="flex gap-6 items-center flex-wrap justify-center">
-           <span>Toluca · Lerma · Metepec · CDMX</span>
+           <span>Ciudad de México · Toluca–Lerma · Querétaro · Guadalajara · Monterrey</span>
            <div className="h-4 w-px bg-white/10 hidden sm:block"></div>
            <span className="text-brand-orange">Cumplimiento LFPDPPP</span>
         </div>
