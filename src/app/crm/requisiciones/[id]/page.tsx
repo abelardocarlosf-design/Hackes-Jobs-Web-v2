@@ -71,15 +71,19 @@ export default async function RequisicionDetallePage({ params }: { params: { id:
       <div className="grid lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
           <section className="rounded-2xl border border-white/10 bg-white/5 p-7">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
               <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">
                 Pipeline · {requisicion.procesos.length} {requisicion.procesos.length === 1 ? 'candidato' : 'candidatos'}
               </h2>
+              <Link href="/crm/candidatos?bolsa=1"
+                className="text-[10px] font-black uppercase tracking-wider text-brand-orange hover:text-orange-400 transition-colors flex items-center gap-1">
+                Explorar bolsa de talento <ChevronRight size={12} />
+              </Link>
             </div>
 
             {requisicion.procesos.length === 0 ? (
               <p className="text-slate-500 font-medium text-sm py-10 text-center">
-                Todavía no hay candidatos en esta requisición. Asígnalos desde la ficha de cada candidato.
+                Todavía no hay candidatos en esta requisición. Asígnalos desde la ficha de cada candidato o desde la bolsa de talento.
               </p>
             ) : (
               <TableroPipeline

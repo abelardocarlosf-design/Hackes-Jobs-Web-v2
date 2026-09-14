@@ -369,3 +369,37 @@ Tras revisar las 18 capturas completas se implementó lo que faltaba.
 - **Efecto secundario:** la prueba del formulario `LeadForm` envió un correo real de "Solicitud de Talento" a `abelardo.carlos@hackesjobs.com.mx` con datos ficticios ("ACME QA"). Puede ignorarse.
 - Se crearon 3 usuarios de prueba durante el diagnóstico y **se eliminaron después**; la base quedó en su estado original (1 admin, 1 candidate, 3 company, 1 recruiter).
 - **No se disparó ninguna psicometría de prueba** contra n8n, para no contaminar producción con resultados falsos ni generar correos a clientes. Ese módulo se verificó por código.
+
+## 15. Lista de candidatos — funciones nuevas (2026-09-13)
+
+No venía de un reporte de bugs puntual: se definió cruzando el estado real del código de `/crm/candidatos` contra las capturas de la referencia (`docs/referencias-crm/`) para encontrar patrones de lista/tabla que la referencia muestra y aquí no existían todavía.
+
+**Construido**
+
+1. **Filtros de zona y fuente**, visibles en el formulario junto a la búsqueda existente (`zona` por texto, `fuente` por selector con los 5 valores del schema: whatsapp/scraping/formulario/referido/otro).
+2. **Pestañas de etapa con conteo en vivo**, reemplazando el `<select>` de etapa que no mostraba cifras.
+3. **Chips de calidad de match clicables** (Sobresaliente/Potencial/Descartable/Sin evaluar) como filtro dentro de la lista general — antes ese chip solo existía como conteo estático dentro de una requisición (`/crm/requisiciones/[id]`).
+4. **Cambio de etapa desde la fila de la lista** (`src/components/crm/CambioEtapaFila.tsx`), con flechas ‹ › igual que el tablero — mismo contrato `PATCH /api/procesos/[id]`, sin tocar el endpoint.
+5. **Salto cruzado "Explorar bolsa de talento"** desde `/crm/requisiciones/[id]` hacia `/crm/candidatos?bolsa=1`.
+
+**Deliberadamente fuera de alcance** (no aparecen en la referencia — construirlos habría sido inventar, no replicar): selección múltiple, acciones en lote, exportar CSV/Excel, etiquetas libres. Tampoco IA de matching/resumen de CV ni búsqueda semántica, ya excluidas desde la sección 14.
+
+**Verificación** (Playwright headless contra la rama `dev` de Neon, sesión real de reclutador, datos de prueba creados y borrados después)
+
+| Caso | Resultado |
+|---|---|
+| Filtro zona + filtro fuente, por separado y combinados | Cuentan y muestran exactamente lo esperado |
+| Pestaña de etapa (ej. Filtro CV) | Solo candidatos con proceso en esa etapa, conteo correcto |
+| Chip de calidad (ej. Descartable, Sin evaluar) | Solo candidatos en ese rango de `scoreMatch` |
+| Etapa + calidad combinados | Exige que ambas condiciones caigan en el **mismo** proceso, no en procesos distintos del mismo candidato |
+| Cambio de etapa desde la fila | `PATCH /api/procesos/[id]` → 200, cambio reflejado también en el tablero de la requisición |
+| Salto cruzado desde requisición | Aterriza en `/crm/candidatos?bolsa=1` con los candidatos sin proceso |
+
+`tsc --noEmit` y `npm run build` limpios. Ningún contrato de `api/n8n/*` ni de `PATCH /api/procesos/[id]` cambió.
+
+## 16. Pendientes
+
+- **Frente de diseño/tipografía:** sigue sin confirmarse dónde vive (fuera del repo, otra rama, o por iniciar aquí). No tocar `layout.tsx` (fuentes vía `next/font`) ni `globals.css` sin esa confirmación.
+- **Feedback puntual de reclutadores:** lo construido en la sección 15 salió de cruzar código contra la referencia visual, no de una lista real de fricciones reportadas en campo. Si existen bugs concretos de uso diario, siguen sin recopilarse.
+- **Reconciliar `docs/CHECKLIST-DESPLIEGUE.md`:** ese documento quedó fechado 2026-08-17 con varias fases abiertas (Google/n8n, base de producción, PR y verificación). Si el sitio ya está en producción, falta pasar por ese documento y marcar qué se cerró realmente, en vez de asumirlo.
+- **Ideas descartadas esta vez, no evaluadas a fondo:** selección múltiple/acciones en lote y exportar CSV en la lista de candidatos — no están en la referencia, pero si un reclutador los pide explícitamente son candidatos razonables para una próxima iteración.

@@ -1,26 +1,52 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { ETAPAS, ETAPA_CLASES, etapaLabel, tiempoTranscurrido, calidadMatch, CALIDAD_META } from '@/lib/crm';
+import { ETAPAS, tiempoTranscurrido, calidadMatch, CALIDAD_META, type CalidadMatch } from '@/lib/crm';
 import { CrmHeader } from '@/components/crm/CrmShell';
+import { CambioEtapaFila } from '@/components/crm/CambioEtapaFila';
 import { Search, Mail, Phone, MapPin, UserPlus, Download, Inbox, Layers } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 const POR_PAGINA = 20;
 
+const FUENTES = [
+  { id: 'whatsapp', label: 'WhatsApp' },
+  { id: 'scraping', label: 'Scraping' },
+  { id: 'formulario', label: 'Formulario público' },
+  { id: 'referido', label: 'Referido' },
+  { id: 'otro', label: 'Otro' },
+] as const;
+
+const RANGO_CALIDAD: Record<string, { gte?: number; lt?: number }> = {
+  sobresaliente: { gte: 70 },
+  potencial: { gte: 40, lt: 70 },
+  descartable: { lt: 40 },
+};
+
+const PILL_BASE = 'px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-2';
+const PILL_INACTIVA = 'border-white/10 text-slate-500 hover:text-white';
+const PILL_ACTIVA = 'bg-white/10 border-white/25 text-white';
+
 export default async function CandidatosPage({
   searchParams,
 }: {
-  searchParams: { q?: string; etapa?: string; cv?: string; bolsa?: string; page?: string };
+  searchParams: {
+    q?: string; etapa?: string; cv?: string; bolsa?: string; page?: string;
+    zona?: string; fuente?: string; calidad?: string;
+  };
 }) {
   const q = searchParams.q?.trim() || '';
   const etapa = searchParams.etapa || '';
   const soloCV = searchParams.cv === '1';
   // "Bolsa de talento": candidatos sin ninguna vacante asignada todavía.
   const soloBolsa = searchParams.bolsa === '1';
+  const zona = searchParams.zona?.trim() || '';
+  const fuente = searchParams.fuente || '';
+  const calidad = searchParams.calidad || '';
   const page = Math.max(1, parseInt(searchParams.page || '1', 10));
 
-  const where = {
+  // Filtros sobre el candidato mismo (independientes de si tiene proceso).
+  const baseCandidato = {
     ...(q
       ? {
           OR: [
@@ -31,11 +57,32 @@ export default async function CandidatosPage({
           ],
         }
       : {}),
+    ...(zona ? { zona: { contains: zona } } : {}),
+    ...(fuente ? { fuente } : {}),
     ...(soloCV ? { cvKey: { not: null } } : {}),
-    ...(soloBolsa ? { procesos: { none: {} } } : etapa ? { procesos: { some: { etapa } } } : {}),
   };
 
-  const [candidatos, total] = await Promise.all([
+  // Filtro sobre el proceso más relevante: etapa y/o calidad de match, en el
+  // MISMO proceso (no en procesos distintos del mismo candidato).
+  const condicionCalidad: Record<string, any> =
+    calidad === 'sin_evaluar' ? { scoreMatch: null } : calidad && RANGO_CALIDAD[calidad] ? { scoreMatch: RANGO_CALIDAD[calidad] } : {};
+  const procesoCondicion: Record<string, any> = { ...(etapa ? { etapa } : {}), ...condicionCalidad };
+
+  const where = {
+    ...baseCandidato,
+    ...(soloBolsa
+      ? { procesos: { none: {} } }
+      : Object.keys(procesoCondicion).length > 0
+        ? { procesos: { some: procesoCondicion } }
+        : {}),
+  };
+
+  // Conteos para las pestañas/chips: mismos filtros de candidato, variando
+  // solo la dimensión que cada pestaña o chip representa.
+  const contarConProceso = (extra: Record<string, any>) =>
+    prisma.candidato.count({ where: { ...baseCandidato, procesos: { some: extra } } });
+
+  const [candidatos, total, conteosEtapa, nSobresaliente, nPotencial, nDescartable, nSinEvaluar] = await Promise.all([
     prisma.candidato.findMany({
       where,
       orderBy: { createdAt: 'desc' },
@@ -51,6 +98,11 @@ export default async function CandidatosPage({
       },
     }),
     prisma.candidato.count({ where }),
+    Promise.all(ETAPAS.map((e) => contarConProceso({ etapa: e.id, ...condicionCalidad }))),
+    contarConProceso({ ...(etapa ? { etapa } : {}), scoreMatch: { gte: 70 } }),
+    contarConProceso({ ...(etapa ? { etapa } : {}), scoreMatch: { gte: 40, lt: 70 } }),
+    contarConProceso({ ...(etapa ? { etapa } : {}), scoreMatch: { lt: 40 } }),
+    contarConProceso({ ...(etapa ? { etapa } : {}), scoreMatch: null }),
   ]);
 
   const paginas = Math.max(1, Math.ceil(total / POR_PAGINA));
@@ -60,6 +112,9 @@ export default async function CandidatosPage({
     if (etapa) p.set('etapa', etapa);
     if (soloCV) p.set('cv', '1');
     if (soloBolsa) p.set('bolsa', '1');
+    if (zona) p.set('zona', zona);
+    if (fuente) p.set('fuente', fuente);
+    if (calidad) p.set('calidad', calidad);
     Object.entries(extra).forEach(([k, v]) => (v ? p.set(k, v) : p.delete(k)));
     return `?${p.toString()}`;
   };
@@ -84,29 +139,57 @@ export default async function CandidatosPage({
       />
 
       {/* Accesos rápidos */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-4">
         <Link href="/crm/candidatos"
-          className={`px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all ${
-            !soloBolsa && !etapa && !soloCV ? 'bg-white/10 border-white/25 text-white' : 'border-white/10 text-slate-500 hover:text-white'
-          }`}>
+          className={`${PILL_BASE} ${!soloBolsa && !etapa && !soloCV && !calidad && !zona && !fuente ? PILL_ACTIVA : PILL_INACTIVA}`}>
           Todos
         </Link>
         <Link href="/crm/candidatos?bolsa=1"
-          className={`px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
-            soloBolsa ? 'bg-brand-orange/15 border-brand-orange/30 text-brand-orange' : 'border-white/10 text-slate-500 hover:text-white'
-          }`}>
+          className={`${PILL_BASE} ${soloBolsa ? 'bg-brand-orange/15 border-brand-orange/30 text-brand-orange' : PILL_INACTIVA}`}>
           <Inbox size={13} /> Bolsa de talento
         </Link>
         <Link href="/crm/candidatos?cv=1"
-          className={`px-4 py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all ${
-            soloCV && !soloBolsa ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : 'border-white/10 text-slate-500 hover:text-white'
-          }`}>
+          className={`${PILL_BASE} ${soloCV && !soloBolsa ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300' : PILL_INACTIVA}`}>
           Con CV
+        </Link>
+      </div>
+
+      {/* Pestañas de etapa, con el conteo en vivo de la referencia */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        <Link href={qs({ etapa: '', bolsa: '' })} className={`${PILL_BASE} ${!etapa && !soloBolsa ? PILL_ACTIVA : PILL_INACTIVA}`}>
+          Todas las etapas
+        </Link>
+        {ETAPAS.map((e, i) => (
+          <Link key={e.id} href={qs({ etapa: e.id, bolsa: '' })}
+            className={`${PILL_BASE} ${etapa === e.id && !soloBolsa ? PILL_ACTIVA : PILL_INACTIVA}`}>
+            {e.label} <span className="opacity-60">{conteosEtapa[i]}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Chips de calidad de match, clicables como filtro (en la referencia solo eran conteo estático) */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <Link href={qs({ calidad: '', bolsa: '' })} className={`${PILL_BASE} ${!calidad ? PILL_ACTIVA : PILL_INACTIVA}`}>
+          Toda calidad
+        </Link>
+        {(['sobresaliente', 'potencial', 'descartable'] as CalidadMatch[]).map((c, i) => (
+          <Link key={c} href={qs({ calidad: c, bolsa: '' })}
+            className={`${PILL_BASE} ${calidad === c ? CALIDAD_META[c].clases : PILL_INACTIVA}`}>
+            {CALIDAD_META[c].label} <span className="opacity-60">{[nSobresaliente, nPotencial, nDescartable][i]}</span>
+          </Link>
+        ))}
+        <Link href={qs({ calidad: 'sin_evaluar', bolsa: '' })}
+          className={`${PILL_BASE} ${calidad === 'sin_evaluar' ? PILL_ACTIVA : PILL_INACTIVA}`}>
+          Sin evaluar <span className="opacity-60">{nSinEvaluar}</span>
         </Link>
       </div>
 
       {/* Filtros */}
       <form method="GET" className="rounded-2xl border border-white/10 bg-white/5 p-5 mb-8 flex flex-col lg:flex-row gap-4">
+        {etapa && <input type="hidden" name="etapa" value={etapa} />}
+        {calidad && <input type="hidden" name="calidad" value={calidad} />}
+        {soloBolsa && <input type="hidden" name="bolsa" value="1" />}
+
         <div className="relative flex-1">
           <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
           <input
@@ -118,11 +201,19 @@ export default async function CandidatosPage({
           />
         </div>
 
-        <select name="etapa" defaultValue={etapa}
+        <input
+          type="text"
+          name="zona"
+          defaultValue={zona}
+          placeholder="Zona (ej. Toluca)"
+          className="h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-white placeholder-slate-600 focus:bg-white/10 focus:border-brand-orange outline-none transition-all font-medium lg:w-52"
+        />
+
+        <select name="fuente" defaultValue={fuente}
           className="h-12 px-4 rounded-xl border border-white/10 bg-white/5 text-white font-bold text-sm outline-none focus:border-brand-orange cursor-pointer">
-          <option value="" className="bg-brand-black">Todas las etapas</option>
-          {ETAPAS.map((e) => (
-            <option key={e.id} value={e.id} className="bg-brand-black">{e.label}</option>
+          <option value="" className="bg-brand-black">Todas las fuentes</option>
+          {FUENTES.map((f) => (
+            <option key={f.id} value={f.id} className="bg-brand-black">{f.label}</option>
           ))}
         </select>
 
@@ -143,7 +234,7 @@ export default async function CandidatosPage({
         <div className="rounded-2xl border border-white/10 bg-white/5 p-16 text-center">
           <p className="text-white font-black text-lg mb-2">Sin resultados</p>
           <p className="text-slate-500 font-medium">
-            {q || etapa || soloCV
+            {q || etapa || soloCV || zona || fuente || calidad
               ? 'Ningún candidato coincide con estos filtros.'
               : 'Aún no hay candidatos. Los que envíen su CV desde /candidatos aparecerán aquí automáticamente.'}
           </p>
@@ -160,11 +251,7 @@ export default async function CandidatosPage({
                       className="text-white font-black text-base hover:text-brand-orange transition-colors">
                       {c.nombre}
                     </Link>
-                    {proceso && (
-                      <span className={`px-2.5 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider ${ETAPA_CLASES[proceso.etapa]}`}>
-                        {etapaLabel(proceso.etapa)}
-                      </span>
-                    )}
+                    {proceso && <CambioEtapaFila procesoId={proceso.id} etapa={proceso.etapa} />}
                     {proceso?.scoreMatch != null && (() => {
                       const cal = calidadMatch(proceso.scoreMatch)!;
                       return (
