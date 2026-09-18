@@ -1,19 +1,17 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getPostBySlug, savePost, deletePost } from '@/lib/blog';
-import { verifyAuth } from '@/lib/jwt';
-import { cookies } from 'next/headers';
+import { requireAuth } from '@/lib/api-helpers';
 
-async function checkAdminAuth() {
-  const token = cookies().get('hj_admin_token')?.value;
-  if (!token) return false;
-  try {
-    const decoded = await verifyAuth(token);
-    return decoded && decoded.role === 'admin';
-  } catch {
-    return false;
-  }
+// Refresca el listado, el artículo y el sitemap tras escribir. Sin esto la
+// edición queda en la base pero el sitio sigue mostrando la versión cacheada.
+function revalidarBlog(slug: string) {
+  revalidatePath('/blog');
+  revalidatePath(`/blog/${slug}`);
+  revalidatePath('/sitemap.xml');
 }
 
+// GET es público: lo consume el detalle del blog. Editar y borrar exigen admin.
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
@@ -33,13 +31,13 @@ export async function PUT(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
-  try {
-    if (!(await checkAdminAuth())) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
-    }
+  const auth = await requireAuth(request, ['admin']);
+  if (auth instanceof NextResponse) return auth;
 
+  try {
     const post = await request.json();
     await savePost(post);
+    revalidarBlog(post.slug ?? params.slug);
     return NextResponse.json({ success: true, post });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
@@ -50,12 +48,12 @@ export async function DELETE(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
-  try {
-    if (!(await checkAdminAuth())) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
-    }
+  const auth = await requireAuth(request, ['admin']);
+  if (auth instanceof NextResponse) return auth;
 
+  try {
     await deletePost(params.slug);
+    revalidarBlog(params.slug);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });

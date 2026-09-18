@@ -149,7 +149,10 @@ No uses markdown, responde solo con el texto plano del análisis.
               apiKey: orKey,
               baseURL: "https://openrouter.ai/api/v1",
               defaultHeaders: {
-                "HTTP-Referer": "http://localhost:3000",
+                // OpenRouter atribuye el consumo a este dominio. Fijarlo a
+                // localhost hacía que en producción todo el gasto se
+                // reportara como tráfico de desarrollo.
+                "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://www.hackesjobs.com.mx",
                 "X-Title": "Hackes Jobs",
               },
             });

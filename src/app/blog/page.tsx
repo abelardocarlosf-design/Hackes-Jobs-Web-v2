@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   description: 'Artículos, noticias y consejos sobre reclutamiento, tecnología y talento humano.',
 };
 
+// Los artículos ya no son archivos del repositorio, así que la página no puede
+// quedarse congelada en el build: un artículo publicado desde /admin/blog no
+// aparecería hasta el siguiente despliegue. Las rutas de API llaman a
+// `revalidatePath('/blog')` al guardar, y estos 5 minutos son la red por si esa
+// llamada no llega.
+export const revalidate = 300;
+
 export default async function BlogPage() {
   const posts = await getAllPosts();
   const publishedPosts = posts.filter(p => p.published);

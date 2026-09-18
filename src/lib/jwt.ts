@@ -7,9 +7,17 @@ export interface TokenPayload extends JWTPayload {
   name: string;
 }
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'hackesjobs-dev-secret-change-in-production-2026'
-);
+// Sin fallback a propósito. Antes había una literal de desarrollo aquí, y como
+// está publicada en el repositorio cualquiera podía firmarse un token con
+// role:'admin' y entrar al CRM. Es preferible que la aplicación no arranque a
+// que arranque con una sesión falsificable.
+if (!process.env.JWT_SECRET) {
+  throw new Error(
+    'Falta JWT_SECRET. Defínelo en .env (local) y en las variables de entorno de Vercel.'
+  );
+}
+
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 const ISSUER = 'hackesjobs';
 const AUDIENCE = 'hackesjobs-app';

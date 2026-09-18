@@ -95,7 +95,7 @@ export async function POST(request: Request) {
         const dateStr = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         const pdfBuffer = await renderToBuffer(<CandidatePDF name={name} email={email} date={dateStr} />);
         await sendCandidatePDFEmail(name, email, pdfBuffer);
-        console.log(`[PDF Email] Correo enviado a abelardo.carlos@hackesjobs.com para ${name}`);
+        console.log(`[PDF Email] Correo de alta enviado para ${name}`);
       } catch (pdfError) {
         console.error('[PDF Email Error]:', pdfError);
       }

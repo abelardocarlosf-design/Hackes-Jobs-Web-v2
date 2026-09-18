@@ -9,6 +9,15 @@ export async function POST(req: Request) {
   try {
     const { planId, tenantId, isCredits } = await req.json();
 
+    // La URL de retorno no puede caer a localhost: Stripe redirige ahí al
+    // cliente después de pagar y el cobro termina en una página inalcanzable.
+    // Si falta la variable se usa el origen de la propia petición, que en
+    // Vercel es el dominio real del despliegue.
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      req.headers.get('origin') ||
+      new URL(req.url).origin;
+
     // Mock IDs. En prod: reemplazar con tus process.env.STRIPE_PRICE_ID
     let priceId = '';
     
@@ -31,8 +40,10 @@ export async function POST(req: Request) {
         },
       ],
       mode: isCredits ? 'payment' : 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/billing/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/billing`,
+      // Antes apuntaban a /dashboard/billing/success y /dashboard/billing, dos
+      // rutas que nunca existieron: todo checkout terminaba en un 404.
+      success_url: `${baseUrl}/exito?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/precios`,
       client_reference_id: tenantId || 'guest',
       metadata: {
         tenantId: tenantId || 'guest',

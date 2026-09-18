@@ -1,3 +1,15 @@
 User-agent: *
 Allow: /
+
+# Zonas privadas: una por rol. No deben indexarse aunque el middleware ya
+# exija sesión (los layouts además envían robots: noindex).
+Disallow: /admin
+Disallow: /crm
+Disallow: /mi-empresa
+Disallow: /portal
+Disallow: /dashboard
+
+# Pantalla de confirmación de pago: no tiene sentido como resultado de búsqueda.
+Disallow: /exito
+
 Sitemap: https://hackesjobs.com.mx/sitemap.xml

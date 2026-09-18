@@ -105,11 +105,16 @@ const tests = [
 async function main() {
   console.log('🌱 Seeding Psychometric Tests...');
 
+  // upsert y no create: con `create`, ejecutar este seed dos veces duplicaba
+  // las 12 psicometrías del catálogo y no había constraint que lo impidiera.
+  // `PsychometricTest.name` es @unique justamente para permitir esto.
   for (const test of tests) {
-    const created = await prisma.psychometricTest.create({
-      data: test
+    const guardado = await prisma.psychometricTest.upsert({
+      where: { name: test.name },
+      update: test,
+      create: test,
     });
-    console.log(`Created test: ${created.name} (${created.level}) - $${created.price}`);
+    console.log(`Test: ${guardado.name} (${guardado.level}) - $${guardado.price}`);
   }
 
   console.log('✅ Psychometric Tests Seed completed!');

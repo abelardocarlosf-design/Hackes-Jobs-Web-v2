@@ -1,29 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getAllSubscribers } from '@/lib/newsletter';
-import { verifyAuth } from '@/lib/jwt';
-import { cookies } from 'next/headers';
+import { requireAuth, errorResponse, successResponse } from '@/lib/api-helpers';
 
-async function checkAdminAuth() {
-  const token = cookies().get('hj_admin_token')?.value;
-  if (!token) return false;
+// Recibe `request` porque requireAuth necesita leer la cookie hj_token de él.
+// Antes la firma era GET() sin argumentos y la sesión salía de next/headers.
+export async function GET(request: Request) {
+  const auth = await requireAuth(request, ['admin']);
+  if (auth instanceof NextResponse) return auth;
+
   try {
-    const decoded = await verifyAuth(token);
-    return decoded && decoded.role === 'admin';
-  } catch {
-    return false;
-  }
-}
-
-export async function GET() {
-  try {
-    if (!(await checkAdminAuth())) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
-    }
-
-    const subscribers = await getAllSubscribers();
-    return NextResponse.json(subscribers);
+    return successResponse(await getAllSubscribers());
   } catch (error) {
-    return NextResponse.json({ error: 'Error al obtener suscriptores' }, { status: 500 });
+    console.error('[admin/subscribers GET]:', error);
+    return errorResponse('Error al obtener suscriptores', 500);
   }
 }
-
