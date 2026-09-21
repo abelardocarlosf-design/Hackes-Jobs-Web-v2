@@ -1,20 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
 import Link from 'next/link';
-import {
-  Brain,
-  Workflow,
-  Database,
-  Cpu,
-  ShieldCheck,
-  Plug,
-  ChevronRight,
-  Search,
-  UserPlus,
-} from 'lucide-react';
-import { ScrollSequence } from '@/components/brand/ScrollSequence';
+import { ArrowDown, ArrowRight, Search, UserPlus } from 'lucide-react';
 import { ClientsMarquee } from '@/components/brand/ClientsMarquee';
+import { HeroReel } from '@/components/landing/HeroReel';
+import { ProcessStory } from '@/components/landing/ProcessStory';
+import { EngineMap } from '@/components/landing/EngineMap';
 import { waUrl } from '@/lib/contact';
 import {
   Reveal,
@@ -26,287 +17,149 @@ import {
   ScrollProgress,
 } from '@/components/motion';
 
-/** Ritmo horizontal común a todo el bloque cinemático. */
-const GUTTER = 'px-5 sm:px-8 md:px-12';
-/** Shell de sección a viewport completo, con aire bajo el navbar fijo. */
-const VIEWPORT_SECTION =
-  'relative flex min-h-screen supports-[height:100svh]:min-h-[100svh] flex-col justify-between pt-24 pb-12 sm:pt-28 md:pb-16';
+/** Ritmo horizontal común a toda la landing. */
+const WRAP = 'mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12';
 
-const SERVICIOS = [
-  'Reclutamiento industrial',
-  'Evaluación psicométrica',
-  'Procesos automatizados',
-];
-
-const PROCESO = [
-  {
-    title: 'Requisición en 24 h',
-    body: 'Levantamos el perfil real del puesto y confirmamos alcance dentro del mismo día hábil.',
-  },
-  {
-    title: 'Evaluación psicométrica',
-    body: 'Batería validada con scoring algorítmico y reporte ejecutivo en PDF, no un test crudo.',
-  },
-  {
-    title: 'Terna con garantía',
-    body: 'Entregamos finalistas con evidencia y respaldo de reposición durante 10 días.',
-  },
+// Los tres compromisos que sostienen la promesa del titular.
+const COMPROMISOS = [
+  { valor: '24 h', label: 'Respuesta a tu requisición' },
+  { valor: '7–10 días', label: 'Terna con evidencia' },
+  { valor: '10 días', label: 'Garantía de reposición' },
 ];
 
 const KPIS = [
   { value: 500, prefix: '+', suffix: '', label: 'Evaluaciones procesadas' },
   { value: 50, prefix: '+', suffix: '', label: 'Empresas atendidas' },
   { value: 10, prefix: '', suffix: ' días', label: 'Garantía de reposición' },
-  { value: 24, prefix: '', suffix: ' hrs', label: 'Respuesta a requisición' },
+  { value: 24, prefix: '', suffix: ' h', label: 'Respuesta a requisición' },
 ];
 
-const STACK = [
-  {
-    icon: Workflow,
-    title: 'n8n — Orquestación',
-    body: 'Conecta automáticamente cada etapa del reclutamiento: requisición, atracción, envío de psicometrías, seguimiento por WhatsApp y entrega de terna. Sin pasos manuales perdidos en correos.',
-  },
-  {
-    icon: Brain,
-    title: 'Modelos IA (OpenAI · Anthropic)',
-    body: 'Filtran cientos de currículums contra el perfil real del puesto en minutos, no en días. Solo llegan a entrevista los candidatos con compatibilidad técnica y conductual verificada.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Suite psicométrica',
-    body: 'Aplicamos baterías validadas con scoring algorítmico (DISC, 16PF, Moss, Zavic, Lüscher) y entrega de reporte ejecutivo. Tu gerente de RH recibe un PDF claro, no un test crudo.',
-  },
-  {
-    icon: Database,
-    title: 'PostgreSQL + Pinecone',
-    body: 'Memoria operativa. Cada candidato evaluado y proceso cerrado queda registrado. Cuando vuelves a contratar para el mismo perfil, partimos de la experiencia previa, no de cero.',
-  },
-  {
-    icon: Cpu,
-    title: 'Stripe + CFDI 4.0',
-    body: 'Cobro y facturación transparente. Pago seguro en MXN, facturación electrónica inmediata para México. Cero fricción contable para tu equipo de administración.',
-  },
-  {
-    icon: Plug,
-    title: 'Next.js + Cifrado AES-256',
-    body: 'Plataforma propia, datos protegidos. La infraestructura es nuestra. Los datos de tus candidatos viven cifrados, bajo cumplimiento LFPDPPP, sin intermediarios.',
-  },
-];
+// Reel de HyperFrames (fuente en videos/hero-reel). Sin él, HeroReel cae al embudo en código.
+const HERO_VIDEO = {
+  webm: '/media/hero-reel.webm',
+  mp4: '/media/hero-reel.mp4',
+  poster: '/media/hero-reel-poster.avif',
+};
 
 export default function HomePage() {
-  // El scrub de la secuencia se mide contra este bloque (hero + spacer + proceso).
-  const cinematicRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden font-sans selection:bg-brand-orange/40 selection:text-white">
+    <div className="hj-landing relative flex min-h-screen flex-col overflow-x-clip selection:bg-hj-signal/40 selection:text-white">
       <ScrollProgress />
+      <div className="hj-grain" aria-hidden="true" />
 
-      {/* Estos dos viven antes de la secuencia: al compartir z-0, el orden del
-          DOM decide, así que las fotos pintan encima y el overlay sigue
-          domando el mesh en las secciones transparentes de abajo. */}
-      <div className="page-overlay" />
-      <div className="page-dotgrid" />
+      {/* ═══ HERO ═══ */}
+      <section className="relative isolate overflow-hidden pb-20 pt-32 sm:pt-36 lg:pb-28" aria-labelledby="hero-title">
+        <div className="hj-aurora" aria-hidden="true" />
+        <div className="hj-grid" aria-hidden="true" />
 
-      {/* ═══ BLOQUE CINEMÁTICO · el scroll barre la secuencia de Toluca ═══ */}
-      <div ref={cinematicRef} className="relative">
-        <ScrollSequence targetRef={cinematicRef} />
-
-        <div className="relative z-10">
-          {/* ─── 1. HERO ─── */}
-          <section className={`${VIEWPORT_SECTION} ${GUTTER}`} aria-labelledby="hero-title">
-            {/* Fila superior: servicios · intro */}
-            <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-              <ul className="flex flex-col gap-2">
-                {SERVICIOS.map((s, i) => (
-                  <Reveal
-                    as="li"
-                    key={s}
-                    delay={0.15 + i * 0.12}
-                    distance={18}
-                    className="font-mono text-[11px] uppercase tracking-[0.15em] text-white/90 drop-shadow-md sm:text-xs"
-                  >
-                    <span aria-hidden="true" className="text-brand-orange">/ </span>
-                    {s}
-                  </Reveal>
-                ))}
-              </ul>
-
-              <Reveal delay={0.3} distance={18} className="max-w-xs sm:text-right">
-                <p className="text-lg leading-relaxed text-white drop-shadow-md sm:text-xl">
-                  Cubrimos vacantes de manufactura en el corredor Toluca–Lerma–Metepec con candidatos
-                  evaluados, no con currículums sin filtrar.
-                </p>
-              </Reveal>
-            </div>
-
-            {/* Fila inferior: badge + titular · tarjeta de contacto */}
-            <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-              <div>
-                <Reveal delay={0.15} distance={18}>
-                  <span className="badge-accent font-mono text-[10px] uppercase tracking-[0.15em] text-white sm:text-[11px]">
-                    Garantía de reposición · 10 días
-                  </span>
-                </Reveal>
-
-                <Reveal delay={0.28} distance={22}>
-                  <h1
-                    id="hero-title"
-                    className="headline-editorial mt-5 text-5xl text-white drop-shadow-lg sm:text-6xl lg:text-7xl"
-                  >
-                    Vacante cubierta.
-                    <br />
-                    Candidato evaluado.
-                  </h1>
-                </Reveal>
-              </div>
-
-              <Reveal delay={0.42} distance={22}>
-                <div className="glass-chip flex items-center gap-4 rounded-xl p-3">
-                  {/* En el slot de retrato va el dato que sostiene la promesa,
-                      no una foto de archivo. */}
-                  <div className="flex h-24 w-20 flex-col items-center justify-center rounded-lg border border-white/15 bg-white/10">
-                    <span className="text-2xl font-semibold leading-none text-white">24 h</span>
-                    <span className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/75">
-                      Respuesta
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5 pr-2">
-                    <span className="text-sm font-medium text-white">Habla con un reclutador</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/75">
-                      Diagnóstico sin costo
-                    </span>
-                    <Magnetic strength={0.3}>
-                      <Link
-                        href="/empresas/requisicion"
-                        className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-4 py-2 text-xs font-semibold text-white transition-colors duration-300 hover:bg-orange-600"
-                      >
-                        Solicitar reclutamiento
-                        <ChevronRight size={14} aria-hidden="true" />
-                      </Link>
-                    </Magnetic>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-
-          {/* Aire para que el scrub tenga recorrido entre las dos secciones. */}
-          <div className="h-[80vh]" aria-hidden="true" />
-
-          {/* ─── 2. PROCESO / CAPACIDAD ─── */}
-          <section className={`${VIEWPORT_SECTION} ${GUTTER}`} aria-labelledby="proceso-title">
-            <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-              <Reveal delay={0.12} distance={18}>
-                <span className="badge-accent font-mono text-[10px] uppercase tracking-[0.15em] text-white sm:text-[11px]">
-                  Operación verificable
-                </span>
-              </Reveal>
-
-              <Reveal delay={0.22} distance={18} className="max-w-sm sm:text-right">
-                <p className="text-lg leading-relaxed text-white drop-shadow-md sm:text-xl">
-                  Nuestro proceso no solo responde: filtra, evalúa y entrega la terna con la
-                  evidencia que tu gerente de RH necesita para decidir.
-                </p>
-              </Reveal>
-            </div>
-
-            <div className="flex flex-1 flex-col justify-end gap-12 md:flex-row md:items-end md:justify-between md:gap-16">
-              <div className="max-w-xl">
-                <Reveal delay={0.18} distance={22}>
-                  <h2
-                    id="proceso-title"
-                    className="headline-editorial text-5xl text-white drop-shadow-lg sm:text-6xl lg:text-7xl"
-                  >
-                    Contrata con
-                    <br />
-                    evidencia.
-                  </h2>
-                </Reveal>
-
-                <Reveal delay={0.32} distance={18}>
-                  <p className="mt-6 max-w-md text-sm leading-relaxed text-white/80 drop-shadow-md sm:text-base">
-                    Desde la requisición hasta la terna final, convertimos el perfil que necesitas en
-                    decisiones que tu equipo puede tomar hoy — con trazabilidad y sin pasos manuales
-                    perdidos en correos.
-                  </p>
-                </Reveal>
-
-                <Reveal delay={0.42} distance={18}>
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    <Magnetic strength={0.3}>
-                      <Link
-                        href="/empresas#proceso"
-                        className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-5 py-2.5 text-xs font-semibold text-white transition-colors duration-300 hover:bg-orange-600 sm:text-sm"
-                      >
-                        Ver el proceso
-                        <ChevronRight size={14} aria-hidden="true" />
-                      </Link>
-                    </Magnetic>
-                    <a
-                      href={waUrl()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-xs font-medium text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:text-sm"
-                    >
-                      Cotizar por WhatsApp
-                    </a>
-                  </div>
-                </Reveal>
-              </div>
-
-              {/* Panel frosted — la secuencia real del servicio, no tres cards decorativas */}
-              <div className="glass-panel w-full max-w-md rounded-2xl px-5 sm:px-6">
-                {PROCESO.map((p, i) => (
-                  <Reveal key={p.title} delay={0.3 + i * 0.11} distance={18} className="panel-row">
-                    <div className="flex gap-5 py-5">
-                      <span className="pt-1 font-mono text-[11px] tracking-[0.15em] text-white/70">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <div>
-                        <h3 className="group flex items-center gap-1.5 text-base font-medium text-white sm:text-lg">
-                          {p.title}
-                          <ChevronRight
-                            size={16}
-                            aria-hidden="true"
-                            className="text-white/40 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-white"
-                          />
-                        </h3>
-                        <p className="mt-1.5 text-sm leading-relaxed text-white/70">{p.body}</p>
-                      </div>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-
-      {/* ═══ PRUEBA · KPIs reales ═══ */}
-      <section className="relative z-10 border-y border-white/10 bg-[#0d1422] py-24" aria-labelledby="kpis-title">
-        <div className={`container mx-auto ${GUTTER}`}>
-          <Reveal className="mb-12 max-w-2xl">
-            <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-brand-orange">
-              Números de operación
+        <div className={`${WRAP} relative z-10`}>
+          <Reveal delay={0.05} distance={14}>
+            <span className="hj-eyebrow inline-flex items-center gap-3">
+              <span className="h-px w-8 bg-hj-signal" aria-hidden="true" />
+              Agencia de reclutamiento operada con IA · México
             </span>
-            <h2 id="kpis-title" className="headline-editorial mt-4 text-4xl text-white sm:text-5xl">
-              Lo que ya pasó por aquí.
-            </h2>
           </Reveal>
 
-          <RevealGroup className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 md:grid-cols-4">
+          <Reveal delay={0.15} distance={24} blur>
+            <h1 id="hero-title" className="hj-display mt-7 text-[clamp(2.5rem,7.4vw,6.4rem)] text-white">
+              Vacante cubierta.
+              <br />
+              Candidato <span className="text-hj-signal">evaluado.</span>
+            </h1>
+          </Reveal>
+
+          <div className="mt-12 grid items-center gap-12 lg:mt-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+            <div>
+              <Reveal delay={0.3} distance={16}>
+                <p className="max-w-lg text-lg leading-relaxed text-hj-muted sm:text-xl">
+                  Filtramos con inteligencia artificial, evaluamos con psicometría validada y te
+                  entregamos una terna con evidencia. <span className="text-hj-mist">Tú solo
+                  entrevistas y eliges.</span>
+                </p>
+              </Reveal>
+
+              <Reveal delay={0.42} distance={16}>
+                <div className="mt-9 flex flex-wrap gap-3">
+                  <Magnetic strength={0.3}>
+                    <Link href="/empresas/requisicion" className="hj-btn-primary">
+                      Solicitar reclutamiento
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                  </Magnetic>
+                  <Link href="/vacantes" className="hj-btn-ghost">
+                    Busco empleo
+                  </Link>
+                </div>
+              </Reveal>
+
+              <RevealGroup className="hj-hairline mt-12 grid grid-cols-3 gap-3 border-t pt-6 sm:gap-4" delayChildren={0.55} stagger={0.08}>
+                {COMPROMISOS.map((c) => (
+                  <RevealItem key={c.label}>
+                    <p className="hj-display whitespace-nowrap text-[0.95rem] text-white sm:text-2xl">{c.valor}</p>
+                    <p className="mt-2 font-mono text-[10px] uppercase leading-snug tracking-[0.14em] text-hj-muted">
+                      {c.label}
+                    </p>
+                  </RevealItem>
+                ))}
+              </RevealGroup>
+            </div>
+
+            <Reveal delay={0.35} distance={30} blur>
+              <HeroReel video={HERO_VIDEO} />
+            </Reveal>
+          </div>
+
+          <a
+            href="#proceso"
+            className="mt-16 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-hj-muted hover:text-white lg:mt-20"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15">
+              <ArrowDown size={14} aria-hidden="true" />
+            </span>
+            Sigue el hilo: así cubrimos tu vacante
+          </a>
+        </div>
+      </section>
+
+      {/* ═══ PROCESO · el hilo ═══ */}
+      <section id="proceso" className="relative scroll-mt-24 py-20 lg:py-28" aria-labelledby="proceso-title">
+        <div className={WRAP}>
+          <Reveal className="max-w-3xl">
+            <span className="hj-eyebrow">Cómo trabajamos</span>
+            <h2 id="proceso-title" className="hj-display mt-5 text-4xl text-white sm:text-5xl lg:text-6xl">
+              De la vacante a la contratación, en cinco etapas.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-hj-muted">
+              Tú participas donde aportas valor: definir el perfil y entrevistar a los finalistas.
+              Todo lo demás lo operamos nosotros.
+            </p>
+          </Reveal>
+
+          <div className="mt-8 lg:mt-4">
+            <ProcessStory />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ PRUEBA · KPIs ═══ */}
+      <section className="hj-hairline relative border-y bg-hj-ink/60 py-20 lg:py-24" aria-labelledby="kpis-title">
+        <div className={WRAP}>
+          <Reveal className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <span className="hj-eyebrow">Números de operación</span>
+              <h2 id="kpis-title" className="hj-display mt-4 text-3xl text-white sm:text-4xl">
+                Lo que ya pasó por el hilo.
+              </h2>
+            </div>
+          </Reveal>
+
+          <RevealGroup className="hj-hairline grid grid-cols-2 gap-px overflow-hidden rounded-2xl border bg-white/[0.06] md:grid-cols-4">
             {KPIS.map((s) => (
-              <RevealItem
-                key={s.label}
-                className="group bg-[#0d1422] px-6 py-10 transition-colors duration-500 hover:bg-white/[0.03]"
-              >
-                <div className="kpi-num text-4xl font-semibold text-white transition-colors duration-500 group-hover:text-brand-orange md:text-5xl">
+              <RevealItem key={s.label} className="group bg-hj-void px-6 py-10 transition-colors duration-500 hover:bg-hj-ink">
+                <div className="hj-display text-4xl text-white transition-colors duration-500 group-hover:text-hj-signal md:text-5xl">
                   <CountUp value={s.value} prefix={s.prefix} suffix={s.suffix} />
                 </div>
-                <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.15em] text-white/55">
-                  {s.label}
-                </div>
+                <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-hj-muted">{s.label}</div>
               </RevealItem>
             ))}
           </RevealGroup>
@@ -316,169 +169,104 @@ export default function HomePage() {
       {/* ═══ CLIENTES ═══ */}
       <ClientsMarquee />
 
-      {/* ═══ CANDIDATOS ═══ */}
-      <section className="relative z-10 overflow-hidden border-t border-white/10 bg-[#07070f] py-24" aria-labelledby="talento-title">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-orange/5 blur-[140px]" />
-
-        <div className={`container relative z-10 mx-auto max-w-6xl ${GUTTER}`}>
-          <Reveal className="mb-14 max-w-2xl">
-            <span className="badge-accent font-mono text-[10px] uppercase tracking-[0.15em] text-white sm:text-[11px]">
-              ¿Buscas empleo?
-            </span>
-            <h2 id="talento-title" className="headline-editorial mt-5 text-4xl text-white sm:text-5xl">
-              Encuentra tu próximo reto profesional.
+      {/* ═══ EL MOTOR ═══ */}
+      <section className="relative py-20 lg:py-28" aria-labelledby="motor-title">
+        <div className={WRAP}>
+          <Reveal className="mb-14 max-w-3xl">
+            <span className="hj-eyebrow">El motor</span>
+            <h2 id="motor-title" className="hj-display mt-5 text-4xl text-white sm:text-5xl">
+              Tecnología propia detrás de cada etapa.
             </h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70">
-              Conectamos talento técnico, administrativo y operativo con las plantas de manufactura y
-              empresas del corredor industrial Toluca–Lerma.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-hj-muted">
+              No te vendemos software ni te pedimos aprender otro dashboard. Nosotros operamos la
+              infraestructura; tú recibes candidatos.
+            </p>
+          </Reveal>
+          <EngineMap />
+        </div>
+      </section>
+
+      {/* ═══ CANDIDATOS ═══ */}
+      <section className="hj-hairline relative overflow-hidden border-t py-20 lg:py-28" aria-labelledby="talento-title">
+        <div className={WRAP}>
+          <Reveal className="mb-12 max-w-2xl">
+            <span className="hj-eyebrow">¿Buscas empleo?</span>
+            <h2 id="talento-title" className="hj-display mt-5 text-4xl text-white sm:text-5xl">
+              Tu próximo trabajo, sin enviar CVs al vacío.
+            </h2>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-hj-muted">
+              Vacantes reales en empresas de todo México, con un proceso claro y retroalimentación
+              en cada etapa.
             </p>
           </Reveal>
 
-          <RevealGroup className="grid max-w-4xl gap-6 md:grid-cols-2" stagger={0.12}>
-            <RevealItem className="[perspective:1200px]">
-              <TiltCard glow="249, 115, 22" max={6} className="h-full rounded-2xl">
-                <div className="glass-panel group flex h-full flex-col justify-between gap-8 rounded-2xl p-8 transition-colors duration-500 hover:border-brand-orange/30">
-                  <div className="relative z-20 space-y-5">
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-orange/10 text-brand-orange transition-colors duration-500 group-hover:bg-brand-orange group-hover:text-white">
-                      <Search size={20} aria-hidden="true" />
-                    </span>
-                    <h3 className="text-xl font-medium tracking-tight text-white">
-                      Bolsa de empleo activa
-                    </h3>
-                    <p className="text-sm leading-relaxed text-white/70">
-                      Vacantes reales, validadas directamente con los tomadores de decisiones.
-                      Procesos transparentes y con feedback claro.
-                    </p>
+          <RevealGroup className="grid max-w-4xl gap-5 md:grid-cols-2" stagger={0.12}>
+            {[
+              {
+                icon: Search,
+                glow: '255, 122, 26',
+                titulo: 'Bolsa de empleo activa',
+                cuerpo: 'Vacantes validadas directamente con quien contrata. Sabes en qué etapa vas.',
+                href: '/vacantes',
+                cta: 'Explorar vacantes',
+              },
+              {
+                icon: UserPlus,
+                glow: '59, 107, 255',
+                titulo: 'Sube tu CV una vez',
+                cuerpo: 'Registra tu perfil y te vinculamos con las vacantes que encajan con tu experiencia.',
+                href: '/register',
+                cta: 'Subir mi CV',
+              },
+            ].map(({ icon: Icon, glow, titulo, cuerpo, href, cta }) => (
+              <RevealItem key={titulo} className="[perspective:1200px]">
+                <TiltCard glow={glow} max={5} className="h-full rounded-2xl">
+                  <div className="hj-panel flex h-full flex-col justify-between gap-8 rounded-2xl p-8">
+                    <div className="relative z-20 space-y-4">
+                      <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-hj-mist">
+                        <Icon size={20} aria-hidden="true" />
+                      </span>
+                      <h3 className="hj-display text-xl text-white">{titulo}</h3>
+                      <p className="text-sm leading-relaxed text-hj-muted">{cuerpo}</p>
+                    </div>
+                    <Link href={href} className="hj-btn-ghost relative z-20 self-start">
+                      {cta}
+                      <ArrowRight size={14} aria-hidden="true" />
+                    </Link>
                   </div>
-
-                  <Link
-                    href="/vacantes"
-                    className="relative z-20 inline-flex items-center gap-1.5 self-start rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-xs font-medium text-white transition-colors duration-300 hover:bg-white/20"
-                  >
-                    Explorar vacantes
-                    <ChevronRight size={14} aria-hidden="true" />
-                  </Link>
-                </div>
-              </TiltCard>
-            </RevealItem>
-
-            <RevealItem className="[perspective:1200px]">
-              <TiltCard glow="30, 64, 175" max={6} className="h-full rounded-2xl">
-                <div className="glass-panel group flex h-full flex-col justify-between gap-8 rounded-2xl p-8 transition-colors duration-500 hover:border-brand-blue/30">
-                  <div className="relative z-20 space-y-5">
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue transition-colors duration-500 group-hover:bg-brand-blue group-hover:text-white">
-                      <UserPlus size={20} aria-hidden="true" />
-                    </span>
-                    <h3 className="text-xl font-medium tracking-tight text-white">
-                      Vincúlate con inteligencia artificial
-                    </h3>
-                    <p className="text-sm leading-relaxed text-white/70">
-                      Registra tu perfil y sube tu CV. Nuestros algoritmos de perfilado te vinculan
-                      con vacantes afines a tu experiencia.
-                    </p>
-                  </div>
-
-                  <Link
-                    href="/register"
-                    className="relative z-20 inline-flex items-center gap-1.5 self-start rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-xs font-medium text-white transition-colors duration-300 hover:bg-white/20"
-                  >
-                    Subir mi CV
-                    <ChevronRight size={14} aria-hidden="true" />
-                  </Link>
-                </div>
-              </TiltCard>
-            </RevealItem>
+                </TiltCard>
+              </RevealItem>
+            ))}
           </RevealGroup>
         </div>
       </section>
 
-      {/* ═══ STACK · filas editoriales, no un muro de cards ═══ */}
-      <section className="relative z-10 bg-brand-black py-24" aria-labelledby="stack-title">
-        <div className={`container mx-auto max-w-6xl ${GUTTER}`}>
-          <Reveal className="mb-14 max-w-2xl">
-            <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-brand-blue">
-              Infraestructura
-            </span>
-            <h2 id="stack-title" className="headline-editorial mt-4 text-4xl text-white sm:text-5xl">
-              Tecnología que opera detrás de cada proceso.
+      {/* ═══ CIERRE · el hilo termina en el botón ═══ */}
+      <section className="relative isolate overflow-hidden py-24 lg:py-32">
+        <div className="hj-aurora !top-auto bottom-[-60%] !opacity-40" aria-hidden="true" />
+        <div className={`${WRAP} relative z-10 flex flex-col items-center text-center`}>
+          <span className="h-24 w-px bg-gradient-to-b from-transparent to-hj-signal" aria-hidden="true" />
+          <span className="-mt-1 h-2.5 w-2.5 rounded-full bg-hj-signal shadow-[0_0_20px_rgba(255,122,26,0.9)]" aria-hidden="true" />
+
+          <Reveal from="up" distance={24} className="mt-10 max-w-3xl">
+            <h2 className="hj-display text-4xl text-white sm:text-5xl lg:text-6xl">
+              Servicio de agencia. Precisión de empresa de tecnología.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-white/70">
-              No vendemos software. Lo usamos. Tú recibes el resultado; nosotros operamos la
-              infraestructura.
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-hj-muted">
+              Una persona responsable de tu cuenta, con la velocidad y la trazabilidad de una
+              plataforma. Sin licencias, sin dashboards que aprender.
             </p>
-          </Reveal>
-
-          {/* Dos paneles en vez de un grid: así el divisor `.panel-row + .panel-row`
-              sigue el orden visual y no le pinta borde superior al primero de la
-              segunda columna. */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {[STACK.slice(0, 3), STACK.slice(3)].map((group, gi) => (
-              <RevealGroup key={gi} className="glass-panel rounded-2xl px-5 sm:px-6" stagger={0.07}>
-                {group.map(({ icon: Icon, title, body }, i) => (
-                  <RevealItem key={title} className="panel-row">
-                    <div className="flex gap-5 py-6">
-                      <span className="pt-1 font-mono text-[11px] tracking-[0.15em] text-white/55">
-                        {String(gi * 3 + i + 1).padStart(2, '0')}
-                      </span>
-                      <div>
-                        <h3 className="flex items-center gap-2.5 text-base font-medium text-white sm:text-lg">
-                          <Icon size={18} aria-hidden="true" className="text-white/45" />
-                          {title}
-                        </h3>
-                        <p className="mt-1.5 text-sm leading-relaxed text-white/70">{body}</p>
-                      </div>
-                    </div>
-                  </RevealItem>
-                ))}
-              </RevealGroup>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CIERRE ═══ */}
-      <section className="relative z-10 overflow-hidden border-t border-white/10 bg-[#0d1422] py-28">
-        <div className="pointer-events-none absolute right-0 top-0 -mr-64 -mt-64 h-[500px] w-[500px] rounded-full bg-brand-orange/10 blur-[120px]" />
-
-        <div className={`container relative z-10 mx-auto max-w-3xl ${GUTTER}`}>
-          <Reveal from="up" distance={30}>
-            <span className="badge-accent font-mono text-[10px] uppercase tracking-[0.15em] text-white sm:text-[11px]">
-              Qué significa para ti
-            </span>
-
-            <h2 className="headline-editorial mt-6 text-4xl text-white sm:text-5xl">
-              Servicio de agencia, precisión de empresa de tecnología.
-            </h2>
-
-            <p className="mt-6 text-base leading-relaxed text-white/75 sm:text-lg">
-              Recibes un humano responsable de tu cuenta, entregando con la velocidad y trazabilidad
-              de una plataforma.{' '}
-              <strong className="font-medium text-white">
-                Sin licencias que pagar, sin dashboards que aprender, sin onboarding de software.
-              </strong>
-            </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
               <Magnetic strength={0.35}>
-                <Link
-                  href="/empresas/requisicion"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-orange px-6 py-3 text-xs font-semibold text-white transition-colors duration-300 hover:bg-orange-600 sm:text-sm"
-                >
+                <Link href="/empresas/requisicion" className="hj-btn-primary">
                   Solicitar reclutamiento
-                  <ChevronRight size={14} aria-hidden="true" />
+                  <ArrowRight size={16} aria-hidden="true" />
                 </Link>
               </Magnetic>
-              <Link
-                href="/empresas#proceso"
-                className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-6 py-3 text-xs font-medium text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:text-sm"
-              >
-                Ver cómo trabajamos
-              </Link>
+              <a href={waUrl()} target="_blank" rel="noopener noreferrer" className="hj-btn-ghost">
+                Cotizar por WhatsApp
+              </a>
             </div>
-
-            <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.15em] text-white/60">
-              Hacke&apos;s Jobs Technologies © {new Date().getFullYear()} · LFPDPPP
-            </p>
           </Reveal>
         </div>
       </section>

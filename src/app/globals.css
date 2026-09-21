@@ -439,81 +439,10 @@
   object-fit: contain;
 }
 
-/* ─────────────────────────────────────────────────────────
-   HERO TOLUCA · Cinematic background with Ken Burns
-   Each layer slowly zooms + pans; crossfades drive variety.
-   ───────────────────────────────────────────────────────── */
-@keyframes ken-burns-1 {
-  0%   { transform: scale(1.05) translate(0, 0); }
-  100% { transform: scale(1.18) translate(-2%, -1.5%); }
-}
-@keyframes ken-burns-2 {
-  0%   { transform: scale(1.08) translate(-1%, 0); }
-  100% { transform: scale(1.22) translate(2%, -2%); }
-}
-@keyframes ken-burns-3 {
-  0%   { transform: scale(1.04) translate(0, -1%); }
-  100% { transform: scale(1.20) translate(-2%, 2%); }
-}
-@keyframes ken-burns-4 {
-  0%   { transform: scale(1.06) translate(1%, 0); }
-  100% { transform: scale(1.18) translate(-1%, 2%); }
-}
-
-@keyframes hero-crossfade {
-  0%, 22%   { opacity: 0; }
-  25%, 47%  { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-.hero-toluca {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-}
-.hero-toluca-layer {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  background-size: cover;
-  background-position: center;
-  will-change: transform, opacity;
-  animation: hero-crossfade 32s ease-in-out infinite;
-}
-.hero-toluca-layer > div {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  will-change: transform;
-}
-.hero-toluca-layer.layer-1 { animation-delay: 0s; }
-.hero-toluca-layer.layer-1 > div { animation: ken-burns-1 32s linear infinite; }
-.hero-toluca-layer.layer-2 { animation-delay: 8s; }
-.hero-toluca-layer.layer-2 > div { animation: ken-burns-2 32s linear infinite; }
-.hero-toluca-layer.layer-3 { animation-delay: 16s; }
-.hero-toluca-layer.layer-3 > div { animation: ken-burns-3 32s linear infinite; }
-.hero-toluca-layer.layer-4 { animation-delay: 24s; }
-.hero-toluca-layer.layer-4 > div { animation: ken-burns-4 32s linear infinite; }
-
-/* Heavy dark overlay — non-negotiable for text legibility */
-.hero-toluca-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(7,7,15,0.78) 0%, rgba(7,7,15,0.86) 60%, rgba(7,7,15,0.94) 100%),
-    linear-gradient(135deg, rgba(30,58,138,0.12) 0%, transparent 60%);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track,
-  .hero-toluca-layer,
-  .hero-toluca-layer > div {
+  .marquee-track {
     animation: none !important;
   }
-  .hero-toluca-layer.layer-1 { opacity: 1; }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -596,14 +525,6 @@
    aquí (y no sueltos en el markup) porque necesitan variante
    de light mode.
    ───────────────────────────────────────────────────────── */
-
-/* Velo de legibilidad sobre la secuencia de fotos */
-.seq-veil {
-  background:
-    linear-gradient(180deg, rgba(7,7,15,0.72) 0%, rgba(7,7,15,0.80) 55%, rgba(7,7,15,0.92) 100%),
-    linear-gradient(120deg, rgba(30,58,138,0.14) 0%, transparent 55%),
-    radial-gradient(120% 80% at 80% 10%, rgba(249,115,22,0.10), transparent 60%);
-}
 
 /* Badge con barra de acento a la izquierda — el marcador de dato del sitio */
 .badge-accent {
@@ -741,12 +662,6 @@
   opacity: 0.3 !important; /* Make orbs softer in light mode */
 }
 
-:root.light .hero-toluca-overlay {
-  background:
-    linear-gradient(180deg, rgba(248,250,252,0.6) 0%, rgba(248,250,252,0.85) 60%, rgba(248,250,252,1) 100%),
-    linear-gradient(135deg, rgba(30,58,138,0.05) 0%, transparent 60%) !important;
-}
-
 /* Fix invert on Logo in light mode */
 :root.light img.invert {
   filter: none !important;
@@ -791,14 +706,6 @@
   background-color: rgba(255, 255, 255, 0.7) !important;
   border-color: rgba(0, 0, 0, 0.06) !important;
   box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Capa cinemática en light mode — el velo aclara la foto para que el
-   texto (que ya se invierte a slate-900) mantenga contraste AA. */
-:root.light .seq-veil {
-  background:
-    linear-gradient(180deg, rgba(248,250,252,0.72) 0%, rgba(248,250,252,0.84) 55%, rgba(248,250,252,0.94) 100%),
-    linear-gradient(120deg, rgba(30,58,138,0.05) 0%, transparent 55%) !important;
 }
 
 :root.light .glass-panel,
@@ -1210,3 +1117,183 @@
 :root.light .group\/user-link:hover .group-hover\/user-link\:text-white {
   color: #ffffff !important;
 }
+
+/* ═════════════════════════════════════════════════════════
+   LANDING · sistema "neural / aurora"
+   Todo cuelga de .hj-landing para no filtrar al resto del sitio.
+   ═════════════════════════════════════════════════════════ */
+@property --hj-a1 { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@property --hj-a2 { syntax: '<angle>'; inherits: false; initial-value: 180deg; }
+
+.hj-landing {
+  --hj-void: #05060B;
+  --hj-ink: #0B0E1A;
+  --hj-line: #1A1F33;
+  --hj-signal: #FF7A1A;
+  --hj-synapse: #3B6BFF;
+  --hj-aurora: #8B5CF6;
+  --hj-mist: #E6E9F2;
+  --hj-muted: #8A90A6;
+  background: var(--hj-void);
+  color: var(--hj-mist);
+  font-family: var(--font-body), var(--font-jakarta), ui-sans-serif, system-ui;
+}
+
+/* Titulares: display ancho, ligero, tracking cerrado. Pisa el font-black global. */
+.hj-landing .hj-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.hj-landing .hj-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hj-muted);
+}
+
+/* ── Fondo: aurora + retícula + grano ─────────────────── */
+.hj-aurora {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 140vh;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px) saturate(1.2);
+  opacity: 0.55;
+  background:
+    conic-gradient(from var(--hj-a1) at 30% 40%, transparent 0deg, rgba(59,107,255,0.55) 60deg, transparent 140deg, rgba(139,92,246,0.35) 220deg, transparent 300deg),
+    conic-gradient(from var(--hj-a2) at 72% 30%, transparent 0deg, rgba(255,122,26,0.35) 50deg, transparent 120deg, rgba(59,107,255,0.25) 250deg, transparent 320deg);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 35%, #000 20%, transparent 75%);
+          mask-image: radial-gradient(70% 60% at 50% 35%, #000 20%, transparent 75%);
+  animation: hj-aurora-spin 38s linear infinite;
+}
+@keyframes hj-aurora-spin {
+  to { --hj-a1: 360deg; --hj-a2: 540deg; }
+}
+
+.hj-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(230,233,242,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(230,233,242,0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(80% 70% at 50% 30%, #000 10%, transparent 70%);
+          mask-image: radial-gradient(80% 70% at 50% 30%, #000 10%, transparent 70%);
+}
+
+.hj-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── Superficies ──────────────────────────────────────── */
+.hj-panel {
+  background: linear-gradient(180deg, rgba(20,24,44,0.72), rgba(11,14,26,0.82));
+  border: 1px solid rgba(230,233,242,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 30px 80px -40px rgba(0,0,0,0.9);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.hj-hairline { border-color: rgba(230,233,242,0.08); }
+
+/* Consola del hero: marco con borde de luz */
+.hj-console {
+  position: relative;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,122,26,0.55), rgba(59,107,255,0.25) 40%, rgba(139,92,246,0.35) 70%, rgba(230,233,242,0.08));
+  box-shadow: 0 40px 120px -40px rgba(59,107,255,0.45), 0 0 0 1px rgba(255,255,255,0.02);
+}
+.hj-console > .hj-console-inner {
+  border-radius: 19px;
+  overflow: hidden;
+  background: var(--hj-ink);
+}
+
+/* ── Botones ─────────────────────────────────────────── */
+.hj-btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #140800;
+  background: var(--hj-signal);
+  box-shadow: 0 0 0 1px rgba(255,122,26,0.4), 0 12px 40px -12px rgba(255,122,26,0.7);
+}
+.hj-btn-primary:hover { background: #FF8F40; box-shadow: 0 0 0 1px rgba(255,143,64,0.6), 0 16px 50px -12px rgba(255,122,26,0.9); }
+.hj-btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--hj-mist);
+  border: 1px solid rgba(230,233,242,0.16);
+  background: rgba(230,233,242,0.03);
+}
+.hj-btn-ghost:hover { border-color: rgba(230,233,242,0.32); background: rgba(230,233,242,0.07); }
+.hj-landing a:focus-visible, .hj-landing button:focus-visible {
+  outline: 2px solid var(--hj-signal);
+  outline-offset: 3px;
+}
+
+/* ── El hilo ─────────────────────────────────────────── */
+.hj-thread-glow { filter: drop-shadow(0 0 6px rgba(255,122,26,0.8)) drop-shadow(0 0 18px rgba(255,122,26,0.35)); }
+
+/* Pulso del nodo encendido */
+@keyframes hj-node-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.hj-node-pulse { transform-origin: center; transform-box: fill-box; animation: hj-node-pulse 2.2s cubic-bezier(0.16,1,0.3,1) infinite; }
+
+/* Conector del motor: línea tenue con una señal que la recorre */
+.hj-flow {
+  background: linear-gradient(90deg, rgba(59,107,255,0.15), rgba(59,107,255,0.15));
+  overflow: hidden;
+}
+.hj-flow::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 14px;
+  height: 3px;
+  border-radius: 3px;
+  background: #FF7A1A;
+  box-shadow: 0 0 10px rgba(255,122,26,0.9);
+  animation: hj-flow 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes hj-flow {
+  from { transform: translateX(-14px); }
+  to { transform: translateX(40px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hj-aurora { animation: none; }
+  .hj-flow::after { animation: none; opacity: 0; }
+  .hj-node-pulse { animation: none; opacity: 0; }
+}
+
+/* La landing es oscura por diseño (la aurora no existe sobre blanco). Los
+   overrides globales de light mode invierten .text-white y compañía con
+   !important; aquí se restituyen con más especificidad solo dentro de ella. */
+:root.light .hj-landing .text-white,
+:root.light .hj-landing .hover\:text-white:hover { color: #fff !important; }
+:root.light .hj-landing .bg-white\/10 { background-color: rgb(255 255 255 / 0.1) !important; }
+:root.light .hj-landing .border-white\/10 { border-color: rgb(255 255 255 / 0.1) !important; }
+:root.light .hj-landing .border-white\/20 { border-color: rgb(255 255 255 / 0.2) !important; }
+:root.light .hj-landing { color-scheme: dark; }

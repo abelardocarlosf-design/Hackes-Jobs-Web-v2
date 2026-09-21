@@ -49,17 +49,12 @@ export function ClientsMarquee() {
     <section className="relative py-24 z-10" aria-labelledby="clientes-title">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-5">
-          <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[11px]">
-            Casos reales
-          </span>
-          <h2
-            id="clientes-title"
-            className="text-3xl md:text-5xl font-black text-white tracking-tight leading-[1.05]"
-          >
+          <span className="hj-eyebrow">Casos reales</span>
+          <h2 id="clientes-title" className="hj-display text-3xl text-white md:text-5xl">
             Empresas que confían en nosotros.
           </h2>
-          <p className="text-slate-400 text-base md:text-lg font-medium">
-            Operaciones reales en el corredor industrial mexicano y academias profesionales.
+          <p className="text-base text-hj-muted md:text-lg">
+            Manufactura, servicios y academias profesionales en México.
           </p>
         </div>
 
