@@ -12,6 +12,9 @@ module.exports = {
         sans: ["var(--font-jakarta)", "var(--font-inter)", "ui-sans-serif", "system-ui"],
         heading: ["var(--font-jakarta)", "ui-sans-serif", "system-ui"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        // Solo la landing rediseñada: display ancho para titulares y cuerpo Manrope.
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui"],
+        body: ["var(--font-body)", "var(--font-jakarta)", "ui-sans-serif", "system-ui"],
       },
       colors: {
         brand: {
@@ -20,6 +23,18 @@ module.exports = {
           orange: '#F97316',
           white: '#FFFFFF',
           slate: '#F8FAFC',
+        },
+        // Sistema "neural/aurora" de la landing. Convive con brand.* hasta
+        // que el resto de páginas migre.
+        hj: {
+          void: '#05060B',
+          ink: '#0B0E1A',
+          line: '#1A1F33',
+          signal: '#FF7A1A',
+          synapse: '#3B6BFF',
+          aurora: '#8B5CF6',
+          mist: '#E6E9F2',
+          muted: '#8A90A6',
         }
       },
       boxShadow: {
