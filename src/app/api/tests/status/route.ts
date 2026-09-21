@@ -15,38 +15,30 @@ export async function GET(request: Request) {
     }
 
     // ─── Autenticación & Prevención de IDOR ─────────────────
-    // Intentar validar sesión de Administrador primero
-    let isAuthorized = false;
-    const adminToken = cookies().get('hj_admin_token')?.value;
-    if (adminToken) {
-      try {
-        const decodedAdmin = await verifyAuth(adminToken);
-        if (decodedAdmin && decodedAdmin.role === 'admin') {
-          isAuthorized = true;
-        }
-      } catch {}
+    // Una sola sesión (hj_token). Antes el admin se validaba con una cookie
+    // aparte, hj_admin_token, que ya no existe.
+    const token = cookies().get('hj_token')?.value;
+    if (!token) {
+      return NextResponse.json({ success: false, message: 'No autorizado' }, { status: 401 });
     }
 
-    // Si no es admin, validar sesión del Candidato
-    let authenticatedCandidateId: string | null = null;
-    if (!isAuthorized) {
-      const candidateToken = cookies().get('hj_token')?.value;
-      if (!candidateToken) {
-        return NextResponse.json({ success: false, message: 'No autorizado' }, { status: 401 });
-      }
+    let sesion;
+    try {
+      sesion = await verifyAuth(token);
+    } catch {
+      return NextResponse.json({ success: false, message: 'Sesión inválida o expirada' }, { status: 401 });
+    }
 
-      try {
-        const decodedCandidate = await verifyAuth(candidateToken);
-        if (decodedCandidate && decodedCandidate.role === 'candidate') {
-          const candidate = await prisma.candidate.findUnique({
-            where: { userId: decodedCandidate.userId },
-          });
-          if (candidate) {
-            authenticatedCandidateId = candidate.id;
-          }
-        }
-      } catch {
-        return NextResponse.json({ success: false, message: 'Sesión inválida o expirada' }, { status: 401 });
+    const isAuthorized = sesion.role === 'admin';
+
+    // Si no es admin, solo puede ver su propio resultado.
+    let authenticatedCandidateId: string | null = null;
+    if (!isAuthorized && sesion.role === 'candidate') {
+      const candidate = await prisma.candidate.findUnique({
+        where: { userId: sesion.userId },
+      });
+      if (candidate) {
+        authenticatedCandidateId = candidate.id;
       }
     }
 

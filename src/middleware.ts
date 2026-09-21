@@ -1,36 +1,45 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import {
+  RUTAS_POR_ROL,
+  RUTAS_SOLO_SESION,
+  inicioDe,
+  puedeEntrar,
+  rutaCoincide,
+  zonaDe,
+} from '@/lib/navegacion';
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'hackesjobs-dev-secret-change-in-production-2026'
-);
+// Sin fallback: la literal de desarrollo que había aquí está publicada en el
+// repositorio, así que cualquiera podía firmarse un token con role:'admin'.
+// Si falta la variable tratamos toda sesión como inválida (falla cerrado). No
+// lanzamos: una excepción aquí tumbaría absolutamente todas las peticiones.
+const JWT_SECRET = process.env.JWT_SECRET;
+const SECRET = JWT_SECRET ? new TextEncoder().encode(JWT_SECRET) : null;
 
-// Rutas que requieren autenticación
-const PROTECTED_ROUTES = ['/dashboard'];
+/** Zonas privadas: las de rol (/crm, /admin, …) más las que solo piden sesión. */
+const RUTAS_PRIVADAS = [...Object.keys(RUTAS_POR_ROL), ...RUTAS_SOLO_SESION];
 
-// Rutas de API que NO requieren autenticación
-const PUBLIC_API_ROUTES = [
-  '/api/auth/login',
-  '/api/auth/register',
-  '/api/auth/logout',
-  '/api/webhooks',
-];
+function aLogin(request: NextRequest, pathname: string, borrarCookie = false) {
+  const url = new URL('/login', request.url);
+  url.searchParams.set('redirect', pathname);
+  const response = NextResponse.redirect(url);
+  if (borrarCookie) response.cookies.delete('hj_token');
+  return response;
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const esPrivada = RUTAS_PRIVADAS.some(ruta => rutaCoincide(pathname, ruta));
 
-  // ─── Proteger rutas del dashboard ──────────────────
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
-  
-  if (isProtectedRoute) {
-    const token = request.cookies.get('hj_token')?.value;
-
-    if (!token) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
+  if (esPrivada) {
+    if (!SECRET) {
+      console.error('[middleware] Falta JWT_SECRET: se rechaza toda sesión.');
+      return aLogin(request, pathname);
     }
+
+    const token = request.cookies.get('hj_token')?.value;
+    if (!token) return aLogin(request, pathname);
 
     try {
       const { payload } = await jwtVerify(token, SECRET, {
@@ -38,43 +47,43 @@ export async function middleware(request: NextRequest) {
         audience: 'hackesjobs-app',
       });
 
-      const role = payload.role as string | undefined;
-      const tenantId = payload.tenantId as string | undefined;
+      const rol = payload.role as string | undefined;
 
-      // ─── RBAC Logic ────────────────────────────────────
-      // Restrict /dashboard/admin to only 'admin' role
-      if (pathname.startsWith('/dashboard/admin') && role !== 'admin') {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+      // Cada zona declara sus roles en src/lib/navegacion.ts, el mismo archivo
+      // del que salen los menús. Así los permisos y la navegación no pueden
+      // divergir, que es lo que pasaba antes: el CRM existía y nadie lo veía.
+      if (!puedeEntrar(rol, pathname)) {
+        const destino = inicioDe(rol);
+        // Anti-bucle: si el inicio del rol tampoco es accesible (rol
+        // desconocido o corrupto), sacamos a la portada en vez de redirigir
+        // en círculos.
+        if (zonaDe(destino) && !puedeEntrar(rol, destino)) {
+          return NextResponse.redirect(new URL('/', request.url));
+        }
+        return NextResponse.redirect(new URL(destino, request.url));
       }
-      
-      // Add custom headers for downstream API usage
-      const response = NextResponse.next();
-      if (role) response.headers.set('x-user-role', role);
-      if (tenantId) response.headers.set('x-tenant-id', tenantId);
-      
-      return response;
+
+      return NextResponse.next();
     } catch {
-      // Token inválido o expirado
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.delete('hj_token');
-      return response;
+      // Token inválido o expirado.
+      return aLogin(request, pathname, true);
     }
   }
 
-  // ─── Redirigir usuarios autenticados lejos del login ─
+  // ─── Quien ya tiene sesión no necesita ver login/register ──────────
   if (pathname === '/login' || pathname === '/register') {
     const token = request.cookies.get('hj_token')?.value;
-    if (token) {
+    if (token && SECRET) {
       try {
-        await jwtVerify(token, SECRET, {
+        const { payload } = await jwtVerify(token, SECRET, {
           issuer: 'hackesjobs',
           audience: 'hackesjobs-app',
         });
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+        return NextResponse.redirect(
+          new URL(inicioDe(payload.role as string | undefined), request.url)
+        );
       } catch {
-        // Token inválido, dejar pasar al login
+        // Token inválido: que pase al login y se autentique de nuevo.
       }
     }
   }
@@ -83,8 +92,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Las rutas /api/* no pasan por aquí: cada handler valida su propia sesión
+  // con requireAuth() de src/lib/api-helpers.ts.
   matcher: [
     '/dashboard/:path*',
+    '/crm/:path*',
+    '/admin/:path*',
+    '/mi-empresa/:path*',
+    '/portal/:path*',
     '/login',
     '/register',
   ],

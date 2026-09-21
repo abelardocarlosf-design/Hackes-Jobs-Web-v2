@@ -24,6 +24,8 @@ export default function Footer() {
             <li><Link href="/empresas" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Automatización B2B</Link></li>
             <li><Link href="/precios" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Precios</Link></li>
             <li><Link href="/vacantes" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Bolsa de Trabajo</Link></li>
+            <li><Link href="/empresas/requisicion" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Solicitar Talento</Link></li>
+            <li><Link href="/candidatos" className="hover:text-brand-orange transition-all hover:translate-x-1 inline-block">Portal de Talento</Link></li>
           </ul>
         </div>
 

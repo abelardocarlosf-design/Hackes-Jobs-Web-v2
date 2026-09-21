@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { cerrarSesion } from '@/lib/sesion-cliente';
 
 export interface AuthUser {
   userId: string;
@@ -9,12 +10,23 @@ export interface AuthUser {
   role: string;
 }
 
+/**
+ * `login` y `register` devuelven el usuario además del éxito: quien llama
+ * necesita el rol para decidir a dónde redirigir. Antes se descartaba, y por
+ * eso todos los roles acababan en /dashboard.
+ */
+interface ResultadoAuth {
+  success: boolean;
+  message?: string;
+  user?: AuthUser;
+}
+
 interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  register: (data: RegisterData) => Promise<{ success: boolean; message?: string }>;
+  login: (email: string, password: string) => Promise<ResultadoAuth>;
+  register: (data: RegisterData) => Promise<ResultadoAuth>;
   logout: () => void;
 }
 
@@ -67,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (data.success) {
         setUser(data.data.user);
-        return { success: true };
+        return { success: true, user: data.data.user as AuthUser };
       }
       return { success: false, message: data.message };
     } catch {
@@ -87,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (data.success) {
         setUser(data.data.user);
-        return { success: true };
+        return { success: true, user: data.data.user as AuthUser };
       }
       return { success: false, message: data.message };
     } catch {
@@ -96,11 +108,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    // Eliminar cookie via API
-    fetch('/api/auth/logout', { method: 'POST' }).then(() => {
-      setUser(null);
-      window.location.href = '/login';
-    });
+    setUser(null);
+    cerrarSesion();
   };
 
   return (

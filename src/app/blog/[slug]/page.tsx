@@ -11,11 +11,23 @@ interface Props {
   params: { slug: string };
 }
 
+// Misma razón que en /blog: los artículos salen de la base, así que la página
+// se revalida en vez de quedarse fija en el build.
+export const revalidate = 300;
+
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  // Si la base no responde durante el build, se devuelve una lista vacía en vez
+  // de tumbar el despliegue entero: `dynamicParams` está activo por defecto, y
+  // cada artículo se renderiza bajo demanda en la primera visita.
+  try {
+    const posts = await getAllPosts();
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    console.error('[blog generateStaticParams]:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

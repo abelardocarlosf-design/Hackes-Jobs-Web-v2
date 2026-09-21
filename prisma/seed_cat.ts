@@ -66,6 +66,10 @@ async function main() {
 
   console.log(`Prueba CAT creada/encontrada: ${test.name}`);
 
+  // Los ítems no tienen clave natural, así que se limpian los de esta prueba
+  // antes de reinsertarlos. Sin esto, cada ejecución acumulaba 43 ítems más.
+  await prisma.catItem.deleteMany({ where: { testId: test.id } });
+
   for (const item of catItems) {
     await prisma.catItem.create({
       data: {

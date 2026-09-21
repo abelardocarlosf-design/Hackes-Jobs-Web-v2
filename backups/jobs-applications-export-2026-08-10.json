@@ -1,0 +1,70 @@
+{
+  "exportadoEn": "2026-08-11T00:24:12.356Z",
+  "jobs": [
+    {
+      "id": "cmohjq49l0007gylivcbq80my",
+      "title": "Senior Frontend Developer",
+      "description": "Buscamos un desarrollador frontend senior con experiencia en React y TypeScript para liderar nuestro equipo de producto.",
+      "salaryRange": "$45,000 - $60,000 MXN",
+      "location": "CDMX",
+      "modality": "Híbrido",
+      "status": "approved",
+      "requirements": "{\"skills\":[\"React\",\"TypeScript\",\"Next.js\"],\"experience\":5,\"education\":\"Licenciatura\"}",
+      "schedule": null,
+      "benefits": null,
+      "positions": 2,
+      "createdAt": "2026-04-27T18:44:02.457Z",
+      "updatedAt": "2026-04-27T18:44:02.457Z",
+      "companyId": "cmohjq3un0002gyli3ud44c5c"
+    },
+    {
+      "id": "cmohjq49r0009gylicqlzkdxk",
+      "title": "Product Manager",
+      "description": "Necesitamos un PM experimentado que pueda definir la estrategia de producto y coordinar equipos cross-funcionales.",
+      "salaryRange": "$50,000 - $70,000 MXN",
+      "location": "Remoto",
+      "modality": "Remoto",
+      "status": "approved",
+      "requirements": "{\"skills\":[\"Product Strategy\",\"Agile\",\"Data Analysis\"],\"experience\":3,\"education\":\"Licenciatura\"}",
+      "schedule": null,
+      "benefits": null,
+      "positions": 1,
+      "createdAt": "2026-04-27T18:44:02.464Z",
+      "updatedAt": "2026-04-27T18:44:02.464Z",
+      "companyId": "cmohjq3un0002gyli3ud44c5c"
+    },
+    {
+      "id": "cmohjq49x000bgyliwjbq86x6",
+      "title": "DevOps Engineer",
+      "description": "Ingeniero DevOps para automatizar infraestructura cloud y pipelines CI/CD.",
+      "salaryRange": "$40,000 - $55,000 MXN",
+      "location": "Querétaro",
+      "modality": "Presencial",
+      "status": "pending",
+      "requirements": "{\"skills\":[\"AWS\",\"Docker\",\"Kubernetes\",\"Terraform\"],\"experience\":3,\"education\":\"Licenciatura\"}",
+      "schedule": null,
+      "benefits": null,
+      "positions": 1,
+      "createdAt": "2026-04-27T18:44:02.469Z",
+      "updatedAt": "2026-04-27T18:44:02.469Z",
+      "companyId": "cmohjq3un0002gyli3ud44c5c"
+    },
+    {
+      "id": "cmou987a60004a7qoqtlumded",
+      "title": "Ayudante General",
+      "description": "Gonzalves de mexico solicita ayudantes generales.\npara laboral en parque industrial ",
+      "salaryRange": "8,700",
+      "location": "Tepotzotlan, México",
+      "modality": "Presencial",
+      "status": "pending",
+      "requirements": null,
+      "schedule": null,
+      "benefits": null,
+      "positions": 10,
+      "createdAt": "2026-05-06T16:11:10.668Z",
+      "updatedAt": "2026-05-06T16:11:10.668Z",
+      "companyId": "cmou91cfl0002a7qohiyj0pec"
+    }
+  ],
+  "applications": []
+}

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth, type RegisterData } from '@/lib/auth-context';
-import { GoogleLogin } from '@react-oauth/google';
+import { BotonGoogle } from '@/components/BotonGoogle';
+import { inicioDe } from '@/lib/navegacion';
 import { Eye, EyeOff, ArrowRight, Building2, UserCircle, Check, Briefcase, Brain, BarChart3 } from 'lucide-react';
 import { PrivacyCheckbox } from '@/components/PrivacyCheckbox';
 
@@ -66,14 +67,15 @@ export default function RegisterPage() {
     const result = await register(data);
 
     if (result.success) {
-      router.push('/dashboard');
+      // Empresa y candidato tienen paneles distintos: cada uno al suyo.
+      router.push(inicioDe(result.user?.role ?? role));
     } else {
       setError(result.message || 'Error al crear la cuenta');
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
     setIsLoading(true);
     setError('');
     try {
@@ -84,7 +86,7 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (data.success) {
-        window.location.href = '/dashboard';
+        window.location.href = inicioDe(data.data?.user?.role);
       } else {
         setError(data.message || 'Error con Google Sign-In');
         setIsLoading(false);
@@ -196,30 +198,13 @@ export default function RegisterPage() {
             </div>
           )}
 
+          {/* Solo para candidatos: el alta con Google siempre crea rol
+              `candidate`, así que ofrecerlo en el flujo de empresa engañaría. */}
           {role === 'candidate' && (
-            <>
-              <div className="flex justify-center">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError('Error al conectar con Google')}
-                  useOneTap
-                  theme="filled_black"
-                  size="large"
-                  width="100%"
-                  text="signup_with"
-                  shape="pill"
-                />
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10"></div>
-                </div>
-                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                  <span className="px-6 bg-transparent text-slate-600">O regístrate con email</span>
-                </div>
-              </div>
-            </>
+            <BotonGoogle
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Error al conectar con Google')}
+            />
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">

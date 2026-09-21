@@ -8,7 +8,11 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ['@react-pdf/renderer'],
+  // @react-pdf/renderer necesita el build completo de React (usa React.Component).
+  // Bundlearlo deja `react` resuelto al build de servidor, que no lo expone.
+  experimental: {
+    serverComponentsExternalPackages: ['@react-pdf/renderer'],
+  },
   output: 'standalone',
   async headers() {
     return [
@@ -37,7 +41,10 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://accounts.google.com;",
+            // accounts.google.com también en style-src: Google Identity Services
+            // inyecta su propia hoja de estilos (gsi/style). Sin esto el botón
+            // se renderiza sin estilos aunque el Client ID sea correcto.
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://accounts.google.com;",
           },
         ],
       },
