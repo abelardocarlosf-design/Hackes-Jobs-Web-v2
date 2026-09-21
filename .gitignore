@@ -57,3 +57,9 @@ data/users.json
 next-env.d.ts
 
 .vercel
+
+# HyperFrames: renders y artefactos locales (el entregable web vive en public/media)
+/videos/**/renders/
+/videos/**/snapshots/
+/videos/**/.hyperframes/
+/videos/**/node_modules/

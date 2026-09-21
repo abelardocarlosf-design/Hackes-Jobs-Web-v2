@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1600, height=1100" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400&family=Manrope:wght@500;700&family=JetBrains+Mono:wght@400&display=block"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Hacke's Jobs · hero reel — ver design.md. Concepto: un hilo naranja
+         atraviesa las cinco etapas y convierte CVs en una contratación. */
+      :root {
+        --void: #05060b;
+        --ink: #0b0e1a;
+        --line: #1a1f33;
+        --signal: #ff7a1a;
+        --synapse: #3b6bff;
+        --aurora: #8b5cf6;
+        --mist: #e6e9f2;
+        --muted: #8a90a6;
+        --display: "Unbounded", sans-serif;
+        --body: "Manrope", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1600px;
+        height: 1100px;
+        overflow: hidden;
+        background: var(--void);
+        color: var(--mist);
+        font-family: var(--body);
+      }
+      #root { position: relative; width: 1600px; height: 1100px; overflow: hidden; }
+      .scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+      /* ── Fondo ─────────────────────────────── */
+      .glow { position: absolute; border-radius: 50%; pointer-events: none; }
+      #glow-a {
+        width: 1100px; height: 1100px; left: 760px; top: -380px;
+        background: radial-gradient(circle, rgba(59,107,255,0.34) 0%, rgba(59,107,255,0) 62%);
+      }
+      #glow-b {
+        width: 900px; height: 900px; left: -260px; top: 520px;
+        background: radial-gradient(circle, rgba(255,122,26,0.22) 0%, rgba(255,122,26,0) 62%);
+      }
+      #glow-c {
+        width: 700px; height: 700px; left: 520px; top: 180px;
+        background: radial-gradient(circle, rgba(139,92,246,0.16) 0%, rgba(139,92,246,0) 65%);
+      }
+      .grid-wrap {
+        position: absolute; inset: 0; overflow: hidden;
+        -webkit-mask-image: radial-gradient(75% 70% at 50% 45%, #000 20%, transparent 78%);
+        mask-image: radial-gradient(75% 70% at 50% 45%, #000 20%, transparent 78%);
+      }
+      #grid {
+        position: absolute; left: -80px; top: 0; width: 1760px; height: 1100px;
+        background-image:
+          linear-gradient(to right, rgba(230,233,242,0.07) 2px, transparent 2px),
+          linear-gradient(to bottom, rgba(230,233,242,0.07) 2px, transparent 2px);
+        background-size: 80px 80px;
+      }
+      .grain {
+        position: absolute; inset: 0; opacity: 0.09; mix-blend-mode: overlay; pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      }
+
+      /* ── Barra superior ───────────────────── */
+      .topbar {
+        position: absolute; left: 80px; right: 80px; top: 56px;
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: var(--mono); font-size: 26px; letter-spacing: 0.16em; text-transform: uppercase;
+      }
+      .topbar .live { display: flex; align-items: center; gap: 16px; color: var(--muted); }
+      .topbar .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--signal); display: block; }
+      .stage-count { position: relative; color: var(--muted); display: flex; gap: 14px; }
+      .stage-num { position: relative; width: 44px; height: 32px; color: var(--mist); }
+      .stage-num span { position: absolute; left: 0; top: 0; opacity: 0; }
+
+      /* ── Escenario ────────────────────────── */
+      .beat {
+        position: absolute; left: 80px; right: 80px; top: 140px; height: 680px;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+      }
+      .eyebrow {
+        font-family: var(--mono); font-size: 26px; letter-spacing: 0.16em; text-transform: uppercase;
+        color: #7f9cff;
+      }
+      .panel {
+        background: rgba(11,14,26,0.78);
+        border: 2px solid rgba(230,233,242,0.10);
+        border-radius: 28px;
+        box-shadow: 0 50px 120px -50px rgba(0,0,0,0.9);
+      }
+
+      /* Beat 1 · requisición */
+      #b1 .panel { width: 1040px; padding: 56px 64px; display: flex; flex-direction: column; gap: 34px; }
+      .title-line { display: flex; align-items: center; gap: 10px; }
+      #b1-title {
+        font-family: var(--display); font-weight: 400; font-size: 52px; letter-spacing: -0.04em;
+        color: #fff; white-space: nowrap; display: inline-block;
+      }
+      #b1-caret { width: 6px; height: 56px; background: var(--signal); display: block; }
+      .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 48px; }
+      .field { border-top: 2px solid rgba(230,233,242,0.12); padding-top: 14px; }
+      .field .k { font-family: var(--mono); font-size: 26px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+      .field .v { font-size: 36px; font-weight: 500; margin-top: 6px; color: var(--mist); }
+      .chips { display: flex; flex-wrap: wrap; gap: 16px; }
+      .chip {
+        font-size: 28px; font-weight: 500; color: #c9d5ff; padding: 10px 24px; border-radius: 999px;
+        border: 2px solid rgba(59,107,255,0.4); background: rgba(59,107,255,0.14);
+      }
+      .stamp {
+        align-self: flex-start; display: flex; align-items: center; gap: 14px;
+        font-family: var(--mono); font-size: 26px; letter-spacing: 0.14em; text-transform: uppercase;
+        color: #ffd2b0; padding: 14px 22px; border-radius: 14px;
+        border: 2px solid rgba(255,122,26,0.55); background: rgba(255,122,26,0.12);
+      }
+
+      /* Beat 2 · filtrado */
+      #b2 { flex-direction: column; gap: 26px; }
+      #b2 svg { width: 1440px; height: 470px; overflow: visible; }
+      .stats { display: flex; gap: 120px; width: 1440px; padding-left: 40px; }
+      .stat .n { font-family: var(--display); font-size: 70px; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+      .stat .l { font-family: var(--mono); font-size: 26px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+
+      /* Beat 3 · psicometría */
+      #b3 { gap: 110px; }
+      #b3 svg { width: 520px; height: 520px; overflow: visible; }
+      .tests { display: flex; flex-direction: column; gap: 22px; }
+      .test { display: flex; align-items: center; gap: 22px; font-size: 40px; font-weight: 700; color: var(--mist); }
+      .check { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--synapse); display: flex; align-items: center; justify-content: center; color: #9db3ff; font-size: 26px; }
+      .scores { display: flex; gap: 44px; margin-top: 26px; padding-top: 26px; border-top: 2px solid rgba(230,233,242,0.12); }
+      .score .n { font-family: var(--display); font-size: 58px; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; width: 110px; display: block; }
+      .score .l { font-family: var(--mono); font-size: 26px; color: var(--muted); margin-top: 10px; }
+
+      /* Beat 4 · terna */
+      #b4 .list { width: 1080px; display: flex; flex-direction: column; gap: 26px; }
+      .row { display: flex; align-items: center; gap: 34px; padding: 28px 36px; }
+      .row.top { border-color: rgba(255,122,26,0.6); background: rgba(255,122,26,0.09); }
+      .avatar {
+        width: 92px; height: 92px; flex: 0 0 92px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-family: var(--display); font-size: 38px; background: rgba(230,233,242,0.10); color: #fff;
+      }
+      .row.top .avatar { background: var(--signal); color: #1a0a00; }
+      .row .body { flex: 1; }
+      .row .head { display: flex; justify-content: space-between; align-items: baseline; }
+      .row .name { font-size: 40px; font-weight: 700; color: #fff; }
+      .row .pct { font-family: var(--mono); font-size: 40px; color: var(--mist); font-variant-numeric: tabular-nums; }
+      .row.top .pct { color: var(--signal); }
+      .track { margin-top: 16px; height: 12px; border-radius: 6px; background: rgba(230,233,242,0.10); overflow: hidden; position: relative; }
+      .fill { position: absolute; left: 0; top: 0; height: 100%; width: 100%; border-radius: 6px; background: var(--synapse); transform-origin: left center; transform: scaleX(0); }
+      .row.top .fill { background: var(--signal); }
+      .row .meta { font-family: var(--mono); font-size: 26px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+
+      /* Beat 5 · garantía */
+      #b5 { flex-direction: column; gap: 30px; }
+      #b5 svg { width: 500px; height: 500px; overflow: visible; }
+      .badge {
+        display: flex; align-items: center; gap: 16px; font-size: 34px; font-weight: 700; color: #fff;
+        padding: 18px 34px; border-radius: 999px; border: 2px solid rgba(255,122,26,0.6); background: rgba(255,122,26,0.12);
+      }
+      .badge i { font-style: normal; color: var(--signal); }
+
+      /* ── Tira del hilo ────────────────────── */
+      #strip { position: absolute; left: 0; top: 850px; width: 1600px; height: 200px; overflow: visible; }
+      .node-label { font-family: var(--mono); font-size: 26px; letter-spacing: 0.12em; fill: var(--muted); text-anchor: middle; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1600" data-height="1100">
+      <div id="scene" class="scene clip" data-start="0" data-duration="12" data-track-index="0">
+        <!-- Fondo -->
+        <div class="glow" id="glow-a"></div>
+        <div class="glow" id="glow-b"></div>
+        <div class="glow" id="glow-c"></div>
+        <div class="grid-wrap"><div id="grid" data-layout-allow-overflow></div></div>
+
+        <!-- Barra superior -->
+        <div class="topbar">
+          <div class="live"><span class="dot" id="live-dot"></span>Proceso activo · Hacke's Jobs</div>
+          <div class="stage-count">
+            Etapa
+            <span class="stage-num" id="stage-num">
+              <span>01</span><span>02</span><span>03</span><span>04</span><span>05</span>
+            </span>
+            / 05
+          </div>
+        </div>
+
+        <!-- 1 · Requisición -->
+        <div class="beat" id="b1">
+          <div class="panel">
+            <div class="eyebrow">Perfil del puesto</div>
+            <div class="title-line">
+              <span id="b1-title">Supervisor de producción</span>
+              <span id="b1-caret"></span>
+            </div>
+            <div class="fields">
+              <div class="field"><div class="k">Área</div><div class="v">Manufactura</div></div>
+              <div class="field"><div class="k">Turno</div><div class="v">Rotativo · 3 turnos</div></div>
+              <div class="field"><div class="k">Reporta a</div><div class="v">Gerente de planta</div></div>
+              <div class="field"><div class="k">Éxito a 90 días</div><div class="v">OEE ≥ 85 %</div></div>
+            </div>
+            <div class="chips">
+              <span class="chip">Lean Manufacturing</span>
+              <span class="chip">Liderazgo</span>
+              <span class="chip">Seguridad industrial</span>
+            </div>
+            <div class="stamp" id="b1-stamp">✓ Perfil validado · 24 h</div>
+          </div>
+        </div>
+
+        <!-- 2 · Filtrado IA -->
+        <div class="beat" id="b2">
+          <svg viewBox="0 0 1440 470" id="b2-svg">
+            <defs>
+              <linearGradient id="plane-g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#3B6BFF" stop-opacity="0" />
+                <stop offset="0.5" stop-color="#3B6BFF" stop-opacity="1" />
+                <stop offset="1" stop-color="#3B6BFF" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect x="717" y="0" width="6" height="470" fill="url(#plane-g)" />
+            <!-- Caja de detección (ai-tracking-box) alrededor del plano -->
+            <g id="track-box" stroke="#FF7A1A" stroke-width="6" fill="none">
+              <path d="M650 40 L650 10 L680 10" />
+              <path d="M760 10 L790 10 L790 40" />
+              <path d="M650 430 L650 460 L680 460" />
+              <path d="M760 460 L790 460 L790 430" />
+            </g>
+            <g id="track-label">
+              <rect x="644" y="-58" width="296" height="44" rx="6" fill="#FF7A1A" />
+              <text x="660" y="-27" font-family="JetBrains Mono" font-size="24" fill="#1A0A00" letter-spacing="2">IA · PERFIL 96 %</text>
+            </g>
+            <rect x="1250" y="20" width="100" height="430" rx="22" fill="none" stroke="rgba(255,122,26,0.35)" stroke-width="3" stroke-dasharray="6 10" />
+            <g id="dots"></g>
+          </svg>
+          <div class="stats">
+            <div class="stat"><div class="n" id="s-cvs">0</div><div class="l">CVs revisados</div></div>
+            <div class="stat"><div class="n" id="s-desc" style="color:#7f9cff">0 %</div><div class="l">Descartados</div></div>
+            <div class="stat"><div class="n" id="s-ok" style="color:#FF7A1A">0</div><div class="l">Compatibles</div></div>
+          </div>
+        </div>
+
+        <!-- 3 · Psicometría -->
+        <div class="beat" id="b3">
+          <svg viewBox="0 0 520 520">
+            <g fill="none" stroke="rgba(230,233,242,0.14)" stroke-width="2">
+              <polygon points="260,60 460,260 260,460 60,260" />
+              <polygon points="260,110 410,260 260,410 110,260" />
+              <polygon points="260,160 360,260 260,360 160,260" />
+              <polygon points="260,210 310,260 260,310 210,260" />
+              <line x1="260" y1="60" x2="260" y2="460" />
+              <line x1="60" y1="260" x2="460" y2="260" />
+            </g>
+            <polygon id="radar" points="260,260 260,260 260,260 260,260" fill="rgba(59,107,255,0.3)" stroke="#3B6BFF" stroke-width="5" stroke-linejoin="round" />
+            <g font-family="JetBrains Mono" font-size="30" fill="#E6E9F2" text-anchor="middle">
+              <text x="260" y="36">D</text>
+              <text x="494" y="270">I</text>
+              <text x="260" y="506">S</text>
+              <text x="26" y="270">C</text>
+            </g>
+          </svg>
+          <div>
+            <div class="eyebrow">Batería validada</div>
+            <div class="tests" style="margin-top: 22px">
+              <div class="test"><span class="check">✓</span>DISC</div>
+              <div class="test"><span class="check">✓</span>16PF</div>
+              <div class="test"><span class="check">✓</span>Moss</div>
+              <div class="test"><span class="check">✓</span>Zavic</div>
+            </div>
+            <div class="scores">
+              <div class="score"><span class="n" id="sc-d">0</span><div class="l">D</div></div>
+              <div class="score"><span class="n" id="sc-i">0</span><div class="l">I</div></div>
+              <div class="score"><span class="n" id="sc-s">0</span><div class="l">S</div></div>
+              <div class="score"><span class="n" id="sc-c">0</span><div class="l">C</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 · Terna -->
+        <div class="beat" id="b4">
+          <div class="list">
+            <div class="row panel top">
+              <div class="avatar">A</div>
+              <div class="body">
+                <div class="head"><span class="name">Candidato A</span><span class="pct" id="p-a">0 %</span></div>
+                <div class="track"><div class="fill" id="f-a"></div></div>
+                <div class="meta">D/C · 7 años en planta</div>
+              </div>
+            </div>
+            <div class="row panel">
+              <div class="avatar">B</div>
+              <div class="body">
+                <div class="head"><span class="name">Candidato B</span><span class="pct" id="p-b">0 %</span></div>
+                <div class="track"><div class="fill" id="f-b"></div></div>
+                <div class="meta">C/S · 5 años en calidad</div>
+              </div>
+            </div>
+            <div class="row panel">
+              <div class="avatar">C</div>
+              <div class="body">
+                <div class="head"><span class="name">Candidato C</span><span class="pct" id="p-c">0 %</span></div>
+                <div class="track"><div class="fill" id="f-c"></div></div>
+                <div class="meta">D/I · 6 años en producción</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 · Garantía -->
+        <div class="beat" id="b5">
+          <svg viewBox="0 0 500 500">
+            <circle cx="250" cy="250" r="200" fill="none" stroke="rgba(230,233,242,0.1)" stroke-width="4" />
+            <circle id="ring" cx="250" cy="250" r="200" fill="none" stroke="#FF7A1A" stroke-width="6" stroke-linecap="round" transform="rotate(-90 250 250)" />
+            <g id="days"></g>
+            <text x="250" y="282" text-anchor="middle" font-family="Unbounded" font-size="150" fill="#FFFFFF" letter-spacing="-6">10</text>
+            <text x="250" y="340" text-anchor="middle" font-family="JetBrains Mono" font-size="26" fill="#A3A9BD" letter-spacing="3">DÍAS DE GARANTÍA</text>
+          </svg>
+          <div class="badge" id="b5-badge"><i>✓</i>Contratación confirmada</div>
+        </div>
+
+        <!-- Tira del hilo -->
+        <svg id="strip" viewBox="0 0 1600 200">
+          <line x1="140" y1="50" x2="1460" y2="50" stroke="rgba(230,233,242,0.14)" stroke-width="4" />
+          <line id="thread" x1="140" y1="50" x2="1460" y2="50" stroke="#FF7A1A" stroke-width="6" stroke-linecap="round" />
+          <g id="nodes"></g>
+          <text class="node-label" x="140" y="120">REQUISICIÓN</text>
+          <text class="node-label" x="470" y="120">FILTRADO IA</text>
+          <text class="node-label" x="800" y="120">PSICOMETRÍA</text>
+          <text class="node-label" x="1130" y="120">TERNA</text>
+          <text class="node-label" x="1460" y="120">GARANTÍA</text>
+        </svg>
+
+        <div class="grain"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const NS = "http://www.w3.org/2000/svg";
+        const DUR = 12;
+        // Inicio de cada etapa. La última termina en OUTRO y el loop cierra en DUR.
+        const B = [0.3, 2.3, 4.7, 6.9, 9.0];
+        const OUTRO = 11.15;
+        const NODE_X = [140, 470, 800, 1130, 1460];
+
+        // PRNG con semilla (mulberry32): posiciones "aleatorias" reproducibles.
+        let seed = 7;
+        const rnd = () => {
+          seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+
+        // ── Construcción estática (antes de cualquier tween) ──
+        const nodesG = document.getElementById("nodes");
+        const nodes = NODE_X.map((x) => {
+          const pulse = document.createElementNS(NS, "circle");
+          pulse.setAttribute("cx", x); pulse.setAttribute("cy", 50); pulse.setAttribute("r", 16);
+          pulse.setAttribute("fill", "#FF7A1A"); pulse.setAttribute("opacity", "0");
+          pulse.style.transformOrigin = `${x}px 50px`;
+          const dot = document.createElementNS(NS, "circle");
+          dot.setAttribute("cx", x); dot.setAttribute("cy", 50); dot.setAttribute("r", 16);
+          dot.setAttribute("fill", "#0B0E1A"); dot.setAttribute("stroke", "#3A4160"); dot.setAttribute("stroke-width", "4");
+          nodesG.appendChild(pulse); nodesG.appendChild(dot);
+          return { pulse, dot };
+        });
+
+        const DOTS = 64;
+        const dotsG = document.getElementById("dots");
+        const cvs = [];
+        let lane = 0;
+        for (let i = 0; i < DOTS; i++) {
+          const pass = i % 6 === 1; // 11 de 64 cruzan el filtro
+          const c = document.createElementNS(NS, "circle");
+          const x0 = 30 + rnd() * 380;
+          const y0 = 30 + rnd() * 410;
+          c.setAttribute("cx", x0.toFixed(1)); c.setAttribute("cy", y0.toFixed(1));
+          c.setAttribute("r", pass ? 9 : 7);
+          c.setAttribute("fill", "#C9CEDC");
+          dotsG.appendChild(c);
+          cvs.push({ c, pass, x0, y0, lane: pass ? lane++ : -1 });
+        }
+
+        const daysG = document.getElementById("days");
+        const days = [];
+        for (let d = 0; d < 10; d++) {
+          const a = (d / 10) * Math.PI * 2 - Math.PI / 2;
+          const c = document.createElementNS(NS, "circle");
+          c.setAttribute("cx", (250 + Math.cos(a) * 200).toFixed(1));
+          c.setAttribute("cy", (250 + Math.sin(a) * 200).toFixed(1));
+          c.setAttribute("r", 13);
+          c.setAttribute("fill", "#1A1F33");
+          daysG.appendChild(c);
+          days.push(c);
+        }
+
+        const THREAD_LEN = 1320;
+        const thread = document.getElementById("thread");
+        thread.style.strokeDasharray = THREAD_LEN;
+        const RING_LEN = 2 * Math.PI * 200;
+        const ring = document.getElementById("ring");
+        ring.style.strokeDasharray = RING_LEN;
+
+        const tl = gsap.timeline({ paused: true });
+
+        // ── Ambiente: glows que respiran (2 ciclos exactos) y retícula que
+        //    se desplaza una celda: ambos cierran el loop sin salto. ──
+        const phase = { p: 0 };
+        const ga = document.getElementById("glow-a");
+        const gb = document.getElementById("glow-b");
+        const gc = document.getElementById("glow-c");
+        tl.fromTo(phase, { p: 0 }, {
+          p: Math.PI * 4, duration: DUR, ease: "none",
+          onUpdate: () => {
+            const s = Math.sin(phase.p);
+            ga.style.transform = `translate(${s * 40}px, ${s * 18}px) scale(${1 + s * 0.06})`;
+            gb.style.transform = `translate(${-s * 30}px, ${-s * 20}px) scale(${1 - s * 0.05})`;
+            gc.style.opacity = String(0.8 + Math.cos(phase.p) * 0.2);
+          },
+        }, 0);
+        tl.fromTo("#grid", { x: 0 }, { x: 80, duration: DUR, ease: "none" }, 0);
+        tl.fromTo("#live-dot", { opacity: 1 }, {
+          opacity: 0.35, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: Math.max(0, Math.floor(DUR / 0.6) - 1),
+        }, 0);
+
+        // Contador de etapa (discrete-text-sequence)
+        const nums = document.querySelectorAll("#stage-num span");
+        B.forEach((t, i) => {
+          tl.set(nums, { opacity: 0 }, t);
+          tl.set(nums[i], { opacity: 1 }, t);
+        });
+        tl.set(nums, { opacity: 0 }, OUTRO + 0.3);
+        tl.set(nums[0], { opacity: 0 }, 0);
+
+        // ── El hilo (svg-path-draw) avanza de nodo en nodo ──
+        tl.set(thread, { strokeDashoffset: THREAD_LEN }, 0);
+        B.forEach((t, i) => {
+          if (i > 0) {
+            tl.to(thread, { strokeDashoffset: THREAD_LEN * (1 - i / 4), duration: 0.7, ease: "power2.inOut" }, t - 0.2);
+          }
+          const at = i === 0 ? t : t + 0.45;
+          tl.to(nodes[i].dot, { attr: { fill: "#FF7A1A", stroke: "#FF7A1A" }, duration: 0.2, ease: "power1.out" }, at);
+          tl.fromTo(nodes[i].pulse, { opacity: 0.7, scale: 1 }, { opacity: 0, scale: 3, duration: 0.9, ease: "power2.out" }, at);
+        });
+
+        // Entrada/salida de cada panel
+        const beats = ["#b1", "#b2", "#b3", "#b4", "#b5"];
+        beats.forEach((id, i) => {
+          const tin = B[i];
+          const tout = i < 4 ? B[i + 1] - 0.4 : OUTRO;
+          tl.fromTo(id, { opacity: 0, y: 40, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, tin);
+          tl.to(id, { opacity: 0, y: -30, scale: 0.98, duration: 0.38, ease: "power2.in" }, tout);
+        });
+
+        // ── 1 · Requisición: el título se escribe, campos y chips caen, sello ──
+        const t1 = B[0];
+        tl.fromTo("#b1-title", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.75, ease: "steps(24)" }, t1 + 0.25);
+        tl.fromTo("#b1-caret", { opacity: 0 }, { opacity: 1, duration: 0.01 }, t1 + 0.95);
+        tl.to("#b1-caret", { opacity: 0, duration: 0.01, yoyo: true, repeat: 3, repeatDelay: 0.22 }, t1 + 1.2);
+        tl.fromTo("#b1 .field", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", stagger: 0.07 }, t1 + 0.7);
+        tl.fromTo("#b1 .chip", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)", stagger: 0.07 }, t1 + 1.0);
+        tl.fromTo("#b1-stamp", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power4.out" }, t1 + 1.35);
+
+        // ── 2 · Filtrado: enjambre → plano IA → solo pasan los compatibles ──
+        const t2 = B[1];
+        tl.fromTo("#track-box", { opacity: 0, scale: 1.15, transformOrigin: "720px 235px" }, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" }, t2 + 0.3);
+        tl.fromTo("#track-label", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, t2 + 0.45);
+        cvs.forEach((cv, i) => {
+          const st = t2 + 0.3 + (i / DOTS) * 1.05;
+          tl.set(cv.c, { attr: { cx: cv.x0.toFixed(1), cy: cv.y0.toFixed(1), fill: "#C9CEDC" }, opacity: 1 }, t2 - 0.05);
+          if (cv.pass) {
+            const yl = 50 + cv.lane * 37;
+            tl.to(cv.c, { attr: { cx: 700 }, duration: 0.5, ease: "power1.in" }, st);
+            tl.to(cv.c, { attr: { cx: 1300, cy: yl, fill: "#FF7A1A" }, duration: 0.55, ease: "power2.out" }, st + 0.5);
+          } else {
+            tl.to(cv.c, { attr: { cx: 690 - (i % 5) * 9 }, duration: 0.5, ease: "power1.in" }, st);
+            tl.to(cv.c, { opacity: 0.12, duration: 0.3, ease: "power1.out" }, st + 0.5);
+          }
+        });
+        const counters = { cvs: 0, desc: 0, ok: 0 };
+        const eCvs = document.getElementById("s-cvs");
+        const eDesc = document.getElementById("s-desc");
+        const eOk = document.getElementById("s-ok");
+        tl.fromTo(counters, { cvs: 0, desc: 0, ok: 0 }, {
+          cvs: 248, desc: 96, ok: 11, duration: 1.4, ease: "power2.out",
+          onUpdate: () => {
+            eCvs.textContent = Math.round(counters.cvs);
+            eDesc.textContent = Math.round(counters.desc) + " %";
+            eOk.textContent = Math.round(counters.ok);
+          },
+        }, t2 + 0.4);
+
+        // ── 3 · Psicometría: el rombo DISC se dibuja y los puntajes cuentan ──
+        const t3 = B[2];
+        const V = { d: 0.82, i: 0.64, s: 0.46, c: 0.78 };
+        const rp = { k: 0 };
+        const radar = document.getElementById("radar");
+        const sc = ["d", "i", "s", "c"].map((k) => document.getElementById("sc-" + k));
+        tl.fromTo(rp, { k: 0 }, {
+          k: 1, duration: 1.0, ease: "power3.out",
+          onUpdate: () => {
+            const R = 200 * rp.k;
+            radar.setAttribute("points",
+              `260,${(260 - R * V.d).toFixed(1)} ${(260 + R * V.i).toFixed(1)},260 260,${(260 + R * V.s).toFixed(1)} ${(260 - R * V.c).toFixed(1)},260`);
+            sc[0].textContent = Math.round(82 * rp.k);
+            sc[1].textContent = Math.round(64 * rp.k);
+            sc[2].textContent = Math.round(46 * rp.k);
+            sc[3].textContent = Math.round(78 * rp.k);
+          },
+        }, t3 + 0.4);
+        tl.fromTo("#b3 .test", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out", stagger: 0.12 }, t3 + 0.35);
+
+        // ── 4 · Terna: suben tres finalistas con su compatibilidad ──
+        const t4 = B[3];
+        tl.fromTo("#b4 .row", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.16 }, t4 + 0.3);
+        [["a", 94], ["b", 91], ["c", 88]].forEach(([k, v], i) => {
+          const at = t4 + 0.55 + i * 0.16;
+          tl.fromTo("#f-" + k, { scaleX: 0 }, { scaleX: v / 100, duration: 0.8, ease: "power2.out" }, at);
+          const o = { n: 0 };
+          const el = document.getElementById("p-" + k);
+          tl.fromTo(o, { n: 0 }, { n: v, duration: 0.8, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.n) + " %"; } }, at);
+        });
+
+        // ── 5 · Garantía: el anillo de 10 días se cierra ──
+        const t5 = B[4];
+        tl.fromTo(ring, { strokeDashoffset: RING_LEN }, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, t5 + 0.35);
+        days.forEach((d, i) => {
+          tl.fromTo(d, { attr: { fill: "#1A1F33" } }, { attr: { fill: "#FF7A1A" }, duration: 0.12, ease: "none" }, t5 + 0.35 + (i + 1) * 0.12);
+        });
+        tl.fromTo("#b5-badge", { opacity: 0, y: 20, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, t5 + 1.55);
+
+        // ── Outro: el hilo se retrae y los nodos se apagan → frame 0 ──
+        tl.to(thread, { strokeDashoffset: THREAD_LEN, duration: 0.6, ease: "power2.inOut" }, OUTRO + 0.1);
+        nodes.forEach((n, i) => {
+          tl.to(n.dot, { attr: { fill: "#0B0E1A", stroke: "#3A4160" }, duration: 0.25, ease: "power1.in" }, OUTRO + 0.1 + (4 - i) * 0.1);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
