@@ -21,11 +21,33 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+
+# archivos temporales
+*.tmp
 
 # local env files
+# Solo .env.example se versiona; el resto lleva secretos.
+.env
 .env*.local
 .env.local.txt
+# respaldos que deja `vercel env pull` o `vercel blob create-store` al reescribir
+.env.local.bak-*
+.env.vercel
 
+# base de datos local y sus respaldos
+# prisma/dev.db estuvo versionado por error: viajaba dentro del bundle de Vercel,
+# donde el disco es de solo lectura, así que toda escritura (crear usuarios,
+# candidatos, requisiciones) fallaba en producción.
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db.backup-*
+
+# El antiguo almacén de usuarios en JSON. Guardaba contraseñas en texto plano.
+data/users.json
+
+# CVs subidos en desarrollo: son datos personales, nunca al repositorio
+/storage
 
 # vercel
 .vercel

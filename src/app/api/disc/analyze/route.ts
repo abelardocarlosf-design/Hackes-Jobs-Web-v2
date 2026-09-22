@@ -1,76 +1,20 @@
-import fs from 'fs';
-import path from 'path';
 import OpenAI from "openai";
 
 export const maxDuration = 60;
 
-// Función para lectura manual y tolerante de archivos .env que extrae ambas claves
-function getManualEnvKeys(): { deepseek: string | null; openrouter: string | null; logs: any } {
-  const logs: any = {
-    envSysCheck: !!process.env.DEEPSEEK_API_KEY,
-    filesChecked: [],
-    keysFound: { deepseek: false, openrouter: false },
-    source: null
+// Las llaves salen solo de las variables de entorno.
+//
+// Antes esta ruta leía `.env.local` y `.env.local.txt` del disco con un parser
+// propio y devolvía en la respuesta los primeros 100 caracteres del archivo.
+// Eso era la misma clase de fuga que `/api/test-env` (hallazgo H-02 de la
+// auditoría, ya eliminado): un endpoint sin sesión que publica el contenido del
+// entorno. Además nunca funcionó en Vercel, donde el bundle no lleva archivos
+// `.env` y el disco es de solo lectura salvo `/tmp`.
+function getEnvKeys(): { deepseek: string | null; openrouter: string | null } {
+  return {
+    deepseek: process.env.DEEPSEEK_API_KEY || null,
+    openrouter: process.env.OPENROUTER_API_KEY || null,
   };
-
-  let dsKey = process.env.DEEPSEEK_API_KEY || null;
-  let orKey = process.env.OPENROUTER_API_KEY || null;
-
-  if (dsKey) logs.keysFound.deepseek = true;
-  if (orKey) logs.keysFound.openrouter = true;
-
-  if (dsKey && orKey) {
-    logs.source = 'process.env';
-    return { deepseek: dsKey, openrouter: orKey, logs };
-  }
-
-  const pathsToCheck = ['.env.local', '.env.local.txt'];
-
-  for (const fileName of pathsToCheck) {
-    const envPath = path.resolve(process.cwd(), fileName);
-    const fileLog: any = { path: envPath, exists: false };
-
-    try {
-      if (fs.existsSync(envPath)) {
-        fileLog.exists = true;
-        const content = fs.readFileSync(envPath, 'utf8');
-        
-        // Sanitizar contenido para logs
-        fileLog.contentPreview = content.substring(0, 100).replace(/sk-[a-zA-Z0-9]+/g, 'sk-XXXXX...');
-
-        const lines = content.split('\n');
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed || trimmed.startsWith('#')) continue;
-
-          const [key, ...valueParts] = trimmed.split('=');
-          const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
-          
-          if (key.trim() === 'DEEPSEEK_API_KEY' && value) {
-            dsKey = value;
-            logs.keysFound.deepseek = true;
-          }
-          if (key.trim() === 'OPENROUTER_API_KEY' && value) {
-            orKey = value;
-            logs.keysFound.openrouter = true;
-          }
-        }
-        
-        if (dsKey || orKey) {
-           logs.source = fileName;
-           fileLog.keysFoundInThisFile = true;
-        } else {
-           fileLog.keysFoundInThisFile = false;
-        }
-      }
-    } catch (err: any) {
-      fileLog.error = err.message;
-    }
-    
-    logs.filesChecked.push(fileLog);
-  }
-
-  return { deepseek: dsKey, openrouter: orKey, logs };
 }
 
 async function fetchWithRetry(apiCall: () => Promise<any>, retries = 3, delay = 1000) {
@@ -92,17 +36,13 @@ async function fetchWithRetry(apiCall: () => Promise<any>, retries = 3, delay = 
 
 export async function POST(req: Request) {
   try {
-    const { logs, deepseek: dsKey, openrouter: orKey } = getManualEnvKeys();
-
-    console.log("=== EXTRACCIÓN DE LLAVES DE ENTORNO ===");
-    console.log(JSON.stringify(logs, null, 2));
-    console.log("=======================================");
+    const { deepseek: dsKey, openrouter: orKey } = getEnvKeys();
 
     if (!dsKey) {
-      return Response.json({ 
-        error: "No se encontró DEEPSEEK_API_KEY. Asegúrate de tener un archivo .env.local o .env.local.txt en la raíz con el formato DEEPSEEK_API_KEY=sk-...",
-        details: logs
-      }, { status: 500 });
+      console.error("[DISC] Falta DEEPSEEK_API_KEY en las variables de entorno.");
+      return Response.json({
+        error: "El análisis con IA no está configurado en este entorno.",
+      }, { status: 503 });
     }
 
     const openaiDeepSeek = new OpenAI({
@@ -149,7 +89,10 @@ No uses markdown, responde solo con el texto plano del análisis.
               apiKey: orKey,
               baseURL: "https://openrouter.ai/api/v1",
               defaultHeaders: {
-                "HTTP-Referer": "http://localhost:3000",
+                // OpenRouter atribuye el consumo a este dominio. Fijarlo a
+                // localhost hacía que en producción todo el gasto se
+                // reportara como tráfico de desarrollo.
+                "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://www.hackesjobs.com.mx",
                 "X-Title": "Hackes Jobs",
               },
             });
@@ -187,17 +130,4 @@ No uses markdown, responde solo con el texto plano del análisis.
     console.error("[Endpoint Critical Error]:", criticalError?.message);
     return Response.json({ error: "Fallo fatal en el servidor." }, { status: 500 });
   }
-}
-
-// Endpoint de diagnóstico
-export async function GET(req: Request) {
-  const { logs, deepseek, openrouter } = getManualEnvKeys();
-  
-  return Response.json({
-    status: 'ok',
-    isNextJsEnvLoaded: !!process.env.DEEPSEEK_API_KEY,
-    isDeepSeekKeyLoaded: !!deepseek,
-    isOpenRouterKeyLoaded: !!openrouter,
-    logs: logs
-  });
 }

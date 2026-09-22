@@ -1,46 +1,47 @@
-import fs from 'fs';
-import path from 'path';
+import { Prisma } from '@prisma/client';
+import { prisma } from './prisma';
 import { Subscriber } from './newsletter.types';
 
 export * from './newsletter.types';
 
-const SUBSCRIBERS_PATH = path.join(process.cwd(), 'data/subscribers.json');
-
-// Ensure data directory exists
-const DATA_DIR = path.join(process.cwd(), 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+// Las suscripciones se guardaban en `data/subscribers.json` con `fs`. En Vercel
+// el disco es de solo lectura, así que `writeFileSync` lanzaba y la ruta
+// devolvía "Error al guardar la suscripción" — o, peor, en las lecturas el
+// catch devolvía `[]` y la pérdida pasaba desapercibida. Ahora van a Postgres.
 
 export async function getAllSubscribers(): Promise<Subscriber[]> {
-  if (!fs.existsSync(SUBSCRIBERS_PATH)) return [];
-  
-  try {
-    const content = fs.readFileSync(SUBSCRIBERS_PATH, 'utf8');
-    return JSON.parse(content) as Subscriber[];
-  } catch (error) {
-    return [];
-  }
+  const filas = await prisma.subscriber.findMany({ orderBy: { date: 'desc' } });
+  return filas.map((fila) => ({
+    email: fila.email,
+    date: fila.date.toISOString(),
+  }));
 }
 
 export async function addSubscriber(email: string): Promise<{ success: boolean; message: string }> {
-  const subscribers = await getAllSubscribers();
-  
-  if (subscribers.find(s => s.email === email)) {
+  // Se normaliza antes de escribir: el índice único de Postgres distingue
+  // mayúsculas, así que sin esto "Ana@X.com" y "ana@x.com" entrarían las dos.
+  const normalizado = email.trim().toLowerCase();
+
+  const yaEsta = await prisma.subscriber.findUnique({
+    where: { email: normalizado },
+    select: { email: true },
+  });
+  if (yaEsta) {
     return { success: false, message: 'Este correo ya está suscrito.' };
   }
 
-  const newSubscriber: Subscriber = {
-    email,
-    date: new Date().toISOString(),
-  };
-
-  subscribers.push(newSubscriber);
-  
   try {
-    fs.writeFileSync(SUBSCRIBERS_PATH, JSON.stringify(subscribers, null, 2), 'utf8');
+    await prisma.subscriber.create({ data: { email: normalizado } });
     return { success: true, message: '¡Gracias por suscribirte!' };
   } catch (error) {
+    // Entre la lectura de arriba y esta escritura hay una ventana en la que dos
+    // peticiones con el mismo correo pasan las dos. El índice único de la tabla
+    // la cierra, y P2002 es cómo se ve esa colisión desde aquí: no es un fallo,
+    // es el mismo caso de "ya estaba" llegando por la vía rápida.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return { success: false, message: 'Este correo ya está suscrito.' };
+    }
+    console.error('[newsletter addSubscriber]:', error);
     return { success: false, message: 'Error al guardar la suscripción.' };
   }
 }

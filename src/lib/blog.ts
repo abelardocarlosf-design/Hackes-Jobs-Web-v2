@@ -1,53 +1,77 @@
-import fs from 'fs';
-import path from 'path';
+import { prisma } from './prisma';
 import { BlogPost } from './blog.types';
 
 export * from './blog.types';
 
-const BLOG_DATA_PATH = path.join(process.cwd(), 'data/blog');
+// Los artículos vivían como un archivo JSON por slug en `data/blog/`. En Vercel
+// el disco es de solo lectura, así que el CMS no guardaba nada en producción:
+// la petición devolvía 200 y el artículo desaparecía. Ahora van a Postgres.
+//
+// La firma de las cuatro funciones no cambió a propósito, para que las páginas
+// y las rutas de API que ya las consumen sigan igual. `date` sale como string
+// ISO porque así lo declara `BlogPost` y así lo usan el formulario del admin
+// (`post.date.split('T')[0]`) y los metadatos de OpenGraph.
 
-// Ensure directories exist
-if (!fs.existsSync(BLOG_DATA_PATH)) {
-  fs.mkdirSync(BLOG_DATA_PATH, { recursive: true });
-}
+type FilaBlogPost = {
+  slug: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  coverImage: string;
+  author: string;
+  date: Date;
+  tags: string[];
+  published: boolean;
+};
 
-const UPLOADS_PATH = path.join(process.cwd(), 'public/uploads/blog');
-if (!fs.existsSync(UPLOADS_PATH)) {
-  fs.mkdirSync(UPLOADS_PATH, { recursive: true });
+function aBlogPost(fila: FilaBlogPost): BlogPost {
+  return {
+    slug: fila.slug,
+    title: fila.title,
+    content: fila.content,
+    excerpt: fila.excerpt,
+    coverImage: fila.coverImage,
+    author: fila.author,
+    date: fila.date.toISOString(),
+    tags: fila.tags,
+    published: fila.published,
+  };
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
-  if (!fs.existsSync(BLOG_DATA_PATH)) return [];
-  
-  const files = fs.readdirSync(BLOG_DATA_PATH);
-  const posts = files
-    .filter(file => file.endsWith('.json'))
-    .map(file => {
-      const filePath = path.join(BLOG_DATA_PATH, file);
-      const content = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(content) as BlogPost;
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  return posts;
+  const filas = await prisma.blogPost.findMany({ orderBy: { date: 'desc' } });
+  return filas.map(aBlogPost);
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
-  const filePath = path.join(BLOG_DATA_PATH, `${slug}.json`);
-  if (!fs.existsSync(filePath)) return null;
-  
-  const content = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(content) as BlogPost;
+  const fila = await prisma.blogPost.findUnique({ where: { slug } });
+  return fila ? aBlogPost(fila) : null;
 }
 
 export async function savePost(post: BlogPost): Promise<void> {
-  const filePath = path.join(BLOG_DATA_PATH, `${post.slug}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(post, null, 2), 'utf8');
+  // Se copian los campos uno a uno: el cuerpo llega de `request.json()` y
+  // pasárselo entero a Prisma haría fallar la escritura con cualquier clave
+  // de más que mande el formulario.
+  const datos = {
+    title: post.title,
+    content: post.content ?? '',
+    excerpt: post.excerpt ?? '',
+    coverImage: post.coverImage ?? '',
+    author: post.author ?? '',
+    date: post.date ? new Date(post.date) : new Date(),
+    tags: post.tags ?? [],
+    published: post.published ?? false,
+  };
+
+  await prisma.blogPost.upsert({
+    where: { slug: post.slug },
+    create: { slug: post.slug, ...datos },
+    update: datos,
+  });
 }
 
 export async function deletePost(slug: string): Promise<void> {
-  const filePath = path.join(BLOG_DATA_PATH, `${slug}.json`);
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
-  }
+  // `deleteMany` y no `delete`: borrar un slug inexistente era un no-op con
+  // archivos, y con `delete` sería una excepción P2025.
+  await prisma.blogPost.deleteMany({ where: { slug } });
 }

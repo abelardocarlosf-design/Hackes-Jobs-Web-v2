@@ -5,14 +5,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/auth-context';
-import { GoogleLogin } from '@react-oauth/google';
+import { BotonGoogle } from '@/components/BotonGoogle';
+import { inicioDe, destinoSeguro } from '@/lib/navegacion';
 import { Button } from '@/components/Button';
 import { Eye, EyeOff, ArrowRight, Sparkles, Shield } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/dashboard';
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -29,14 +29,17 @@ function LoginForm() {
     const result = await login(email, password);
 
     if (result.success) {
-      router.push(redirectTo);
+      // Cada rol a su espacio de trabajo. El ?redirect= se respeta solo si es
+      // una ruta interna: `destinoSeguro` bloquea `?redirect=https://evil.com`,
+      // que antes sacaba al usuario del sitio recién autenticado.
+      router.push(destinoSeguro(searchParams.get('redirect'), inicioDe(result.user?.role)));
     } else {
       setError(result.message || 'Error al iniciar sesión');
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
     setIsLoading(true);
     setError('');
     try {
@@ -47,8 +50,11 @@ function LoginForm() {
       });
       const data = await res.json();
       if (data.success) {
-        // Necesitamos recargar o despachar un evento para que el AuthContext se entere
-        window.location.href = redirectTo;
+        // Navegación dura para que el AuthContext relea la sesión desde cero.
+        window.location.href = destinoSeguro(
+          searchParams.get('redirect'),
+          inicioDe(data.data?.user?.role)
+        );
       } else {
         setError(data.message || 'Error con Google Sign-In');
         setIsLoading(false);
@@ -126,27 +132,12 @@ function LoginForm() {
             </div>
           )}
 
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => setError('Error al conectar con Google')}
-              useOneTap
-              theme="filled_black"
-              size="large"
-              width="100%"
-              text="continue_with"
-              shape="pill"
-            />
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
-            </div>
-            <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-              <span className="px-6 bg-transparent text-slate-500">O ingresa con email</span>
-            </div>
-          </div>
+          {/* Si no hay NEXT_PUBLIC_GOOGLE_CLIENT_ID, esto no renderiza nada:
+              ni botón roto ni separador huérfano. */}
+          <BotonGoogle
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError('Error al conectar con Google')}
+          />
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-3">
