@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { resolveWebhookUrl } from '@/lib/psicometriasServer';
+import { fetchN8n, resolveWebhookPath, N8N_BASE_URLS } from '@/lib/psicometriasServer';
+import { sendOpsAlert } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +67,44 @@ function logStructured(level: 'info' | 'warn' | 'error', message: string, ctx: L
   if (level === 'error') console.error(entry);
   else if (level === 'warn') console.warn(entry);
   else console.log(entry);
+}
+
+/**
+ * Avisa al buzón interno que una psicometría no llegó a n8n. Adjunta el payload
+ * íntegro: en Vercel no hay respaldo local, así que este correo ES el respaldo
+ * y con él se puede reprocesar la prueba sin pedirle al candidato que la repita.
+ */
+async function alertDispatchFailure(
+  slug: string,
+  webhookPath: string,
+  body: any,
+  idempotencyKey: string,
+  reason: string
+) {
+  const dp = body?.datos_paciente || {};
+  const dt = body?.datos_prueba || {};
+  const url = `${N8N_BASE_URLS[N8N_BASE_URLS.length - 1]}/${webhookPath}`;
+  const text = [
+    `Una psicometría NO llegó a n8n. El candidato vio "Evaluación enviada", pero no recibirá su reporte.`,
+    ``,
+    `Prueba:     ${slug}`,
+    `Candidato:  ${dp.nombre_completo || '(sin nombre)'}`,
+    `Correo:     ${dp.email || '(sin correo)'}`,
+    `Teléfono:   ${dp.telefono || '-'}`,
+    `Aplicada:   ${dt.fecha_aplicacion || '-'}`,
+    `Motivo:     ${reason}`,
+    `Clave:      ${idempotencyKey}`,
+    ``,
+    `Cómo reprocesarla: revisa que n8n esté arriba y envía el JSON adjunto por POST a`,
+    `${url}`,
+    `(por ejemplo: curl -X POST -H "Content-Type: application/json" --data-binary @payload.json ${url})`,
+  ].join('\n');
+
+  await sendOpsAlert(
+    `Psicometría sin procesar: ${slug} · ${dp.nombre_completo || dp.email || 'candidato'}`,
+    text,
+    [{ filename: `payload-${slug}-${idempotencyKey.slice(0, 8)}.json`, content: JSON.stringify(body, null, 2) }]
+  );
 }
 
 export async function POST(request: Request) {
@@ -191,8 +230,8 @@ export async function POST(request: Request) {
     // ════════════════════════════════════════════════════════════════════════
     // ACCIÓN 2 — Despacho a n8n con reintentos
     // ════════════════════════════════════════════════════════════════════════
-    const webhookUrl = resolveWebhookUrl(slug);
-    if (!webhookUrl) {
+    const webhookPath = resolveWebhookPath(slug);
+    if (!webhookPath) {
       logStructured('warn', 'webhook.unmapped', {
         testId: slug,
         candidateId,
@@ -219,7 +258,7 @@ export async function POST(request: Request) {
       const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
       try {
-        const resp = await fetch(webhookUrl, {
+        const resp = await fetchN8n(webhookPath, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -265,6 +304,7 @@ export async function POST(request: Request) {
             statusCode: resp.status,
             durationMs,
           });
+          await alertDispatchFailure(slug, webhookPath, body, idempotencyKey, `n8n respondió HTTP ${resp.status}`);
           return NextResponse.json({
             success: true, // el respaldo está OK; reportamos al cliente como éxito de su parte
             backup: backupOk,
@@ -314,6 +354,13 @@ export async function POST(request: Request) {
       statusCode: lastStatus,
       errorMessage: lastError ?? undefined,
     });
+    await alertDispatchFailure(
+      slug,
+      webhookPath,
+      body,
+      idempotencyKey,
+      `${MAX_RETRIES} intentos fallidos · ${lastStatus ? `último HTTP ${lastStatus}` : `error de red: ${lastError}`}`
+    );
 
     return NextResponse.json({
       success: true, // respaldo OK = el candidato no pierde su trabajo

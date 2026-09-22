@@ -35,6 +35,35 @@ const DEFAULT_N8N_BASE = 'https://hackesjobs-n8n.3hrktu.easypanel.host';
 export const N8N_BASE_URL: string = (process.env.N8N_BASE_URL || DEFAULT_N8N_BASE).replace(/\/+$/, '');
 
 /**
+ * Hosts a probar en orden: el configurado y, si es distinto, el host directo de
+ * Easypanel. Incidente 2026-09-17: `N8N_BASE_URL` apuntaba a un subdominio
+ * propio cuyo registro DNS desapareció, y todas las psicometrías fallaron en
+ * silencio durante días. Con el respaldo, un DNS roto ya no tumba el servicio.
+ */
+export const N8N_BASE_URLS: string[] = Array.from(new Set([N8N_BASE_URL, DEFAULT_N8N_BASE]));
+
+/**
+ * `fetch` a n8n con respaldo de host. Solo cambia de host ante errores de red
+ * (DNS, conexión rechazada, TLS): ahí n8n nunca recibió la petición y reenviarla
+ * no duplica nada. Un timeout (AbortError) o una respuesta HTTP se devuelven tal
+ * cual, porque el workflow pudo haber arrancado.
+ */
+export async function fetchN8n(path: string, init: RequestInit): Promise<Response> {
+  const cleanPath = path.replace(/^\/+/, '');
+  let lastError: unknown;
+  for (const base of N8N_BASE_URLS) {
+    try {
+      return await fetch(`${base}/${cleanPath}`, init);
+    } catch (err: any) {
+      if (err?.name === 'AbortError') throw err;
+      lastError = err;
+      console.warn(`[n8n] Falla de red contra ${base}: ${err?.cause?.code || err?.message || err}`);
+    }
+  }
+  throw lastError;
+}
+
+/**
  * Mapa de psicometría → path del webhook (path únicamente, sin host).
  * Las claves son los `slug` del catálogo `testsConfig`.
  */
@@ -58,4 +87,9 @@ export function resolveWebhookUrl(slug: string): string | null {
   const path = testWebhookPaths[slug];
   if (!path) return null;
   return `${N8N_BASE_URL}/${path}`;
+}
+
+/** Path del webhook (sin host) para usar con `fetchN8n`. `null` si el slug no está registrado. */
+export function resolveWebhookPath(slug: string): string | null {
+  return testWebhookPaths[slug] ?? null;
 }
