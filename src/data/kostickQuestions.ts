@@ -298,11 +298,30 @@ export function calificarKostick(answers: Record<string, string>) {
     const clave = q.options.find(o => o.id === answers[q.id])?.clave as Factor | undefined;
     if (clave) puntos[clave]++;
   }
+  const etiqueta = (f: Factor) => `${f} ${KOSTICK_FACTORES[f].nombre} (${puntos[f]})`;
+  const nivel = (p: number) => (p >= 7 ? 'alto' : p <= 2 ? 'bajo' : 'medio');
+  const areas = FACTORES.map(f => KOSTICK_FACTORES[f].area).filter((a, i, todas) => todas.indexOf(a) === i);
+
   return {
-    nota: 'Escala de 0 a 9 por factor (cada factor aparece en 9 pares). La suma de los 20 factores es igual al número de pares contestados.',
+    nota: 'Escala de 0 a 9 por factor (cada factor aparece en 9 pares). La suma de los 20 factores es igual al número de pares contestados. Alto >= 7, bajo <= 2.',
     por_factor: Object.fromEntries(
-      FACTORES.map(f => [f, { area: KOSTICK_FACTORES[f].area, factor: KOSTICK_FACTORES[f].nombre, puntaje: puntos[f] }])
+      FACTORES.map(f => [f, { area: KOSTICK_FACTORES[f].area, factor: KOSTICK_FACTORES[f].nombre, puntaje: puntos[f], nivel: nivel(puntos[f]) }])
     ),
+    // Lectura ya resuelta para que el análisis no tenga que recalcularla.
+    perfil: {
+      dominantes: [...FACTORES].sort((a, b) => puntos[b] - puntos[a]).slice(0, 4).map(etiqueta),
+      altos: FACTORES.filter(f => puntos[f] >= 7).map(etiqueta),
+      bajos: FACTORES.filter(f => puntos[f] <= 2).map(etiqueta),
+    },
+    // Tabla en texto plano para el bloque "Puntajes crudos" del reporte.
+    tabla: areas
+      .map(area =>
+        `${area}: ` +
+        FACTORES.filter(f => KOSTICK_FACTORES[f].area === area)
+          .map(f => `${f} ${KOSTICK_FACTORES[f].nombre} ${puntos[f]}/9`)
+          .join(' · ')
+      )
+      .join('\n'),
   };
 }
 
