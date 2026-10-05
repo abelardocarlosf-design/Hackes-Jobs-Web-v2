@@ -14,6 +14,9 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const hideAll = HIDE_ALL_ROUTES.some(route => pathname.startsWith(route));
   const hideNav = HIDE_NAV_ROUTES.some(route => pathname.startsWith(route));
+  // Mientras se contesta una psicometría el botón flotante de WhatsApp tapaba
+  // opciones en el celular (p. ej. el "−" de DISC) y un toque sacaba al candidato.
+  const enAplicacionDePrueba = /^\/psicometrias\/[^/]+\/aplicar/.test(pathname);
 
   if (hideAll) {
     return <>{children}</>;
@@ -32,7 +35,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {!hideNav && <Footer />}
-      {!hideNav && <FloatingWhatsApp />}
+      {!hideNav && !enAplicacionDePrueba && <FloatingWhatsApp />}
     </>
   );
 }

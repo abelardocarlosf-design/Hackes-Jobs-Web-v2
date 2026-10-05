@@ -1,90 +1,108 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { TestAplicacionBase } from '../TestAplicacionBase';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { TestAplicacionBase, irAlPanelDeEnvio } from '../TestAplicacionBase';
 import { Button } from '@/components/Button';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
+import { useAvancePrueba } from '@/lib/psicometrias/progreso';
+import {
+  detalleRespuestas,
+  type ChoiceQuestion,
+  type Puntajes,
+  type RespuestasCalificadas,
+} from '@/lib/psicometrias/banco';
 
-export interface ChoiceOption {
-  id: string;
-  text: string;
-}
-
-export interface ChoiceQuestion {
-  id: string;
-  question: string;
-  imageUrl?: string;
-  options: ChoiceOption[];
-}
+export type { ChoiceOption, ChoiceQuestion } from '@/lib/psicometrias/banco';
 
 export interface GenericChoiceTestProps {
   config: TestInfoProps;
   questions: ChoiceQuestion[];
+  /** Versión del banco: si cambia, se descarta el avance guardado con la anterior. */
+  version: string;
+  /** Calcula los puntajes que viajan a n8n junto con el detalle de respuestas. */
+  calificar?: (answers: Record<string, string>) => Puntajes;
   timeLimitMinutes?: number;
 }
 
-export default function GenericChoiceTest({ config, questions, timeLimitMinutes }: GenericChoiceTestProps) {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isSaving, setIsSaving] = useState(false);
+interface Avance {
+  answers: Record<string, string>;
+  currentStep: number;
+}
+
+const AVANCE_INICIAL = (): Avance => ({ answers: {}, currentStep: 0 });
+const MAX_PUNTOS_NAVEGACION = 60;
+const RETARDO_AVANCE_MS = 350;
+
+export default function GenericChoiceTest({ config, questions, version, calificar, timeLimitMinutes }: GenericChoiceTestProps) {
+  const { estado, setEstado, listo, reanudado, guardando, reiniciar } =
+    useAvancePrueba<Avance>(config.slug, version, AVANCE_INICIAL);
+  const autoAvance = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const totalQuestions = questions.length;
-  const answeredCount = Object.keys(answers).length;
-
-  useEffect(() => {
-    const saved = localStorage.getItem(`hj_test_${config.slug}`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setAnswers(parsed.answers || {});
-        setCurrentStep(parsed.currentStep || 0);
-      } catch (e) {}
-    }
-  }, [config.slug]);
-
-  const saveState = (newAnswers: any, step: number) => {
-    setIsSaving(true);
-    localStorage.setItem(`hj_test_${config.slug}`, JSON.stringify({ answers: newAnswers, currentStep: step }));
-    setTimeout(() => setIsSaving(false), 500);
-  };
-
+  const idsValidos = useMemo(() => new Set(questions.map(q => q.id)), [questions]);
+  // Solo cuentan respuestas a preguntas que existen en este banco.
+  const answers = estado.answers;
+  const answeredCount = Object.keys(answers).filter(id => idsValidos.has(id)).length;
+  const currentStep = Math.min(Math.max(0, estado.currentStep), totalQuestions - 1);
   const currentQuestion = questions[currentStep];
+  const esUltima = currentStep === totalQuestions - 1;
+
+  useEffect(() => () => {
+    if (autoAvance.current) clearTimeout(autoAvance.current);
+  }, []);
+
+  const irA = (paso: number) => {
+    if (autoAvance.current) clearTimeout(autoAvance.current);
+    setEstado(prev => ({ ...prev, currentStep: Math.min(Math.max(0, paso), totalQuestions - 1) }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleSelectOption = (optionId: string) => {
     if (!currentQuestion) return;
-    const newAnswers = { ...answers, [currentQuestion.id]: optionId };
-    setAnswers(newAnswers);
-    saveState(newAnswers, currentStep);
-    
-    // Auto-advance after short delay
-    setTimeout(() => {
-      if (currentStep < totalQuestions - 1) {
-        setCurrentStep(s => s + 1);
-        saveState(newAnswers, currentStep + 1);
-      }
-    }, 300);
+    const pasoDeLaPregunta = currentStep;
+    setEstado(prev => ({ ...prev, answers: { ...prev.answers, [currentQuestion.id]: optionId } }));
+
+    // Avance automático. Se cancela si el candidato vuelve a tocar antes de que
+    // ocurra (antes, dos clics rápidos brincaban una pregunta).
+    if (autoAvance.current) clearTimeout(autoAvance.current);
+    autoAvance.current = setTimeout(() => {
+      setEstado(prev =>
+        prev.currentStep === pasoDeLaPregunta && pasoDeLaPregunta < totalQuestions - 1
+          ? { ...prev, currentStep: pasoDeLaPregunta + 1 }
+          : prev
+      );
+      if (pasoDeLaPregunta === totalQuestions - 1) irAlPanelDeEnvio();
+    }, RETARDO_AVANCE_MS);
   };
 
-  const handleNext = () => {
-    if (currentStep < totalQuestions - 1) {
-      setCurrentStep(s => s + 1);
-      saveState(answers, currentStep + 1);
+  const siguienteSinResponder = () => {
+    for (let k = 1; k <= totalQuestions; k++) {
+      const i = (currentStep + k) % totalQuestions;
+      if (!answers[questions[i].id]) return i;
     }
+    return -1;
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(s => s - 1);
-      saveState(answers, currentStep - 1);
-    }
-  };
+  const pendientes = useMemo(
+    () =>
+      questions
+        .map((q, i) => ({ q, i }))
+        .filter(({ q }) => !answers[q.id])
+        .map(({ i }) => ({ clave: String(i), etiqueta: String(i + 1), onIr: () => irA(i) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [questions, answers]
+  );
 
-  const handleFinalSubmit = () => {
-    // Retornamos directamente el objeto plano { "Q1": "A", ... }
-    return answers;
-  };
+  const handleFinalSubmit = (): RespuestasCalificadas => ({
+    formato: 'v2',
+    puntajes: calificar ? calificar(answers) : {},
+    detalle: detalleRespuestas(questions, answers),
+  });
 
-  if (!currentQuestion) return null;
+  if (!listo || !currentQuestion) return null;
+
+  const respuestaActual = answers[currentQuestion.id];
+  const proximaPendiente = siguienteSinResponder();
 
   return (
     <TestAplicacionBase
@@ -93,42 +111,40 @@ export default function GenericChoiceTest({ config, questions, timeLimitMinutes 
       answeredQuestions={answeredCount}
       timeLimitMinutes={timeLimitMinutes}
       onFinalSubmit={handleFinalSubmit}
-      isSaving={isSaving}
+      isSaving={guardando}
+      reanudado={reanudado}
+      onReiniciar={reiniciar}
+      pendientes={pendientes}
     >
-      {/* Step-progress dots */}
-      <div className="flex justify-center gap-1.5 mt-6 mb-4 px-4 flex-wrap">
-        {questions.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => { setCurrentStep(i); saveState(answers, i); }}
-            aria-label={`Ir a pregunta ${i + 1}`}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === currentStep
-                ? 'bg-brand-orange scale-150 shadow-[0_0_6px_2px_rgba(255,107,0,0.6)]'
-                : answers[questions[i].id]
-                ? 'bg-brand-orange/50'
-                : 'bg-white/20 hover:bg-white/40'
-            }`}
-          />
-        ))}
-      </div>
+      {/* Navegación por puntos (solo en pruebas cortas; en las largas sería ruido) */}
+      {totalQuestions <= MAX_PUNTOS_NAVEGACION && (
+        <div className="flex justify-center gap-1.5 mb-4 px-4 flex-wrap">
+          {questions.map((q, i) => (
+            <button
+              key={q.id}
+              type="button"
+              onClick={() => irA(i)}
+              aria-label={`Ir a pregunta ${i + 1}${answers[q.id] ? ' (respondida)' : ''}`}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                i === currentStep
+                  ? 'bg-brand-orange scale-150 shadow-[0_0_6px_2px_rgba(255,107,0,0.6)]'
+                  : answers[q.id]
+                  ? 'bg-brand-orange/50'
+                  : 'bg-white/20 hover:bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Question card */}
+      {/* Tarjeta de la pregunta */}
       <div className="relative bg-[#0e0e0e] rounded-3xl shadow-2xl border border-white/10 overflow-hidden">
-        {/* Ambient glow top-left */}
         <div className="pointer-events-none absolute -top-20 -left-20 w-64 h-64 rounded-full bg-brand-orange/10 blur-3xl" />
 
-        <div className="relative p-8 sm:p-12">
-          {/* Question header — clean, no jargon */}
-          <div className="mb-10 text-center">
-            {/* Stitch-inspired pill: soft frosted glass */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-6
-              bg-white/5 backdrop-blur-sm border border-white/10
-              rounded-full shadow-inner shadow-white/5">
-              <span className="w-5 h-5 rounded-full bg-brand-orange/20 border border-brand-orange/40
-                text-brand-orange text-[10px] font-black flex items-center justify-center">
-                {currentStep + 1}
-              </span>
+        <div className="relative p-6 sm:p-12">
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-6 bg-white/5 border border-white/10 rounded-full">
+              <span className="text-brand-orange text-xs font-black tabular-nums">{currentStep + 1}</span>
               <span className="text-slate-400 text-xs font-semibold tracking-widest uppercase">
                 de {totalQuestions}
               </span>
@@ -142,30 +158,34 @@ export default function GenericChoiceTest({ config, questions, timeLimitMinutes 
               <div className="mt-6 flex justify-center">
                 <img
                   src={currentQuestion.imageUrl}
-                  alt={`Imagen de apoyo`}
+                  alt="Imagen de apoyo"
                   className="max-w-full max-h-[300px] object-contain rounded-xl border border-white/10 shadow-lg"
                 />
               </div>
             )}
           </div>
 
-          {/* Options */}
-          <div className="space-y-3 mb-12 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          {/* Opciones. El `key` por pregunta evita que un estado visual (foco, hover)
+              pase de una pregunta a la siguiente y la haga parecer ya contestada. */}
+          <div key={currentQuestion.id} role="radiogroup" aria-label={currentQuestion.question} className="space-y-3 mb-10">
             {currentQuestion.options.map((opt) => {
-              const isSelected = answers[currentQuestion.id] === opt.id;
+              const isSelected = respuestaActual === opt.id;
               return (
                 <button
                   key={opt.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => handleSelectOption(opt.id)}
-                  className={`group w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 ${
+                  className={`group w-full text-left p-5 rounded-2xl border-2 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue ${
                     isSelected
                       ? 'border-brand-orange bg-brand-orange/10 text-white shadow-md shadow-brand-orange/20'
-                      : 'border-white/10 bg-white/5 text-slate-300 hover:border-brand-orange/40 hover:bg-white/8'
+                      : 'border-white/10 bg-white/5 text-slate-300 hover:border-brand-orange/40'
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200 ${
-                      isSelected ? 'border-brand-orange bg-brand-orange/20' : 'border-slate-600 group-hover:border-brand-orange/50'
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                      isSelected ? 'border-brand-orange bg-brand-orange/20' : 'border-slate-600'
                     }`}>
                       {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-brand-orange" />}
                     </div>
@@ -176,29 +196,36 @@ export default function GenericChoiceTest({ config, questions, timeLimitMinutes 
             })}
           </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between pt-6 border-t border-white/10">
+          {/* Navegación */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-white/10">
             <Button
-              variant="secondary"
-              onClick={handlePrevious}
+              variant="outline"
+              onClick={() => irA(currentStep - 1)}
               disabled={currentStep === 0}
-              className={`h-12 px-6 uppercase tracking-widest text-xs ${
-                currentStep === 0 ? 'invisible' : 'bg-transparent border border-white/20'
-              }`}
+              className={currentStep === 0 ? 'invisible' : ''}
             >
               ← Anterior
             </Button>
 
-            <Button
-              variant="primary"
-              onClick={handleNext}
-              disabled={!answers[currentQuestion.id]}
-              className={`h-12 px-8 rounded-xl uppercase tracking-widest text-xs ${
-                currentStep === totalQuestions - 1 ? 'hidden' : ''
-              }`}
-            >
-              Siguiente →
-            </Button>
+            {totalQuestions > MAX_PUNTOS_NAVEGACION && proximaPendiente !== -1 && proximaPendiente !== currentStep && (
+              <button
+                type="button"
+                onClick={() => irA(proximaPendiente)}
+                className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white"
+              >
+                Ir a la siguiente sin responder
+              </button>
+            )}
+
+            {esUltima ? (
+              <Button variant="primary" onClick={irAlPanelDeEnvio}>
+                Revisar y enviar ↓
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={() => irA(currentStep + 1)} disabled={!respuestaActual}>
+                Siguiente →
+              </Button>
+            )}
           </div>
         </div>
       </div>

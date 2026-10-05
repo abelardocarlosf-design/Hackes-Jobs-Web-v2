@@ -3,16 +3,8 @@
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
-
-import { getMMPIQuestions } from '@/data/mmpiQuestions';
+import { MMPI_QUESTIONS, MMPI_VERSION, calificarMMPI } from '@/data/mmpiQuestions';
 
 export default function MMPITest({ config }: { config: TestInfoProps }) {
-  const MMPI_QUESTIONS = getMMPIQuestions();
-
-  return (
-    <GenericChoiceTest
-      config={config}
-      questions={MMPI_QUESTIONS}
-    />
-  );
+  return <GenericChoiceTest config={config} questions={MMPI_QUESTIONS} version={MMPI_VERSION} calificar={calificarMMPI} />;
 }

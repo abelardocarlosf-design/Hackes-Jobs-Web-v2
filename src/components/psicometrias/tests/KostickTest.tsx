@@ -3,16 +3,8 @@
 import React from 'react';
 import GenericChoiceTest from './GenericChoiceTest';
 import { TestInfoProps } from '@/lib/psicometriasConfig';
-
-import { getKostickQuestions } from '@/data/kostickQuestions';
+import { KOSTICK_QUESTIONS, KOSTICK_VERSION, calificarKostick } from '@/data/kostickQuestions';
 
 export default function KostickTest({ config }: { config: TestInfoProps }) {
-  const KOSTICK_QUESTIONS = getKostickQuestions();
-
-  return (
-    <GenericChoiceTest
-      config={config}
-      questions={KOSTICK_QUESTIONS}
-    />
-  );
+  return <GenericChoiceTest config={config} questions={KOSTICK_QUESTIONS} version={KOSTICK_VERSION} calificar={calificarKostick} />;
 }

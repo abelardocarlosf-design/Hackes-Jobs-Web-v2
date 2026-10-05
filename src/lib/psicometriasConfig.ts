@@ -23,8 +23,8 @@ export const testsConfig: Record<string, TestInfoProps> = {
     categoria: 'Proyectivo',
     instrucciones: [
       'Se te presentarán 8 tarjetas de colores diferentes.',
-      'Deberás seleccionar el color que más te guste en ese momento, luego el segundo que más te guste, y así sucesivamente.',
-      'Repetirás este proceso una segunda vez para confirmar tus elecciones.',
+      'Toca primero el color que más te agrade en este momento, luego el que más te agrade de los que quedan, y así hasta terminar.',
+      'Después repetirás el ejercicio con los colores en otro orden. No intentes recordar tu primera elección.',
       'Trata de no relacionar los colores con objetos o ropa, elige instintivamente.'
     ]
   },
@@ -38,8 +38,8 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: 'Gratis',
     categoria: 'Comportamiento',
     instrucciones: [
-      'Encontrarás 30 grupos de 4 palabras.',
-      'En cada grupo, selecciona la palabra que MÁS te describe (+) y la que MENOS te describe (-).',
+      'Encontrarás 30 grupos de 4 frases.',
+      'En cada grupo, marca la frase que MÁS te describe (+) y la que MENOS te describe (−).',
       'No hay respuestas correctas o incorrectas. Sé sincero(a) para obtener un resultado preciso.',
       'Responde pensando en tu entorno laboral o académico habitual.'
     ]
@@ -56,7 +56,7 @@ export const testsConfig: Record<string, TestInfoProps> = {
     instrucciones: [
       'El test consta de 45 preguntas divididas en dos partes.',
       'En la primera parte, deberás elegir entre dos alternativas la que más se acerque a tu forma de pensar.',
-      'En la segunda parte, deberás ordenar 4 opciones según tu preferencia, de mayor a menor importancia.',
+      'En la segunda parte, deberás ordenar 4 opciones según tu preferencia: toca primero la que más prefieres y al final la que menos.',
       'No hay respuestas buenas ni malas, responde con total sinceridad.'
     ]
   },
@@ -70,8 +70,8 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: '$349 MXN',
     categoria: 'Habilidades Gerenciales',
     instrucciones: [
-      'Se te presentarán 30 situaciones hipotéticas de trabajo.',
-      'Para cada situación, selecciona la opción que consideres más adecuada o lógica para resolver el problema.',
+      'Se te presentarán 30 situaciones de trabajo con 4 posibles respuestas.',
+      'Para cada situación, elige la opción que consideres más adecuada para resolver el problema.',
       'Responde pensando en tu experiencia o en cómo actuarías en un rol de liderazgo.'
     ]
   },
@@ -85,22 +85,22 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: '$349 MXN',
     categoria: 'Valores y Ética',
     instrucciones: [
-      'El cuestionario consta de 60 reactivos de opción múltiple.',
-      'Lee cuidadosamente cada situación y elige la opción que mejor represente tu punto de vista.',
+      'El cuestionario consta de 60 casos con 4 opciones cada uno.',
+      'Lee cada caso y elige la opción que mejor represente lo que tú harías o preferirías.',
       'Asegúrate de responder todas las preguntas.'
     ]
   },
   kostick: {
     slug: 'kostick',
     nombre: 'Inventario de Percepción y Preferencias (Kostick)',
-    descripcion: 'Analiza 22 dimensiones del comportamiento laboral, incluyendo orientación al liderazgo, forma de trabajar y naturaleza social.',
+    descripcion: 'Analiza 20 factores del comportamiento laboral agrupados en 7 áreas: dirección del trabajo, liderazgo, ritmo, naturaleza social, estilo de trabajo, temperamento y subordinación.',
     duracion: '30 min',
     nivel: 'Intermedio',
     precio: 349,
     precioFormateado: '$349 MXN',
     categoria: 'Personalidad Laboral',
     instrucciones: [
-      'Encontrarás 90 pares de afirmaciones.',
+      'Encontrarás 90 pares de frases.',
       'Deberás elegir siempre una de las dos opciones (A o B), aquella que mejor te describa.',
       'A veces puede parecer que ninguna te describe bien o que ambas lo hacen, pero DEBES elegir una obligatoriamente.'
     ]
@@ -126,16 +126,16 @@ export const testsConfig: Record<string, TestInfoProps> = {
     slug: 'terman',
     nombre: 'Test de Inteligencia de Terman-Merrill',
     descripcion: 'Evaluación integral que mide habilidades verbales, lógicas, matemáticas y espaciales para calcular un coeficiente intelectual (CI).',
-    duracion: '44 min',
+    duracion: '40 min',
     nivel: 'Avanzado',
     precio: 519,
     precioFormateado: '$519 MXN',
     categoria: 'Inteligencia Integral',
     instrucciones: [
-      'Esta evaluación está dividida en 10 sub-pruebas o series, con un tiempo total aproximado de 44 minutos.',
-      'CADA SERIE tiene un límite de tiempo estricto muy breve (entre 3 y 6 minutos).',
-      'El sistema avanzará automáticamente a la siguiente serie cuando se agote el tiempo de la actual.',
-      'Asegúrate de estar en un lugar sin distracciones, no podrás pausar la evaluación.'
+      'La evaluación tiene 10 series (179 reactivos) con un tiempo total de 38 minutos.',
+      'Antes de cada serie verás sus instrucciones y un ejemplo; el cronómetro de la serie (de 3 a 6 minutos) arranca cuando presionas "Comenzar".',
+      'Al agotarse el tiempo la serie se cierra sola y pasas a la siguiente; no podrás regresar. Es normal no alcanzar a contestar todo.',
+      'Ten a la mano papel y lápiz para las series de aritmética, y busca un lugar sin distracciones.'
     ]
   },
   '16pf': {
@@ -148,8 +148,8 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: '$867 MXN',
     categoria: 'Personalidad Profunda',
     instrucciones: [
-      'El cuestionario consta de 185 preguntas sobre tus preferencias y comportamientos diarios.',
-      'Para cada pregunta, tendrás 3 opciones de respuesta. Intenta evitar la opción intermedia o dudosa a menos que sea estrictamente necesario.',
+      'El cuestionario consta de 185 reactivos: la mayoría son afirmaciones sobre tu forma de ser y 15 son problemas breves de razonamiento.',
+      'En las afirmaciones responde Verdadero, No estoy seguro o Falso. Usa "No estoy seguro" solo cuando de verdad no puedas decidir.',
       'Responde rápidamente, lo primero que te venga a la mente suele ser lo más preciso.'
     ]
   },
@@ -163,7 +163,7 @@ export const testsConfig: Record<string, TestInfoProps> = {
     precioFormateado: '$867 MXN',
     categoria: 'Clínica',
     instrucciones: [
-      'Se te presentarán 567 afirmaciones.',
+      'Se te presentarán 567 afirmaciones distintas.',
       'Deberás responder "Verdadero" si la afirmación se aplica a ti en general, o "Falso" si no se aplica.',
       'Es un test extenso, tómate tu tiempo y busca un espacio tranquilo. El sistema guardará tu progreso si necesitas descansar.',
       'Nota: El reporte clínico completo de esta evaluación solo estará visible para los psicólogos certificados de nuestra plataforma o de la empresa reclutadora.'

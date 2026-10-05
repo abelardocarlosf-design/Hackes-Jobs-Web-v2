@@ -1,1265 +1,309 @@
-// Auto-generado — Kostick 90 pares de afirmaciones (forced choice A/B).
-export const KOSTICK_QUESTIONS = [
-  {
-    "id": "1",
-    "question": "Par 1. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_1_opt_A",
-        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
-      },
-      {
-        "id": "kostick_1_opt_B",
-        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
-      }
-    ]
-  },
-  {
-    "id": "2",
-    "question": "Par 2. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_2_opt_A",
-        "text": "A) Prefiero presentar datos y dejar que decidan."
-      },
-      {
-        "id": "kostick_2_opt_B",
-        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
-      }
-    ]
-  },
-  {
-    "id": "3",
-    "question": "Par 3. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_3_opt_A",
-        "text": "A) Me siento cómodo tomando decisiones bajo presión."
-      },
-      {
-        "id": "kostick_3_opt_B",
-        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
-      }
-    ]
-  },
-  {
-    "id": "4",
-    "question": "Par 4. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_4_opt_A",
-        "text": "A) Rindo mejor con cronogramas amplios."
-      },
-      {
-        "id": "kostick_4_opt_B",
-        "text": "B) Me gusta trabajar con plazos ajustados."
-      }
-    ]
-  },
-  {
-    "id": "5",
-    "question": "Par 5. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_5_opt_A",
-        "text": "A) Prefiero variar de tareas a lo largo del día."
-      },
-      {
-        "id": "kostick_5_opt_B",
-        "text": "B) Rindo mejor con tareas continuas y enfocadas."
-      }
-    ]
-  },
-  {
-    "id": "6",
-    "question": "Par 6. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_6_opt_A",
-        "text": "A) Prefiero un círculo reducido de colegas."
-      },
-      {
-        "id": "kostick_6_opt_B",
-        "text": "B) Me gusta convivir con muchas personas en el trabajo."
-      }
-    ]
-  },
-  {
-    "id": "7",
-    "question": "Par 7. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_7_opt_A",
-        "text": "A) Tomo iniciativa para introducir cambios."
-      },
-      {
-        "id": "kostick_7_opt_B",
-        "text": "B) Espero a que el cambio esté validado por otros."
-      }
-    ]
-  },
-  {
-    "id": "8",
-    "question": "Par 8. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_8_opt_A",
-        "text": "A) Me motivan las tareas concretas y prácticas."
-      },
-      {
-        "id": "kostick_8_opt_B",
-        "text": "B) Me motivan los retos intelectuales complejos."
-      }
-    ]
-  },
-  {
-    "id": "9",
-    "question": "Par 9. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_9_opt_A",
-        "text": "A) Defiendo mi punto aunque genere conflicto."
-      },
-      {
-        "id": "kostick_9_opt_B",
-        "text": "B) Cedo si veo que mantener la armonía es más útil."
-      }
-    ]
-  },
-  {
-    "id": "10",
-    "question": "Par 10. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_10_opt_A",
-        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
-      },
-      {
-        "id": "kostick_10_opt_B",
-        "text": "B) Me siento cómodo hablando en público."
-      }
-    ]
-  },
-  {
-    "id": "11",
-    "question": "Par 11. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_11_opt_A",
-        "text": "A) Pongo metas ambiciosas y voy por ellas."
-      },
-      {
-        "id": "kostick_11_opt_B",
-        "text": "B) Pongo metas alcanzables para asegurar avance."
-      }
-    ]
-  },
-  {
-    "id": "12",
-    "question": "Par 12. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_12_opt_A",
-        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
-      },
-      {
-        "id": "kostick_12_opt_B",
-        "text": "B) Disfruto liderar reuniones."
-      }
-    ]
-  },
-  {
-    "id": "13",
-    "question": "Par 13. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_13_opt_A",
-        "text": "A) Tomo riesgos calculados con frecuencia."
-      },
-      {
-        "id": "kostick_13_opt_B",
-        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
-      }
-    ]
-  },
-  {
-    "id": "14",
-    "question": "Par 14. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_14_opt_A",
-        "text": "A) Cuido el equilibrio entre vida laboral y social."
-      },
-      {
-        "id": "kostick_14_opt_B",
-        "text": "B) Pongo mi trabajo por encima de la rutina social."
-      }
-    ]
-  },
-  {
-    "id": "15",
-    "question": "Par 15. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_15_opt_A",
-        "text": "A) Confronto a quien no cumple su parte."
-      },
-      {
-        "id": "kostick_15_opt_B",
-        "text": "B) Prefiero hablar en privado y con tacto."
-      }
-    ]
-  },
-  {
-    "id": "16",
-    "question": "Par 16. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_16_opt_A",
-        "text": "A) Necesito tiempo para internalizar cambios."
-      },
-      {
-        "id": "kostick_16_opt_B",
-        "text": "B) Me adapto rápido a nuevos procesos."
-      }
-    ]
-  },
-  {
-    "id": "17",
-    "question": "Par 17. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_17_opt_A",
-        "text": "A) Trabajo mejor con autonomía total."
-      },
-      {
-        "id": "kostick_17_opt_B",
-        "text": "B) Trabajo mejor con supervisión cercana."
-      }
-    ]
-  },
-  {
-    "id": "18",
-    "question": "Par 18. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_18_opt_A",
-        "text": "A) Prefiero coordinar equipos pequeños."
-      },
-      {
-        "id": "kostick_18_opt_B",
-        "text": "B) Me agrada estar al frente de un equipo grande."
-      }
-    ]
-  },
-  {
-    "id": "19",
-    "question": "Par 19. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_19_opt_A",
-        "text": "A) Comparto ideas aunque no estén pulidas."
-      },
-      {
-        "id": "kostick_19_opt_B",
-        "text": "B) Comparto solo cuando la idea está lista."
-      }
-    ]
-  },
-  {
-    "id": "20",
-    "question": "Par 20. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_20_opt_A",
-        "text": "A) Trabajo mejor sin retroalimentación constante."
-      },
-      {
-        "id": "kostick_20_opt_B",
-        "text": "B) Pido feedback frecuente."
-      }
-    ]
-  },
-  {
-    "id": "21",
-    "question": "Par 21. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_21_opt_A",
-        "text": "A) Negocio con dureza para obtener ventaja."
-      },
-      {
-        "id": "kostick_21_opt_B",
-        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
-      }
-    ]
-  },
-  {
-    "id": "22",
-    "question": "Par 22. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_22_opt_A",
-        "text": "A) Delego el seguimiento y confío en el equipo."
-      },
-      {
-        "id": "kostick_22_opt_B",
-        "text": "B) Doy seguimiento personalmente a cada detalle."
-      }
-    ]
-  },
-  {
-    "id": "23",
-    "question": "Par 23. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_23_opt_A",
-        "text": "A) Compito por reconocimiento profesional."
-      },
-      {
-        "id": "kostick_23_opt_B",
-        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
-      }
-    ]
-  },
-  {
-    "id": "24",
-    "question": "Par 24. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_24_opt_A",
-        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
-      },
-      {
-        "id": "kostick_24_opt_B",
-        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
-      }
-    ]
-  },
-  {
-    "id": "25",
-    "question": "Par 25. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_25_opt_A",
-        "text": "A) Hago las cosas a mi manera aunque haya un manual."
-      },
-      {
-        "id": "kostick_25_opt_B",
-        "text": "B) Sigo el manual estrictamente."
-      }
-    ]
-  },
-  {
-    "id": "26",
-    "question": "Par 26. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_26_opt_A",
-        "text": "A) Espero a tener toda la información antes de decidir."
-      },
-      {
-        "id": "kostick_26_opt_B",
-        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
-      }
-    ]
-  },
-  {
-    "id": "27",
-    "question": "Par 27. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_27_opt_A",
-        "text": "A) Defiendo nuevas formas de hacer las cosas."
-      },
-      {
-        "id": "kostick_27_opt_B",
-        "text": "B) Mantengo los métodos que ya funcionan."
-      }
-    ]
-  },
-  {
-    "id": "28",
-    "question": "Par 28. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_28_opt_A",
-        "text": "A) Mi energía varía y manejo bien los descansos."
-      },
-      {
-        "id": "kostick_28_opt_B",
-        "text": "B) Mi energía es alta y constante."
-      }
-    ]
-  },
-  {
-    "id": "29",
-    "question": "Par 29. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_29_opt_A",
-        "text": "A) Disfruto la presión de ventas o metas comerciales."
-      },
-      {
-        "id": "kostick_29_opt_B",
-        "text": "B) Prefiero roles técnicos sin presión comercial."
-      }
-    ]
-  },
-  {
-    "id": "30",
-    "question": "Par 30. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_30_opt_A",
-        "text": "A) Modulo mis comentarios para no incomodar."
-      },
-      {
-        "id": "kostick_30_opt_B",
-        "text": "B) Hablo con franqueza aunque incomode."
-      }
-    ]
-  },
-  {
-    "id": "31",
-    "question": "Par 31. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_31_opt_A",
-        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
-      },
-      {
-        "id": "kostick_31_opt_B",
-        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
-      }
-    ]
-  },
-  {
-    "id": "32",
-    "question": "Par 32. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_32_opt_A",
-        "text": "A) Prefiero presentar datos y dejar que decidan."
-      },
-      {
-        "id": "kostick_32_opt_B",
-        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
-      }
-    ]
-  },
-  {
-    "id": "33",
-    "question": "Par 33. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_33_opt_A",
-        "text": "A) Me siento cómodo tomando decisiones bajo presión."
-      },
-      {
-        "id": "kostick_33_opt_B",
-        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
-      }
-    ]
-  },
-  {
-    "id": "34",
-    "question": "Par 34. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_34_opt_A",
-        "text": "A) Rindo mejor con cronogramas amplios."
-      },
-      {
-        "id": "kostick_34_opt_B",
-        "text": "B) Me gusta trabajar con plazos ajustados."
-      }
-    ]
-  },
-  {
-    "id": "35",
-    "question": "Par 35. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_35_opt_A",
-        "text": "A) Prefiero variar de tareas a lo largo del día."
-      },
-      {
-        "id": "kostick_35_opt_B",
-        "text": "B) Rindo mejor con tareas continuas y enfocadas."
-      }
-    ]
-  },
-  {
-    "id": "36",
-    "question": "Par 36. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_36_opt_A",
-        "text": "A) Prefiero un círculo reducido de colegas."
-      },
-      {
-        "id": "kostick_36_opt_B",
-        "text": "B) Me gusta convivir con muchas personas en el trabajo."
-      }
-    ]
-  },
-  {
-    "id": "37",
-    "question": "Par 37. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_37_opt_A",
-        "text": "A) Tomo iniciativa para introducir cambios."
-      },
-      {
-        "id": "kostick_37_opt_B",
-        "text": "B) Espero a que el cambio esté validado por otros."
-      }
-    ]
-  },
-  {
-    "id": "38",
-    "question": "Par 38. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_38_opt_A",
-        "text": "A) Me motivan las tareas concretas y prácticas."
-      },
-      {
-        "id": "kostick_38_opt_B",
-        "text": "B) Me motivan los retos intelectuales complejos."
-      }
-    ]
-  },
-  {
-    "id": "39",
-    "question": "Par 39. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_39_opt_A",
-        "text": "A) Defiendo mi punto aunque genere conflicto."
-      },
-      {
-        "id": "kostick_39_opt_B",
-        "text": "B) Cedo si veo que mantener la armonía es más útil."
-      }
-    ]
-  },
-  {
-    "id": "40",
-    "question": "Par 40. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_40_opt_A",
-        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
-      },
-      {
-        "id": "kostick_40_opt_B",
-        "text": "B) Me siento cómodo hablando en público."
-      }
-    ]
-  },
-  {
-    "id": "41",
-    "question": "Par 41. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_41_opt_A",
-        "text": "A) Pongo metas ambiciosas y voy por ellas."
-      },
-      {
-        "id": "kostick_41_opt_B",
-        "text": "B) Pongo metas alcanzables para asegurar avance."
-      }
-    ]
-  },
-  {
-    "id": "42",
-    "question": "Par 42. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_42_opt_A",
-        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
-      },
-      {
-        "id": "kostick_42_opt_B",
-        "text": "B) Disfruto liderar reuniones."
-      }
-    ]
-  },
-  {
-    "id": "43",
-    "question": "Par 43. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_43_opt_A",
-        "text": "A) Tomo riesgos calculados con frecuencia."
-      },
-      {
-        "id": "kostick_43_opt_B",
-        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
-      }
-    ]
-  },
-  {
-    "id": "44",
-    "question": "Par 44. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_44_opt_A",
-        "text": "A) Cuido el equilibrio entre vida laboral y social."
-      },
-      {
-        "id": "kostick_44_opt_B",
-        "text": "B) Pongo mi trabajo por encima de la rutina social."
-      }
-    ]
-  },
-  {
-    "id": "45",
-    "question": "Par 45. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_45_opt_A",
-        "text": "A) Confronto a quien no cumple su parte."
-      },
-      {
-        "id": "kostick_45_opt_B",
-        "text": "B) Prefiero hablar en privado y con tacto."
-      }
-    ]
-  },
-  {
-    "id": "46",
-    "question": "Par 46. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_46_opt_A",
-        "text": "A) Necesito tiempo para internalizar cambios."
-      },
-      {
-        "id": "kostick_46_opt_B",
-        "text": "B) Me adapto rápido a nuevos procesos."
-      }
-    ]
-  },
-  {
-    "id": "47",
-    "question": "Par 47. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_47_opt_A",
-        "text": "A) Trabajo mejor con autonomía total."
-      },
-      {
-        "id": "kostick_47_opt_B",
-        "text": "B) Trabajo mejor con supervisión cercana."
-      }
-    ]
-  },
-  {
-    "id": "48",
-    "question": "Par 48. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_48_opt_A",
-        "text": "A) Prefiero coordinar equipos pequeños."
-      },
-      {
-        "id": "kostick_48_opt_B",
-        "text": "B) Me agrada estar al frente de un equipo grande."
-      }
-    ]
-  },
-  {
-    "id": "49",
-    "question": "Par 49. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_49_opt_A",
-        "text": "A) Comparto ideas aunque no estén pulidas."
-      },
-      {
-        "id": "kostick_49_opt_B",
-        "text": "B) Comparto solo cuando la idea está lista."
-      }
-    ]
-  },
-  {
-    "id": "50",
-    "question": "Par 50. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_50_opt_A",
-        "text": "A) Trabajo mejor sin retroalimentación constante."
-      },
-      {
-        "id": "kostick_50_opt_B",
-        "text": "B) Pido feedback frecuente."
-      }
-    ]
-  },
-  {
-    "id": "51",
-    "question": "Par 51. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_51_opt_A",
-        "text": "A) Negocio con dureza para obtener ventaja."
-      },
-      {
-        "id": "kostick_51_opt_B",
-        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
-      }
-    ]
-  },
-  {
-    "id": "52",
-    "question": "Par 52. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_52_opt_A",
-        "text": "A) Delego el seguimiento y confío en el equipo."
-      },
-      {
-        "id": "kostick_52_opt_B",
-        "text": "B) Doy seguimiento personalmente a cada detalle."
-      }
-    ]
-  },
-  {
-    "id": "53",
-    "question": "Par 53. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_53_opt_A",
-        "text": "A) Compito por reconocimiento profesional."
-      },
-      {
-        "id": "kostick_53_opt_B",
-        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
-      }
-    ]
-  },
-  {
-    "id": "54",
-    "question": "Par 54. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_54_opt_A",
-        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
-      },
-      {
-        "id": "kostick_54_opt_B",
-        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
-      }
-    ]
-  },
-  {
-    "id": "55",
-    "question": "Par 55. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_55_opt_A",
-        "text": "A) Hago las cosas a mi manera aunque haya un manual."
-      },
-      {
-        "id": "kostick_55_opt_B",
-        "text": "B) Sigo el manual estrictamente."
-      }
-    ]
-  },
-  {
-    "id": "56",
-    "question": "Par 56. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_56_opt_A",
-        "text": "A) Espero a tener toda la información antes de decidir."
-      },
-      {
-        "id": "kostick_56_opt_B",
-        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
-      }
-    ]
-  },
-  {
-    "id": "57",
-    "question": "Par 57. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_57_opt_A",
-        "text": "A) Defiendo nuevas formas de hacer las cosas."
-      },
-      {
-        "id": "kostick_57_opt_B",
-        "text": "B) Mantengo los métodos que ya funcionan."
-      }
-    ]
-  },
-  {
-    "id": "58",
-    "question": "Par 58. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_58_opt_A",
-        "text": "A) Mi energía varía y manejo bien los descansos."
-      },
-      {
-        "id": "kostick_58_opt_B",
-        "text": "B) Mi energía es alta y constante."
-      }
-    ]
-  },
-  {
-    "id": "59",
-    "question": "Par 59. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_59_opt_A",
-        "text": "A) Disfruto la presión de ventas o metas comerciales."
-      },
-      {
-        "id": "kostick_59_opt_B",
-        "text": "B) Prefiero roles técnicos sin presión comercial."
-      }
-    ]
-  },
-  {
-    "id": "60",
-    "question": "Par 60. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_60_opt_A",
-        "text": "A) Modulo mis comentarios para no incomodar."
-      },
-      {
-        "id": "kostick_60_opt_B",
-        "text": "B) Hablo con franqueza aunque incomode."
-      }
-    ]
-  },
-  {
-    "id": "61",
-    "question": "Par 61. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_61_opt_A",
-        "text": "A) Prefiero asumir el liderazgo en un proyecto nuevo."
-      },
-      {
-        "id": "kostick_61_opt_B",
-        "text": "B) Prefiero ejecutar tareas claras dentro de un plan ya hecho."
-      }
-    ]
-  },
-  {
-    "id": "62",
-    "question": "Par 62. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_62_opt_A",
-        "text": "A) Prefiero presentar datos y dejar que decidan."
-      },
-      {
-        "id": "kostick_62_opt_B",
-        "text": "B) Disfruto persuadir a otros para alcanzar un objetivo."
-      }
-    ]
-  },
-  {
-    "id": "63",
-    "question": "Par 63. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_63_opt_A",
-        "text": "A) Me siento cómodo tomando decisiones bajo presión."
-      },
-      {
-        "id": "kostick_63_opt_B",
-        "text": "B) Prefiero contar con tiempo y consulta antes de decidir."
-      }
-    ]
-  },
-  {
-    "id": "64",
-    "question": "Par 64. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_64_opt_A",
-        "text": "A) Rindo mejor con cronogramas amplios."
-      },
-      {
-        "id": "kostick_64_opt_B",
-        "text": "B) Me gusta trabajar con plazos ajustados."
-      }
-    ]
-  },
-  {
-    "id": "65",
-    "question": "Par 65. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_65_opt_A",
-        "text": "A) Prefiero variar de tareas a lo largo del día."
-      },
-      {
-        "id": "kostick_65_opt_B",
-        "text": "B) Rindo mejor con tareas continuas y enfocadas."
-      }
-    ]
-  },
-  {
-    "id": "66",
-    "question": "Par 66. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_66_opt_A",
-        "text": "A) Prefiero un círculo reducido de colegas."
-      },
-      {
-        "id": "kostick_66_opt_B",
-        "text": "B) Me gusta convivir con muchas personas en el trabajo."
-      }
-    ]
-  },
-  {
-    "id": "67",
-    "question": "Par 67. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_67_opt_A",
-        "text": "A) Tomo iniciativa para introducir cambios."
-      },
-      {
-        "id": "kostick_67_opt_B",
-        "text": "B) Espero a que el cambio esté validado por otros."
-      }
-    ]
-  },
-  {
-    "id": "68",
-    "question": "Par 68. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_68_opt_A",
-        "text": "A) Me motivan las tareas concretas y prácticas."
-      },
-      {
-        "id": "kostick_68_opt_B",
-        "text": "B) Me motivan los retos intelectuales complejos."
-      }
-    ]
-  },
-  {
-    "id": "69",
-    "question": "Par 69. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_69_opt_A",
-        "text": "A) Defiendo mi punto aunque genere conflicto."
-      },
-      {
-        "id": "kostick_69_opt_B",
-        "text": "B) Cedo si veo que mantener la armonía es más útil."
-      }
-    ]
-  },
-  {
-    "id": "70",
-    "question": "Par 70. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_70_opt_A",
-        "text": "A) Prefiero comunicar por escrito o en grupos pequeños."
-      },
-      {
-        "id": "kostick_70_opt_B",
-        "text": "B) Me siento cómodo hablando en público."
-      }
-    ]
-  },
-  {
-    "id": "71",
-    "question": "Par 71. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_71_opt_A",
-        "text": "A) Pongo metas ambiciosas y voy por ellas."
-      },
-      {
-        "id": "kostick_71_opt_B",
-        "text": "B) Pongo metas alcanzables para asegurar avance."
-      }
-    ]
-  },
-  {
-    "id": "72",
-    "question": "Par 72. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_72_opt_A",
-        "text": "A) Disfruto contribuir en reuniones lideradas por otros."
-      },
-      {
-        "id": "kostick_72_opt_B",
-        "text": "B) Disfruto liderar reuniones."
-      }
-    ]
-  },
-  {
-    "id": "73",
-    "question": "Par 73. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_73_opt_A",
-        "text": "A) Tomo riesgos calculados con frecuencia."
-      },
-      {
-        "id": "kostick_73_opt_B",
-        "text": "B) Evito riesgos a menos que sea estrictamente necesario."
-      }
-    ]
-  },
-  {
-    "id": "74",
-    "question": "Par 74. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_74_opt_A",
-        "text": "A) Cuido el equilibrio entre vida laboral y social."
-      },
-      {
-        "id": "kostick_74_opt_B",
-        "text": "B) Pongo mi trabajo por encima de la rutina social."
-      }
-    ]
-  },
-  {
-    "id": "75",
-    "question": "Par 75. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_75_opt_A",
-        "text": "A) Confronto a quien no cumple su parte."
-      },
-      {
-        "id": "kostick_75_opt_B",
-        "text": "B) Prefiero hablar en privado y con tacto."
-      }
-    ]
-  },
-  {
-    "id": "76",
-    "question": "Par 76. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_76_opt_A",
-        "text": "A) Necesito tiempo para internalizar cambios."
-      },
-      {
-        "id": "kostick_76_opt_B",
-        "text": "B) Me adapto rápido a nuevos procesos."
-      }
-    ]
-  },
-  {
-    "id": "77",
-    "question": "Par 77. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_77_opt_A",
-        "text": "A) Trabajo mejor con autonomía total."
-      },
-      {
-        "id": "kostick_77_opt_B",
-        "text": "B) Trabajo mejor con supervisión cercana."
-      }
-    ]
-  },
-  {
-    "id": "78",
-    "question": "Par 78. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_78_opt_A",
-        "text": "A) Prefiero coordinar equipos pequeños."
-      },
-      {
-        "id": "kostick_78_opt_B",
-        "text": "B) Me agrada estar al frente de un equipo grande."
-      }
-    ]
-  },
-  {
-    "id": "79",
-    "question": "Par 79. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_79_opt_A",
-        "text": "A) Comparto ideas aunque no estén pulidas."
-      },
-      {
-        "id": "kostick_79_opt_B",
-        "text": "B) Comparto solo cuando la idea está lista."
-      }
-    ]
-  },
-  {
-    "id": "80",
-    "question": "Par 80. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_80_opt_A",
-        "text": "A) Trabajo mejor sin retroalimentación constante."
-      },
-      {
-        "id": "kostick_80_opt_B",
-        "text": "B) Pido feedback frecuente."
-      }
-    ]
-  },
-  {
-    "id": "81",
-    "question": "Par 81. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_81_opt_A",
-        "text": "A) Negocio con dureza para obtener ventaja."
-      },
-      {
-        "id": "kostick_81_opt_B",
-        "text": "B) Negocio buscando un acuerdo justo para ambas partes."
-      }
-    ]
-  },
-  {
-    "id": "82",
-    "question": "Par 82. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_82_opt_A",
-        "text": "A) Delego el seguimiento y confío en el equipo."
-      },
-      {
-        "id": "kostick_82_opt_B",
-        "text": "B) Doy seguimiento personalmente a cada detalle."
-      }
-    ]
-  },
-  {
-    "id": "83",
-    "question": "Par 83. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_83_opt_A",
-        "text": "A) Compito por reconocimiento profesional."
-      },
-      {
-        "id": "kostick_83_opt_B",
-        "text": "B) No persigo reconocimiento, me basta el trabajo bien hecho."
-      }
-    ]
-  },
-  {
-    "id": "84",
-    "question": "Par 84. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_84_opt_A",
-        "text": "A) Prefiero un contexto donde la jerarquía sea afín."
-      },
-      {
-        "id": "kostick_84_opt_B",
-        "text": "B) Me siento cómodo dirigiendo a personas mayores que yo."
-      }
-    ]
-  },
-  {
-    "id": "85",
-    "question": "Par 85. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_85_opt_A",
-        "text": "A) Hago las cosas a mi manera aunque haya un manual."
-      },
-      {
-        "id": "kostick_85_opt_B",
-        "text": "B) Sigo el manual estrictamente."
-      }
-    ]
-  },
-  {
-    "id": "86",
-    "question": "Par 86. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_86_opt_A",
-        "text": "A) Espero a tener toda la información antes de decidir."
-      },
-      {
-        "id": "kostick_86_opt_B",
-        "text": "B) Tomo decisiones con la información disponible aunque sea incompleta."
-      }
-    ]
-  },
-  {
-    "id": "87",
-    "question": "Par 87. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_87_opt_A",
-        "text": "A) Defiendo nuevas formas de hacer las cosas."
-      },
-      {
-        "id": "kostick_87_opt_B",
-        "text": "B) Mantengo los métodos que ya funcionan."
-      }
-    ]
-  },
-  {
-    "id": "88",
-    "question": "Par 88. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_88_opt_A",
-        "text": "A) Mi energía varía y manejo bien los descansos."
-      },
-      {
-        "id": "kostick_88_opt_B",
-        "text": "B) Mi energía es alta y constante."
-      }
-    ]
-  },
-  {
-    "id": "89",
-    "question": "Par 89. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_89_opt_A",
-        "text": "A) Disfruto la presión de ventas o metas comerciales."
-      },
-      {
-        "id": "kostick_89_opt_B",
-        "text": "B) Prefiero roles técnicos sin presión comercial."
-      }
-    ]
-  },
-  {
-    "id": "90",
-    "question": "Par 90. ¿Cuál te describe mejor?",
-    "options": [
-      {
-        "id": "kostick_90_opt_A",
-        "text": "A) Modulo mis comentarios para no incomodar."
-      },
-      {
-        "id": "kostick_90_opt_B",
-        "text": "B) Hablo con franqueza aunque incomode."
-      }
-    ]
+// Banco del inventario Kostick (PAPI: Perception And Preference Inventory).
+// Redactado por Hacke's Jobs: afirmaciones originales, no las del instrumento
+// comercial.
+//
+// Estructura del PAPI: 20 factores con 9 afirmaciones cada uno (180 en total),
+// combinadas en 90 pares de elección forzada. Los pares se arman con un
+// calendario "todos contra todos": en cada ronda los 20 factores aparecen una
+// vez, ningún par se repite y ningún factor se enfrenta consigo mismo. Así cada
+// factor puntúa de 0 a 9, como en la prueba original. (Antes eran 30 pares
+// repetidos tres veces.)
+import type { ChoiceQuestion } from '@/lib/psicometrias/banco';
+
+export const KOSTICK_VERSION = 'kostick-2026-10';
+
+export const KOSTICK_FACTORES = {
+  N: { area: 'Dirección del trabajo', nombre: 'Necesidad de terminar una tarea' },
+  G: { area: 'Dirección del trabajo', nombre: 'Papel de trabajador intenso' },
+  A: { area: 'Dirección del trabajo', nombre: 'Necesidad de logro' },
+  L: { area: 'Liderazgo', nombre: 'Papel de líder' },
+  P: { area: 'Liderazgo', nombre: 'Necesidad de controlar a otros' },
+  I: { area: 'Liderazgo', nombre: 'Facilidad para tomar decisiones' },
+  T: { area: 'Ritmo de trabajo', nombre: 'Ritmo (tempo)' },
+  V: { area: 'Ritmo de trabajo', nombre: 'Vigor físico' },
+  X: { area: 'Naturaleza social', nombre: 'Necesidad de ser notado' },
+  S: { area: 'Naturaleza social', nombre: 'Extensión social' },
+  B: { area: 'Naturaleza social', nombre: 'Necesidad de pertenecer a grupos' },
+  O: { area: 'Naturaleza social', nombre: 'Necesidad de cercanía y afecto' },
+  R: { area: 'Estilo de trabajo', nombre: 'Tipo teórico' },
+  D: { area: 'Estilo de trabajo', nombre: 'Interés en los detalles' },
+  C: { area: 'Estilo de trabajo', nombre: 'Organización' },
+  Z: { area: 'Temperamento', nombre: 'Necesidad de cambio' },
+  E: { area: 'Temperamento', nombre: 'Control emocional' },
+  K: { area: 'Temperamento', nombre: 'Necesidad de defenderse (agresividad)' },
+  F: { area: 'Subordinación', nombre: 'Apoyo a la autoridad' },
+  W: { area: 'Subordinación', nombre: 'Necesidad de reglas y supervisión' },
+} as const;
+
+type Factor = keyof typeof KOSTICK_FACTORES;
+
+const AFIRMACIONES: Record<Factor, string[]> = {
+  N: [
+    'Termino una tarea antes de empezar otra.',
+    'Me incomoda dejar un trabajo a medias.',
+    'Sigo con una tarea hasta terminarla, aunque me tome más tiempo.',
+    'Cuando empiezo algo, me gusta verlo terminado.',
+    'Prefiero cerrar pendientes antes de aceptar otros nuevos.',
+    'Me cuesta descansar si tengo algo sin terminar.',
+    'Llevo cada encargo hasta el final.',
+    'No me gusta dejar cabos sueltos en un proyecto.',
+    'Me siento satisfecho cuando cierro por completo un pendiente.',
+  ],
+  G: [
+    'Trabajo duro durante toda la jornada.',
+    'Estoy dispuesto a esforzarme más que los demás.',
+    'Me gusta tener mucho trabajo por hacer.',
+    'Dedico horas extra cuando el trabajo lo exige.',
+    'Disfruto las temporadas de mucha carga de trabajo.',
+    'Pongo mucho empeño en todo lo que hago.',
+    'El trabajo pesado no me cansa fácilmente.',
+    'Prefiero estar ocupado que tener tiempo libre en el trabajo.',
+    'Me esfuerzo al máximo aunque nadie me supervise.',
+  ],
+  A: [
+    'Me pongo metas difíciles de alcanzar.',
+    'Quiero ser de los mejores en lo que hago.',
+    'Me esfuerzo por superar mis propios resultados.',
+    'Me motiva alcanzar objetivos ambiciosos.',
+    'Quiero avanzar en mi carrera más rápido que el promedio.',
+    'Me gusta competir para quedar en primer lugar.',
+    'Busco hacer las cosas mejor que la vez anterior.',
+    'Aspiro a puestos de mayor responsabilidad.',
+    'Me frustra quedarme por debajo de mis metas.',
+  ],
+  L: [
+    'Me gusta dirigir a un grupo de personas.',
+    'Suelo tomar la batuta cuando el grupo no se organiza.',
+    'La gente suele seguir mis indicaciones.',
+    'Me siento cómodo siendo responsable del trabajo de otros.',
+    'Me gusta coordinar el trabajo de un equipo.',
+    'Disfruto ser quien representa al grupo.',
+    'Asumo el mando con naturalidad.',
+    'Me gusta ser el responsable de un proyecto.',
+    'Prefiero ser el líder que un integrante más del equipo.',
+  ],
+  P: [
+    'Me gusta decirle a otros cómo hacer su trabajo.',
+    'Superviso de cerca a quienes dependen de mí.',
+    'Me gusta que las cosas se hagan a mi manera.',
+    'Me siento responsable de que otros cumplan su parte.',
+    'Disfruto dar instrucciones a los demás.',
+    'Me gusta influir en las decisiones de otras personas.',
+    'Corrijo a otros cuando hacen algo mal.',
+    'Me gusta tener autoridad sobre otros.',
+    'Pido cuentas a quienes tienen tareas a su cargo.',
+  ],
+  I: [
+    'Tomo decisiones con rapidez.',
+    'Decido sin necesidad de consultar a muchas personas.',
+    'Me resulta fácil elegir entre varias opciones.',
+    'No me cuesta tomar decisiones importantes.',
+    'Una vez que decido, no le doy más vueltas.',
+    'Prefiero decidir pronto que esperar a tener toda la información.',
+    'Me siento seguro al tomar decisiones difíciles.',
+    'Asumo las consecuencias de mis decisiones sin titubear.',
+    'Me gusta ser quien tiene la última palabra.',
+  ],
+  T: [
+    'Trabajo a un ritmo rápido.',
+    'Me gusta hacer las cosas deprisa.',
+    'Me impaciento cuando las cosas van lentas.',
+    'Resuelvo los pendientes con agilidad.',
+    'Paso rápido de una actividad a otra.',
+    'Termino mis tareas antes del plazo.',
+    'Me gusta trabajar con un ritmo intenso.',
+    'Me desespera la lentitud de algunos procesos.',
+    'Hago muchas cosas en poco tiempo.',
+  ],
+  V: [
+    'Prefiero un trabajo que me mantenga en movimiento.',
+    'Me gustan las actividades físicas.',
+    'Me aburre estar sentado mucho tiempo.',
+    'Disfruto el trabajo de campo o en piso.',
+    'Tengo mucha energía física.',
+    'Prefiero ir en persona a resolver algo que hacerlo por teléfono.',
+    'Practico algún deporte con regularidad.',
+    'Me siento mejor cuando hago esfuerzo físico.',
+    'Prefiero tareas activas a tareas de escritorio.',
+  ],
+  X: [
+    'Me gusta que reconozcan mis logros en público.',
+    'Disfruto ser el centro de atención.',
+    'Me gusta destacar en un grupo.',
+    'Me agrada que la gente note mi trabajo.',
+    'Me gusta hablar frente a un grupo.',
+    'Disfruto que me feliciten frente a otros.',
+    'Me gusta que me pidan mi opinión en las reuniones.',
+    'Me gusta hacerme notar.',
+    'Disfruto presentar mis resultados ante los directivos.',
+  ],
+  S: [
+    'Hago amigos con facilidad.',
+    'Disfruto conocer gente nueva.',
+    'Me gusta convivir con mis compañeros fuera del trabajo.',
+    'Tengo muchos conocidos en distintos ámbitos.',
+    'Platico fácilmente con desconocidos.',
+    'Me gustan las reuniones sociales.',
+    'Disfruto los eventos con mucha gente.',
+    'Me resulta fácil iniciar una conversación.',
+    'Me gusta mantener contacto con mucha gente.',
+  ],
+  B: [
+    'Me gusta sentirme parte de un equipo.',
+    'Prefiero trabajar en grupo que solo.',
+    'Me importa ser aceptado por mis compañeros.',
+    'Me adapto a lo que decide el grupo.',
+    'Me gusta participar en las actividades del equipo.',
+    'Me siento bien cuando el equipo me incluye.',
+    'Me esfuerzo por llevarme bien con todo el grupo.',
+    'Me gusta pertenecer a asociaciones o clubes.',
+    'Prefiero los logros del equipo a los logros individuales.',
+  ],
+  O: [
+    'Me gusta tener relaciones cercanas con mis compañeros.',
+    'Me importa que las personas con quienes trabajo me aprecien.',
+    'Busco ganarme la confianza de mis compañeros.',
+    'Me interesa saber cómo están mis compañeros en lo personal.',
+    'Me afecta cuando alguien del trabajo está molesto conmigo.',
+    'Me gusta tener un amigo de confianza en el trabajo.',
+    'Me gusta apoyar a un compañero con un problema personal.',
+    'Valoro la calidez en el trato.',
+    'Expreso mi aprecio a las personas cercanas.',
+  ],
+  R: [
+    'Me gusta reflexionar sobre ideas y teorías.',
+    'Analizo un problema a fondo antes de actuar.',
+    'Me interesa entender el porqué de las cosas.',
+    'Disfruto planear a largo plazo.',
+    'Me gusta leer sobre temas complejos.',
+    'Busco el principio que explica un problema.',
+    'Prefiero pensar antes que actuar.',
+    'Me gusta diseñar soluciones nuevas.',
+    'Disfruto discutir conceptos abstractos.',
+  ],
+  D: [
+    'Reviso con cuidado los detalles de mi trabajo.',
+    'Detecto errores pequeños que otros no ven.',
+    'Me gusta el trabajo que requiere precisión.',
+    'Reviso dos veces antes de entregar algo.',
+    'Pongo atención a los datos exactos.',
+    'Disfruto las tareas minuciosas.',
+    'Cuido cada detalle de un informe.',
+    'Me molesta entregar algo con errores, aunque sean menores.',
+    'Me gusta trabajar con cifras exactas.',
+  ],
+  C: [
+    'Mantengo mi lugar de trabajo ordenado.',
+    'Planeo mi día antes de empezar.',
+    'Me gusta tener un sistema para todo.',
+    'Sigo una agenda bien definida.',
+    'Archivo mis documentos de forma ordenada.',
+    'Hago listas de pendientes.',
+    'Organizo mis tareas por prioridad.',
+    'Me gusta saber dónde está cada cosa.',
+    'Planifico con anticipación.',
+  ],
+  Z: [
+    'Me gusta probar formas nuevas de hacer las cosas.',
+    'Me aburre la rutina.',
+    'Disfruto los cambios en mi trabajo.',
+    'Busco experiencias nuevas con frecuencia.',
+    'Me gusta cambiar de proyecto seguido.',
+    'Me entusiasman las ideas novedosas.',
+    'Me adapto con gusto a situaciones nuevas.',
+    'Me gusta conocer lugares y ambientes diferentes.',
+    'Prefiero la variedad a la estabilidad.',
+  ],
+  E: [
+    'Mantengo la calma en situaciones tensas.',
+    'Controlo mis emociones en el trabajo.',
+    'Rara vez pierdo la paciencia.',
+    'No dejo que el enojo afecte mis decisiones.',
+    'Pienso antes de reaccionar.',
+    'Soy reservado con mis sentimientos.',
+    'Me mantengo sereno ante las críticas.',
+    'Guardo la compostura aunque me provoquen.',
+    'Mis compañeros rara vez me ven alterado.',
+  ],
+  K: [
+    'Defiendo mi postura con firmeza.',
+    'Enfrento directamente a quien me ataca.',
+    'No me dejo presionar por otros.',
+    'Digo lo que pienso aunque moleste.',
+    'Respondo con firmeza cuando no estoy de acuerdo.',
+    'Lucho por lo que considero justo.',
+    'No dejo pasar una ofensa.',
+    'Discuto cuando creo tener la razón.',
+    'Me defiendo cuando me critican injustamente.',
+  ],
+  F: [
+    'Apoyo las decisiones de mi jefe.',
+    'Soy leal a la empresa en la que trabajo.',
+    'Me gusta ayudar a mi jefe a lograr sus objetivos.',
+    'Respeto la autoridad de mis superiores.',
+    'Defiendo a mi jefe ante los demás.',
+    'Me gusta saber qué espera mi jefe de mí.',
+    'Procuro quedar bien con mis superiores.',
+    'Sigo las indicaciones de mi jefe aunque no las comparta del todo.',
+    'Me identifico con los objetivos de la empresa.',
+  ],
+  W: [
+    'Prefiero recibir instrucciones claras sobre qué hacer.',
+    'Me gusta trabajar con procedimientos definidos.',
+    'Sigo las reglas al pie de la letra.',
+    'Me siento más seguro con un jefe que me oriente.',
+    'Prefiero que me digan cómo se hacen las cosas.',
+    'Me gusta que las políticas estén por escrito.',
+    'Respeto los reglamentos aunque nadie me vigile.',
+    'Me incomoda trabajar sin lineamientos claros.',
+    'Consulto el manual antes de improvisar.',
+  ],
+};
+
+const FACTORES = Object.keys(KOSTICK_FACTORES) as Factor[];
+const RONDAS = 9;
+
+/** Calendario todos contra todos (método del círculo) para 20 factores. */
+function parejasDeRonda(ronda: number): [Factor, Factor][] {
+  const resto = FACTORES.slice(1);
+  const girado = [...resto.slice(ronda), ...resto.slice(0, ronda)];
+  const orden = [FACTORES[0], ...girado];
+  const mitad = orden.length / 2;
+  return Array.from({ length: mitad }, (_, k) => [orden[k], orden[orden.length - 1 - k]] as [Factor, Factor]);
+}
+
+export const KOSTICK_QUESTIONS: ChoiceQuestion[] = Array.from({ length: RONDAS }, (_, ronda) =>
+  parejasDeRonda(ronda).map(([f1, f2], k) => {
+    // Alterna qué factor va como A para que la posición no delate nada.
+    const [fa, fb] = (ronda + k) % 2 === 0 ? [f1, f2] : [f2, f1];
+    return { fa, fb, ronda };
+  })
+)
+  .flat()
+  .map(({ fa, fb, ronda }, i) => {
+    const id = String(i + 1);
+    return {
+      id,
+      question: `Par ${id}. ¿Cuál de las dos frases te describe mejor?`,
+      options: [
+        { id: `kostick_${id}_A`, text: `A) ${AFIRMACIONES[fa][ronda]}`, clave: fa },
+        { id: `kostick_${id}_B`, text: `B) ${AFIRMACIONES[fb][ronda]}`, clave: fb },
+      ],
+    };
+  });
+
+export function calificarKostick(answers: Record<string, string>) {
+  const puntos = Object.fromEntries(FACTORES.map(f => [f, 0])) as Record<Factor, number>;
+  for (const q of KOSTICK_QUESTIONS) {
+    const clave = q.options.find(o => o.id === answers[q.id])?.clave as Factor | undefined;
+    if (clave) puntos[clave]++;
   }
-];
+  return {
+    nota: 'Escala de 0 a 9 por factor (cada factor aparece en 9 pares). La suma de los 20 factores es igual al número de pares contestados.',
+    por_factor: Object.fromEntries(
+      FACTORES.map(f => [f, { area: KOSTICK_FACTORES[f].area, factor: KOSTICK_FACTORES[f].nombre, puntaje: puntos[f] }])
+    ),
+  };
+}
 
 export const getKostickQuestions = () => KOSTICK_QUESTIONS;
