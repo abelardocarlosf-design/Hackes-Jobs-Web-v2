@@ -1,4 +1,4 @@
-// Regenera n8n-workflows/WF-006 Kostick.json con el reporte corregido.
+// Regenera el workflow de n8n de una psicometría con el reporte corregido.
 //
 // Problema que resuelve (reporte del 2026-10-05): Gemini devolvía fortalezas,
 // riesgos y puntajes como listas u objetos, y la plantilla de Gmail los pintaba
@@ -6,8 +6,8 @@
 // leía la salida de Google Sheets (cuya columna se llama "justificiacion_…").
 //
 // Cambios:
-//  · Prompt con los 20 factores reales del PAPI y su lectura alto/bajo, y la
-//    orden explícita de devolver solo texto plano.
+//  · Prompt propio de cada prueba (p. ej. los 20 factores del PAPI en Kostick,
+//    el ICG en Moss) con la orden explícita de devolver solo texto plano.
 //  · "Parser Blindado" convierte cualquier lista u objeto en viñetas de texto y
 //    quita el markdown (**).
 //  · Nodo nuevo "Formato Reporte" (después del parser o del reporte anulado):
@@ -15,13 +15,16 @@
 //    tabla de puntajes calculada por el sitio, no la del modelo.
 //  · Sheets y los correos leen de "Formato Reporte".
 //
-// Uso: node scripts/n8n/kostick-wf006.mjs   (escribe el JSON en n8n-workflows/)
+// Uso: node scripts/n8n/reporte-n8n.mjs kostick|moss   (reescribe el JSON en n8n-workflows/)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const archivo = path.join(raiz, 'n8n-workflows', 'WF-006 Kostick.json');
+const ARCHIVOS = { kostick: 'WF-006 Kostick.json', moss: 'WF-004 Moss.json' };
+const prueba = process.argv[2];
+if (!ARCHIVOS[prueba]) throw new Error(`Uso: node scripts/n8n/reporte-n8n.mjs ${Object.keys(ARCHIVOS).join('|')}`);
+const archivo = path.join(raiz, 'n8n-workflows', ARCHIVOS[prueba]);
 const wf = JSON.parse(fs.readFileSync(archivo, 'utf8'));
 const nodo = nombre => {
   const n = wf.nodes.find(x => x.name === nombre);
@@ -44,7 +47,8 @@ const r = body.respuestas || {};
 const p = r.puntajes || {};
 // Puntajes calculados en el sitio (formato v2). Si llegara un envío viejo, se
 // manda lo que haya para que el modelo al menos vea las respuestas.
-const puntajes = { nota: p.nota, por_factor: p.por_factor, perfil: p.perfil };
+const puntajes = Object.assign({}, p);
+delete puntajes.tabla;
 return { json: {
   candidate_id,
   nombre: (dp.nombre_completo || '').trim(),
@@ -54,14 +58,14 @@ return { json: {
   fecha: dt.fecha_aplicacion || new Date().toISOString(),
   total, contestadas, completitud, es_valido,
   validez_flag: es_valido ? 'VALIDO' : 'INVALIDO_INCOMPLETO',
-  puntajes_str: p.por_factor ? JSON.stringify(puntajes) : JSON.stringify(r),
+  puntajes_str: Object.keys(p).length ? JSON.stringify(puntajes) : JSON.stringify(r),
   tabla_puntajes: typeof p.tabla === 'string' ? p.tabla : '',
   respuestas_str: JSON.stringify(r),
 } };
 `.trim();
 
 // ─── Prompt ──────────────────────────────────────────────────────────────────
-const PROMPT = `=ROL: Analista psicométrico senior de Hacke's Jobs. Tono ejecutivo, basado en evidencia, sin inventar datos.
+const PROMPT_KOSTICK = `=ROL: Analista psicométrico senior de Hacke's Jobs. Tono ejecutivo, basado en evidencia, sin inventar datos.
 
 PRUEBA: Kostick (PAPI, Perception And Preference Inventory). 20 factores agrupados en 7 áreas. Cada factor va de 0 a 9 (aparece en 9 pares de elección forzada; la suma de los 20 factores es 90). Alto >= 7, medio 3-6, bajo <= 2. Es una prueba ipsativa: un puntaje alto en un factor implica bajos en otros, así que interpreta los factores en relación entre sí, no como absolutos.
 
@@ -109,6 +113,43 @@ INSTRUCCIONES DE REDACCIÓN
 - riesgos_potenciales: de 3 a 5 viñetas con el mismo formato, sobre factores bajos, combinaciones en tensión (p. ej. I alto con D bajo) o excesos de un factor alto.
 - recomendacion_contratacion: exactamente uno de estos textos: "Recomendado", "Recomendado con reservas", "No recomendado".
 - justificacion_recomendacion: de 3 a 5 oraciones que conecten los factores con el cargo. Si el cargo es "No especificado", dilo y recomienda para qué tipo de puesto encaja mejor el perfil.
+- puntajes_crudos: déjalo vacío (""); lo llena el sistema.
+- feedback_candidato: 2 o 3 oraciones dirigidas al candidato en segunda persona, tono constructivo, sin puntajes.
+- No uses "excelente", "excepcional", "sobresaliente", "perfecto" ni "ideal". Nada de lenguaje clínico ni diagnóstico: es apoyo a decisiones de RH.
+
+RESPONDE SOLO CON ESTE JSON, sin texto adicional:
+{"validez":"","resumen_validez":"","resumen_ejecutivo":"","fortalezas_operativas":"","riesgos_potenciales":"","recomendacion_contratacion":"","justificacion_recomendacion":"","puntajes_crudos":"","feedback_candidato":""}`;
+
+const PROMPT_MOSS = `=ROL: Analista psicométrico senior de Hacke's Jobs. Tono ejecutivo, basado en evidencia, sin inventar datos.
+
+PRUEBA: Moss (habilidades de supervisión y relaciones humanas en el trabajo). 30 situaciones laborales con una respuesta correcta cada una, 6 por dimensión:
+- HS Habilidad de supervisión: dirigir, corregir y dar seguimiento al trabajo de otros.
+- CDRH Capacidad de decisión en las relaciones humanas: decidir con criterio cuando hay personas, metas y recursos en juego.
+- CEMT Capacidad de evaluación de problemas interpersonales: diagnosticar conflictos y conductas antes de actuar.
+- HERI Habilidad para establecer relaciones interpersonales: reconocer, retener y construir confianza con el equipo.
+- SCMT Sentido común y tacto: comunicar decisiones difíciles, asumir errores y manejar críticas con prudencia.
+
+CÓMO LEER LOS DATOS
+- "porcentaje" es el % de aciertos en la dimensión (aciertos de 6). NO es un percentil: nunca lo llames percentil.
+- ICG (Índice de Capacidad Gerencial) ya calculado: < 40 bajo, 40-60 medio, 61-80 adecuado, > 80 alto.
+- Dimensión con 2 aciertos o menos (<= 33%) = área de desarrollo prioritaria.
+- "errores" lista las situaciones que falló, con lo que eligió y la respuesta correcta: úsalas como evidencia concreta.
+
+DATOS DEL CANDIDATO
+- Nombre: {{ $json.nombre }}
+- Empresa / cargo: {{ $json.empresa }} / {{ $json.cargo }}
+- Completitud: {{ $json.completitud }}% ({{ $json.contestadas }} de {{ $json.total }} situaciones)
+- Puntajes ya calculados por el sistema (son la fuente de verdad; no los recalcules ni los cambies): {{ $json.puntajes_str }}
+
+INSTRUCCIONES DE REDACCIÓN
+- Cada campo del JSON es TEXTO PLANO (string). Prohibido devolver listas, arreglos u objetos. Prohibido usar markdown (**, #, guiones de lista).
+- validez: "VALIDO" si la completitud es >= 85%; si no, "INVALIDO_INCOMPLETO".
+- resumen_validez: una oración sobre la confiabilidad del resultado.
+- resumen_ejecutivo: un párrafo de 4 a 6 oraciones con el ICG y su nivel, las dimensiones más fuertes y las más débiles, y qué tipo de supervisor describe.
+- fortalezas_operativas: de 2 a 4 viñetas, una por línea, cada una empieza con "• " y cita dimensión y aciertos. Ejemplo: "• Supervisión (HS 5/6): corrige en privado y da seguimiento."
+- riesgos_potenciales: de 2 a 4 viñetas con el mismo formato, apoyadas en las situaciones falladas (menciona qué eligió y por qué es un riesgo). Si no falló ninguna, señala el riesgo de sobreestimar un resultado de autoinforme.
+- recomendacion_contratacion: exactamente uno de estos textos: "Recomendado", "Recomendado con reservas", "No recomendado".
+- justificacion_recomendacion: de 3 a 5 oraciones que conecten el ICG y las dimensiones con el cargo, más una acción de desarrollo concreta. Si el cargo es "No especificado", dilo.
 - puntajes_crudos: déjalo vacío (""); lo llena el sistema.
 - feedback_candidato: 2 o 3 oraciones dirigidas al candidato en segunda persona, tono constructivo, sin puntajes.
 - No uses "excelente", "excepcional", "sobresaliente", "perfecto" ni "ideal". Nada de lenguaje clínico ni diagnóstico: es apoyo a decisiones de RH.
@@ -169,13 +210,13 @@ function recomendacion(v) {
   const s = txt(v).toLowerCase();
   if (!s) return 'Revisión manual requerida';
   if (s.includes('no recomend')) return 'No recomendado';
-  if (s.includes('reserva') || s.includes('condicion')) return 'Recomendado con reservas';
+  if (s.includes('reserva') || s.includes('condicion') || s.includes('consider')) return 'Recomendado con reservas';
   if (s.includes('recomend')) return 'Recomendado';
   return txt(v);
 }
 const out = {
   validez: txt(r.validez) || n.validez_flag,
-  resumen_validez: txt(r.resumen_validez) || ('Completitud ' + n.completitud + '% (' + n.contestadas + ' de ' + n.total + ' pares).'),
+  resumen_validez: txt(r.resumen_validez) || ('Completitud ' + n.completitud + '% (' + n.contestadas + ' de ' + n.total + ' reactivos).'),
   resumen_ejecutivo: txt(r.resumen_ejecutivo),
   fortalezas_operativas: txt(r.fortalezas_operativas) || 'Sin información.',
   riesgos_potenciales: txt(r.riesgos_potenciales) || 'Sin información.',
@@ -190,7 +231,7 @@ return { json: out };
 `.trim();
 
 nodo('Normalizar y Validar').parameters.jsCode = CODIGO_NORMALIZAR;
-nodo('Gemini Analisis').parameters.messages.values[0].content = PROMPT;
+nodo('Gemini Analisis').parameters.messages.values[0].content = { kostick: PROMPT_KOSTICK, moss: PROMPT_MOSS }[prueba];
 nodo('Gemini Analisis').parameters.options = { ...(nodo('Gemini Analisis').parameters.options || {}), temperature: 0.3 };
 nodo('Parser Blindado').parameters.jsCode = CODIGO_PARSER;
 
@@ -232,4 +273,4 @@ rh.parameters.message = rh.parameters.message.replace(
 );
 
 fs.writeFileSync(archivo, JSON.stringify(wf, null, 2) + '\n', 'utf8');
-console.log('WF-006 actualizado:', archivo);
+console.log('Workflow actualizado:', archivo);

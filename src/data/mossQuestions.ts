@@ -197,13 +197,34 @@ export function calificarMoss(answers: Record<string, string>) {
     if (q.options.find(o => o.id === answers[q.id])?.valor === 1) aciertos[d]++;
   }
   const total = dims.reduce((s, d) => s + aciertos[d], 0);
+  const pct = (d: Dimension) => Math.round((aciertos[d] / reactivos[d]) * 100);
+
+  // Índice de Capacidad Gerencial: ponderación que usa la lectura del reporte.
+  const PESOS: Record<Dimension, number> = { HS: 0.3, CDRH: 0.25, CEMT: 0.2, HERI: 0.15, SCMT: 0.1 };
+  const icg = Math.round(dims.reduce((s, d) => s + pct(d) * PESOS[d], 0));
+  const nivelIcg = icg < 40 ? 'bajo' : icg <= 60 ? 'medio' : icg <= 80 ? 'adecuado' : 'alto';
+
+  // Situaciones falladas: le dan al análisis ejemplos concretos de qué eligió el candidato.
+  const errores = MOSS_QUESTIONS.flatMap(q => {
+    const elegida = q.options.find(o => o.id === answers[q.id]);
+    if (!elegida || elegida.valor === 1) return [];
+    const correcta = q.options.find(o => o.valor === 1)!;
+    return [`[${q.options[0].clave}] ${q.question} → Eligió: "${elegida.text}" · Correcta: "${correcta.text}"`];
+  });
+
   return {
-    nota: 'Aciertos contra la clave de respuesta del banco de Hacke\'s Jobs. Porcentaje = aciertos / reactivos de la dimensión × 100.',
+    nota: 'Aciertos contra la clave del banco de Hacke\'s Jobs (6 situaciones por dimensión). "porcentaje" es % de aciertos, NO un percentil. ICG = HS×0.30 + CDRH×0.25 + CEMT×0.20 + HERI×0.15 + SCMT×0.10.',
     por_dimension: Object.fromEntries(
-      dims.map(d => [d, { nombre: MOSS_DIMENSIONES[d], aciertos: aciertos[d], reactivos: reactivos[d], porcentaje: Math.round((aciertos[d] / reactivos[d]) * 100) }])
+      dims.map(d => [d, { nombre: MOSS_DIMENSIONES[d], aciertos: aciertos[d], reactivos: reactivos[d], porcentaje: pct(d) }])
     ),
     aciertos_totales: total,
     porcentaje_total: Math.round((total / MOSS_QUESTIONS.length) * 100),
+    icg: { valor: icg, nivel: nivelIcg },
+    errores,
+    tabla: [
+      ...dims.map(d => `${d} ${MOSS_DIMENSIONES[d]}: ${aciertos[d]}/${reactivos[d]} (${pct(d)}%)`),
+      `Total: ${total}/${MOSS_QUESTIONS.length} (${Math.round((total / MOSS_QUESTIONS.length) * 100)}%) · ICG ${icg} (${nivelIcg})`,
+    ].join('\n'),
   };
 }
 

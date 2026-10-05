@@ -20,7 +20,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const body=($input.item.json.body)||{};const dp=body.datos_paciente||{};const dt=body.datos_prueba||{};const total=Number(dt.total_preguntas||0);const contestadas=Number(dt.preguntas_contestadas||0);const completitud=total>0?Math.round((contestadas/total)*100):0;const es_valido=completitud>=85;const email=(dp.email||'').trim().toLowerCase();const candidate_id=email?email+'::'+(dt.fecha_aplicacion||Date.now()):'anon::'+Date.now();return{json:{candidate_id,nombre:(dp.nombre_completo||'').trim(),email,empresa:dp.empresa||'No especificado',cargo:dp.cargo_postulado||'No especificado',fecha:dt.fecha_aplicacion||new Date().toISOString(),total,contestadas,completitud,es_valido,validez_flag:es_valido?'VALIDO':'INVALIDO_INCOMPLETO',respuestas_str:JSON.stringify(body.respuestas||{})}};"
+        "jsCode": "const body = ($input.item.json.body) || {};\nconst dp = body.datos_paciente || {};\nconst dt = body.datos_prueba || {};\nconst total = Number(dt.total_preguntas || 0);\nconst contestadas = Number(dt.preguntas_contestadas || 0);\nconst completitud = total > 0 ? Math.round((contestadas / total) * 100) : 0;\nconst es_valido = completitud >= 85;\nconst email = (dp.email || '').trim().toLowerCase();\nconst candidate_id = email ? email + '::' + (dt.fecha_aplicacion || Date.now()) : 'anon::' + Date.now();\nconst r = body.respuestas || {};\nconst p = r.puntajes || {};\n// Puntajes calculados en el sitio (formato v2). Si llegara un envío viejo, se\n// manda lo que haya para que el modelo al menos vea las respuestas.\nconst puntajes = Object.assign({}, p);\ndelete puntajes.tabla;\nreturn { json: {\n  candidate_id,\n  nombre: (dp.nombre_completo || '').trim(),\n  email,\n  empresa: dp.empresa || 'No especificado',\n  cargo: dp.cargo_postulado || 'No especificado',\n  fecha: dt.fecha_aplicacion || new Date().toISOString(),\n  total, contestadas, completitud, es_valido,\n  validez_flag: es_valido ? 'VALIDO' : 'INVALIDO_INCOMPLETO',\n  puntajes_str: Object.keys(p).length ? JSON.stringify(puntajes) : JSON.stringify(r),\n  tabla_puntajes: typeof p.tabla === 'string' ? p.tabla : '',\n  respuestas_str: JSON.stringify(r),\n} };"
       },
       "id": "ceb5b3f4-742d-465a-832e-02067f8946d4",
       "name": "Normalizar y Validar",
@@ -76,14 +76,14 @@
         "messages": {
           "values": [
             {
-              "content": "=ROL: Analista psicometrico senior Hacke's Jobs. Tono ejecutivo, evidence-based, Zero-Hallucination.\n\nTEST: Moss. Test Moss de adaptabilidad y habilidades gerenciales. Cinco dimensiones: HS=Habilidad de Supervision. CDRH=Capacidad de Decision en Relaciones Humanas. CEMT=Capacidad de Evaluacion de Problemas Interpersonales. HERI=Habilidad para Establecer Relaciones Interpersonales. SCMT=Sentido Comun y Tacto en Relaciones Interpersonales.\n\nREGLAS DE LECTURA: Cada dimension se reporta en percentil. ICG (Indice de Capacidad Gerencial) ponderado: HS*0.30 + CDRH*0.25 + CEMT*0.20 + HERI*0.15 + SCMT*0.10. Lectura ICG: <40 bajo, 40-60 medio, 61-80 adecuado, >80 alto. Dimension < percentil 30 = area de desarrollo prioritaria.\n\nLENGUAJE PROHIBIDO: 'excelente/excepcional/sobresaliente/perfecto/ideal' salvo percentil>=95. PROHIBIDO lenguaje clinico o de diagnostico. Solo interpretacion psicometrica de apoyo a decisiones de RH.\n\nDATOS:\n- Candidato: {{ $json.nombre }}\n- Empresa/Cargo: {{ $json.empresa }} - {{ $json.cargo }}\n- Completitud: {{ $json.completitud }}%\n- Respuestas: {{ $json.respuestas_str }}\n\nPUNTAJES A REPORTAR: HS / CDRH / CEMT / HERI / SCMT (percentiles) + ICG calculado.\n\nOUTPUT: SOLO JSON valido, sin markdown, sin texto adicional.\n{\"validez\":\"VALIDO\",\"resumen_validez\":\"\",\"resumen_ejecutivo\":\"\",\"fortalezas_operativas\":\"\",\"riesgos_potenciales\":\"\",\"recomendacion_contratacion\":\"\",\"justificacion_recomendacion\":\"\",\"puntajes_crudos\":\"\",\"feedback_candidato\":\"\"}"
+              "content": "=ROL: Analista psicométrico senior de Hacke's Jobs. Tono ejecutivo, basado en evidencia, sin inventar datos.\n\nPRUEBA: Moss (habilidades de supervisión y relaciones humanas en el trabajo). 30 situaciones laborales con una respuesta correcta cada una, 6 por dimensión:\n- HS Habilidad de supervisión: dirigir, corregir y dar seguimiento al trabajo de otros.\n- CDRH Capacidad de decisión en las relaciones humanas: decidir con criterio cuando hay personas, metas y recursos en juego.\n- CEMT Capacidad de evaluación de problemas interpersonales: diagnosticar conflictos y conductas antes de actuar.\n- HERI Habilidad para establecer relaciones interpersonales: reconocer, retener y construir confianza con el equipo.\n- SCMT Sentido común y tacto: comunicar decisiones difíciles, asumir errores y manejar críticas con prudencia.\n\nCÓMO LEER LOS DATOS\n- \"porcentaje\" es el % de aciertos en la dimensión (aciertos de 6). NO es un percentil: nunca lo llames percentil.\n- ICG (Índice de Capacidad Gerencial) ya calculado: < 40 bajo, 40-60 medio, 61-80 adecuado, > 80 alto.\n- Dimensión con 2 aciertos o menos (<= 33%) = área de desarrollo prioritaria.\n- \"errores\" lista las situaciones que falló, con lo que eligió y la respuesta correcta: úsalas como evidencia concreta.\n\nDATOS DEL CANDIDATO\n- Nombre: {{ $json.nombre }}\n- Empresa / cargo: {{ $json.empresa }} / {{ $json.cargo }}\n- Completitud: {{ $json.completitud }}% ({{ $json.contestadas }} de {{ $json.total }} situaciones)\n- Puntajes ya calculados por el sistema (son la fuente de verdad; no los recalcules ni los cambies): {{ $json.puntajes_str }}\n\nINSTRUCCIONES DE REDACCIÓN\n- Cada campo del JSON es TEXTO PLANO (string). Prohibido devolver listas, arreglos u objetos. Prohibido usar markdown (**, #, guiones de lista).\n- validez: \"VALIDO\" si la completitud es >= 85%; si no, \"INVALIDO_INCOMPLETO\".\n- resumen_validez: una oración sobre la confiabilidad del resultado.\n- resumen_ejecutivo: un párrafo de 4 a 6 oraciones con el ICG y su nivel, las dimensiones más fuertes y las más débiles, y qué tipo de supervisor describe.\n- fortalezas_operativas: de 2 a 4 viñetas, una por línea, cada una empieza con \"• \" y cita dimensión y aciertos. Ejemplo: \"• Supervisión (HS 5/6): corrige en privado y da seguimiento.\"\n- riesgos_potenciales: de 2 a 4 viñetas con el mismo formato, apoyadas en las situaciones falladas (menciona qué eligió y por qué es un riesgo). Si no falló ninguna, señala el riesgo de sobreestimar un resultado de autoinforme.\n- recomendacion_contratacion: exactamente uno de estos textos: \"Recomendado\", \"Recomendado con reservas\", \"No recomendado\".\n- justificacion_recomendacion: de 3 a 5 oraciones que conecten el ICG y las dimensiones con el cargo, más una acción de desarrollo concreta. Si el cargo es \"No especificado\", dilo.\n- puntajes_crudos: déjalo vacío (\"\"); lo llena el sistema.\n- feedback_candidato: 2 o 3 oraciones dirigidas al candidato en segunda persona, tono constructivo, sin puntajes.\n- No uses \"excelente\", \"excepcional\", \"sobresaliente\", \"perfecto\" ni \"ideal\". Nada de lenguaje clínico ni diagnóstico: es apoyo a decisiones de RH.\n\nRESPONDE SOLO CON ESTE JSON, sin texto adicional:\n{\"validez\":\"\",\"resumen_validez\":\"\",\"resumen_ejecutivo\":\"\",\"fortalezas_operativas\":\"\",\"riesgos_potenciales\":\"\",\"recomendacion_contratacion\":\"\",\"justificacion_recomendacion\":\"\",\"puntajes_crudos\":\"\",\"feedback_candidato\":\"\"}"
             }
           ]
         },
         "jsonOutput": true,
         "builtInTools": {},
         "options": {
-          "temperature": 0.4
+          "temperature": 0.3
         }
       },
       "id": "6b1dca48-cef6-4c00-9588-2981310598ff",
@@ -106,7 +106,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const REQ=['validez','resumen_validez','resumen_ejecutivo','fortalezas_operativas','riesgos_potenciales','recomendacion_contratacion','justificacion_recomendacion','puntajes_crudos','feedback_candidato'];const errShape=(r)=>({validez:'ERROR_PARSEO',resumen_validez:'No se pudo leer respuesta del modelo.',resumen_ejecutivo:'ERROR DE PARSEO: '+r,fortalezas_operativas:'N/A',riesgos_potenciales:'N/A',recomendacion_contratacion:'Revision Manual Requerida',justificacion_recomendacion:'Respuesta no interpretable.',puntajes_crudos:'PARSEO FALLIDO',feedback_candidato:'Tu evaluacion esta siendo revisada manualmente.',_parse_error:r});function extractText(r){if(r==null)return'';if(typeof r==='string')return r;const c=[r.text,r.output_text,r.response,r.message&&r.message.content,r.content&&typeof r.content==='string'?r.content:null,r.content&&r.content.parts&&r.content.parts[0]&&r.content.parts[0].text,r.candidates&&r.candidates[0]&&r.candidates[0].content&&r.candidates[0].content.parts&&r.candidates[0].content.parts[0]&&r.candidates[0].content.parts[0].text];for(const x of c)if(typeof x==='string'&&x.trim())return x;return JSON.stringify(r);}const raw=$input.item.json;let t;try{t=extractText(raw);if(!t||!t.trim())return{json:errShape('Respuesta vacia')};t=String(t).replace(/^\\s*```(?:json)?\\s*/i,'').replace(/\\s*```\\s*$/i,'').trim();const a=t.indexOf('{'),b=t.lastIndexOf('}');const j=(a===-1||b<=a)?t:t.slice(a,b+1);let p;try{p=JSON.parse(j);}catch(_){p=JSON.parse(j.replace(/,\\s*([}\\]])/g,'$1'));}const miss=REQ.filter(k=>!(k in p));if(miss.length)return{json:Object.assign({},errShape('Claves faltantes: '+miss.join(',')),p,{validez:p.validez||'PARCIAL'})};return{json:p};}catch(e){return{json:errShape(e.message||String(e))};}"
+        "jsCode": "\nconst REQ = ['validez','resumen_validez','resumen_ejecutivo','fortalezas_operativas','riesgos_potenciales','recomendacion_contratacion','justificacion_recomendacion','puntajes_crudos','feedback_candidato'];\nconst errShape = (r) => ({ validez: 'ERROR_PARSEO', resumen_validez: 'No se pudo leer la respuesta del modelo.', resumen_ejecutivo: 'ERROR DE PARSEO: ' + r, fortalezas_operativas: 'N/A', riesgos_potenciales: 'N/A', recomendacion_contratacion: 'Revisión manual requerida', justificacion_recomendacion: 'La respuesta del modelo no se pudo interpretar.', puntajes_crudos: '', feedback_candidato: 'Tu evaluación está siendo revisada por nuestro equipo.', _parse_error: r });\nfunction extractText(r) {\n  if (r == null) return '';\n  if (typeof r === 'string') return r;\n  const c = [r.text, r.output_text, r.response, r.message && r.message.content, r.content && typeof r.content === 'string' ? r.content : null, r.content && r.content.parts && r.content.parts[0] && r.content.parts[0].text, r.candidates && r.candidates[0] && r.candidates[0].content && r.candidates[0].content.parts && r.candidates[0].content.parts[0] && r.candidates[0].content.parts[0].text];\n  for (const x of c) if (typeof x === 'string' && x.trim()) return x;\n  if (r.content && typeof r.content === 'object' && !Array.isArray(r.content) && REQ.some(k => k in r.content)) return JSON.stringify(r.content);\n  if (REQ.some(k => k in r)) return JSON.stringify(r);\n  return JSON.stringify(r);\n}\n// Cualquier lista u objeto se vuelve texto: así nunca llega \"[object Object]\" al correo.\nfunction aTexto(v) {\n  if (v == null) return '';\n  if (typeof v === 'string') return v.replace(/\\*\\*/g, '').replace(/^\\s*[-*]\\s+/gm, '• ').trim();\n  if (typeof v === 'number' || typeof v === 'boolean') return String(v);\n  if (Array.isArray(v)) return v.map(x => { const t = aTexto(x); return t.startsWith('• ') ? t : '• ' + t; }).filter(t => t !== '• ').join('\\n');\n  const vals = Object.entries(v).map(([k, x]) => [k, aTexto(x)]).filter(([, x]) => x);\n  const titulo = vals.find(([k]) => /factor|nombre|titulo|fortaleza|riesgo|aspecto|area/i.test(k));\n  const desc = vals.filter(([k]) => !titulo || k !== titulo[0]).map(([, x]) => x).join(' — ');\n  return titulo ? titulo[1] + (desc ? ': ' + desc : '') : vals.map(([k, x]) => k + ': ' + x).join('; ');\n}\nconst raw = $input.item.json;\ntry {\n  let t = extractText(raw);\n  if (!t || !t.trim()) return { json: errShape('Respuesta vacía') };\n  t = String(t).replace(/^\\s*```(?:json)?\\s*/i, '').replace(/\\s*```\\s*$/i, '').trim();\n  const a = t.indexOf('{'), b = t.lastIndexOf('}');\n  const j = (a === -1 || b <= a) ? t : t.slice(a, b + 1);\n  let p;\n  try { p = JSON.parse(j); } catch (_) { p = JSON.parse(j.replace(/,\\s*([}\\]])/g, '$1')); }\n  const out = {};\n  for (const k of REQ) out[k] = aTexto(p[k]);\n  const miss = REQ.filter(k => !(k in p) && k !== 'puntajes_crudos');\n  if (miss.length) out._faltantes = miss.join(',');\n  return { json: out };\n} catch (e) {\n  return { json: errShape(e.message || String(e)) };\n}"
       },
       "id": "1f897cfd-acd1-4919-a683-ca34afea0d00",
       "name": "Parser Blindado",
@@ -152,15 +152,15 @@
             "Nombre": "={{ $('Webhook Recepcion').item.json.body.datos_paciente.nombre_completo }}",
             "Email": "={{ $('Webhook Recepcion').item.json.body.datos_paciente.email }}",
             "Fecha": "={{ $('Webhook Recepcion').item.json.body.datos_prueba.fecha_aplicacion }}",
-            "validez": "={{ $json.validez }}",
-            "resumen_validez": "={{ $json.resumen_validez }}",
-            "resumen_ejecutivo": "={{ $json.resumen_ejecutivo }}",
-            "fortalezas_operativas": "={{ $json.fortalezas_operativas }}",
-            "riesgos_potenciales": "={{ $json.riesgos_potenciales }}",
-            "recomendacion_contratacion": "={{ $json.recomendacion_contratacion }}",
-            "justificiacion_recomendacion": "={{ $json.justificacion_recomendacion }}",
-            "puntajes_crudos": "={{ $json.puntajes_crudos }}",
-            "feedback_candidato": "={{ $json.feedback_candidato }}"
+            "validez": "={{ $('Formato Reporte').item.json.validez }}",
+            "resumen_validez": "={{ $('Formato Reporte').item.json.resumen_validez }}",
+            "resumen_ejecutivo": "={{ $('Formato Reporte').item.json.resumen_ejecutivo }}",
+            "fortalezas_operativas": "={{ $('Formato Reporte').item.json.fortalezas_operativas }}",
+            "riesgos_potenciales": "={{ $('Formato Reporte').item.json.riesgos_potenciales }}",
+            "recomendacion_contratacion": "={{ $('Formato Reporte').item.json.recomendacion_contratacion }}",
+            "justificiacion_recomendacion": "={{ $('Formato Reporte').item.json.justificacion_recomendacion }}",
+            "puntajes_crudos": "={{ $('Formato Reporte').item.json.puntajes_crudos }}",
+            "feedback_candidato": "={{ $('Formato Reporte').item.json.feedback_candidato }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -311,7 +311,7 @@
       "parameters": {
         "sendTo": "abelardo.carlos@hackesjobs.com.mx",
         "subject": "=Alerta Hacke's Jobs: Reporte Moss [ {{ $('Normalizar y Validar').item.json.nombre }} ]",
-        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#0891B2,#0E7490);padding:28px 24px;\"><p style=\"color:#FFF;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:0.9;\">HACKES JOBS REPORTE</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">Test Moss</h2></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Validez: {{ $json.validez }}</p><p style=\"margin:4px 0 0;font-size:13px;color:#555;\">{{ $json.resumen_validez }}</p></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Candidato</p><p style=\"margin:4px 0 0;font-size:20px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.nombre }}</p><p style=\"margin:2px 0 0;font-size:14px;color:#0891B2;\">{{ $('Normalizar y Validar').item.json.email }}</p><div style=\"margin:20px 0;padding:20px;background:#FAFAFA;border-left:4px solid #0891B2;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen Ejecutivo</p><p style=\"margin:0;font-size:15px;line-height:1.7;white-space:pre-line;\">{{ $json.resumen_ejecutivo }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Fortalezas</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $json.fortalezas_operativas }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Riesgos</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $json.riesgos_potenciales }}</p></div></td></tr></table><div style=\"margin:20px 0;padding:20px;background:linear-gradient(135deg,#FFF8F0,#FFF);border:2px solid #0891B2;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Recomendacion</p><p style=\"margin:8px 0 6px;font-size:22px;font-weight:800;color:#0891B2;\">{{ $json.recomendacion_contratacion }}</p><p style=\"margin:10px 0 0;font-size:13px;color:#555;line-height:1.6;text-align:left;\">{{ $json.justificacion_recomendacion }}</p></div><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Puntajes Crudos</p><pre style=\"margin:0;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $json.puntajes_crudos }}</pre></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
+        "message": "=<div style=\"font-family:Helvetica,Arial,sans-serif;max-width:720px;margin:0 auto;border:1px solid #E0E0E0;border-radius:12px;overflow:hidden;\"><div style=\"background:linear-gradient(135deg,#0891B2,#0E7490);padding:28px 24px;\"><p style=\"color:#FFF;margin:0;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:0.9;\">HACKES JOBS REPORTE</p><h2 style=\"color:#FFF;margin:8px 0 4px;font-size:24px;font-weight:800;\">Test Moss</h2></div><div style=\"background:#F5F5F5;padding:12px 24px;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1.5px;\">Validez: {{ $('Formato Reporte').item.json.validez }}</p><p style=\"margin:4px 0 0;font-size:13px;color:#555;\">{{ $('Formato Reporte').item.json.resumen_validez }}</p></div><div style=\"background:#FFF;padding:28px;color:#333;\"><p style=\"margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;letter-spacing:1.5px;\">Candidato</p><p style=\"margin:4px 0 0;font-size:20px;font-weight:700;\">{{ $('Normalizar y Validar').item.json.nombre }}</p><p style=\"margin:2px 0 0;font-size:14px;color:#0891B2;\">{{ $('Normalizar y Validar').item.json.email }}</p><div style=\"margin:20px 0;padding:20px;background:#FAFAFA;border-left:4px solid #0891B2;border-radius:0 8px 8px 0;\"><p style=\"margin:0 0 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;\">Resumen Ejecutivo</p><p style=\"margin:0;font-size:15px;line-height:1.7;white-space:pre-line;\">{{ $('Formato Reporte').item.json.resumen_ejecutivo }}</p></div><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td valign=\"top\" width=\"50%\" style=\"padding-right:8px;\"><div style=\"background:#F1F8F4;border:1px solid #C8E6C9;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#2E7D32;text-transform:uppercase;letter-spacing:1.5px;\">Fortalezas</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#1B5E20;white-space:pre-line;\">{{ $('Formato Reporte').item.json.fortalezas_operativas }}</p></div></td><td valign=\"top\" width=\"50%\" style=\"padding-left:8px;\"><div style=\"background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;padding:16px;\"><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#C62828;text-transform:uppercase;letter-spacing:1.5px;\">Riesgos</p><p style=\"margin:0;font-size:13px;line-height:1.6;color:#B71C1C;white-space:pre-line;\">{{ $('Formato Reporte').item.json.riesgos_potenciales }}</p></div></td></tr></table><div style=\"margin:20px 0;padding:20px;background:linear-gradient(135deg,#FFF8F0,#FFF);border:2px solid #0891B2;border-radius:12px;text-align:center;\"><p style=\"margin:0;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:2px;\">Recomendacion</p><p style=\"margin:8px 0 6px;font-size:22px;font-weight:800;color:#0891B2;\">{{ $('Formato Reporte').item.json.recomendacion_contratacion }}</p><p style=\"margin:10px 0 0;font-size:13px;color:#555;line-height:1.6;text-align:left;white-space:pre-line;\">{{ $('Formato Reporte').item.json.justificacion_recomendacion }}</p></div><p style=\"margin:0 0 10px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1.5px;\">Puntajes Crudos</p><pre style=\"margin:0;font-family:Consolas,monospace;font-size:12px;line-height:1.6;background:#F5F5F5;padding:14px;border-radius:6px;white-space:pre-wrap;border:1px solid #E0E0E0;\">{{ $('Formato Reporte').item.json.puntajes_crudos }}</pre></div><div style=\"background:#000;padding:18px;text-align:center;\"><p style=\"color:#FFF;font-size:11px;margin:0;letter-spacing:2px;font-weight:700;\">HACKES JOBS TECHNOLOGIES</p></div></div>",
         "options": {
           "appendAttribution": false
         }
@@ -360,6 +360,20 @@
         }
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const n = $('Normalizar y Validar').item.json;\nconst r = $input.item.json;\nconst txt = v => (v == null ? '' : typeof v === 'string' ? v : JSON.stringify(v)).trim();\nconst esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nfunction recomendacion(v) {\n  const s = txt(v).toLowerCase();\n  if (!s) return 'Revisión manual requerida';\n  if (s.includes('no recomend')) return 'No recomendado';\n  if (s.includes('reserva') || s.includes('condicion') || s.includes('consider')) return 'Recomendado con reservas';\n  if (s.includes('recomend')) return 'Recomendado';\n  return txt(v);\n}\nconst out = {\n  validez: txt(r.validez) || n.validez_flag,\n  resumen_validez: txt(r.resumen_validez) || ('Completitud ' + n.completitud + '% (' + n.contestadas + ' de ' + n.total + ' reactivos).'),\n  resumen_ejecutivo: txt(r.resumen_ejecutivo),\n  fortalezas_operativas: txt(r.fortalezas_operativas) || 'Sin información.',\n  riesgos_potenciales: txt(r.riesgos_potenciales) || 'Sin información.',\n  recomendacion_contratacion: recomendacion(r.recomendacion_contratacion),\n  justificacion_recomendacion: txt(r.justificacion_recomendacion) || 'El modelo no devolvió justificación; revisar manualmente.',\n  // La tabla sale del cálculo del sitio, no del modelo.\n  puntajes_crudos: n.tabla_puntajes || txt(r.puntajes_crudos) || 'Sin puntajes.',\n  feedback_candidato: txt(r.feedback_candidato),\n};\nfor (const k of Object.keys(out)) out[k] = esc(out[k]);\nreturn { json: out };"
+      },
+      "id": "f3a1c2d4-6b7e-4c9a-9e1f-0f6c1e2a7b11",
+      "name": "Formato Reporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        588,
+        120
+      ]
     }
   ],
   "pinData": {},
@@ -426,7 +440,7 @@
       "main": [
         [
           {
-            "node": "Sheets Respaldar",
+            "node": "Formato Reporte",
             "type": "main",
             "index": 0
           }
@@ -437,7 +451,7 @@
       "main": [
         [
           {
-            "node": "Sheets Respaldar",
+            "node": "Formato Reporte",
             "type": "main",
             "index": 0
           }
@@ -454,6 +468,17 @@
           },
           {
             "node": "Gmail Candidato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato Reporte": {
+      "main": [
+        [
+          {
+            "node": "Sheets Respaldar",
             "type": "main",
             "index": 0
           }
