@@ -191,6 +191,7 @@ export function RequisitionWizard() {
         const { data } = JSON.parse(backup);
         if (data && data.empresa && data.contacto) {
           setHasBackup(true);
+          setShowIntro(true);
         }
       } catch (e) {
         console.error("Error al analizar respaldo local:", e);
