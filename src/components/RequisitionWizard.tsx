@@ -149,7 +149,7 @@ const SUGGESTED_LANGUAGES = ['Inglés Avanzado (C1/C2)', 'Inglés Intermedio (B1
 const SUGGESTED_CERTIFICATIONS = ['PMP', 'Scrum Master', 'ISO 9001', 'AWS Certified', 'Lean Black Belt', 'CISSP'];
 
 export function RequisitionWizard() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<RequisitionPayload>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
