@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: "Crear Cuenta",
+  robots: { index: false, follow: true },
 };
 
 export default function RegisterLayout({

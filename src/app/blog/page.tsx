@@ -9,8 +9,9 @@ import { es } from 'date-fns/locale';
 import { NewsletterForm } from '@/components/NewsletterForm';
 
 export const metadata: Metadata = {
-  title: 'Blog | Hacke\'s Jobs',
-  description: 'Artículos, noticias y consejos sobre reclutamiento, tecnología y talento humano.',
+  title: 'Blog de reclutamiento industrial y psicometría',
+  description: 'Guías para gerentes de planta y RRHH: perfiles de puesto, entrevistas por competencias, pruebas psicométricas, rotación y reclutamiento masivo en el corredor Toluca–Lerma.',
+  alternates: { canonical: '/blog' },
 };
 
 export default async function BlogPage() {

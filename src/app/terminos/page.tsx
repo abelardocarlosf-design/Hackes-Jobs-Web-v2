@@ -2,7 +2,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones | Hacke\'s Jobs',
+  title: 'Términos y Condiciones',
+  description: 'Términos y condiciones de uso de la plataforma y de los servicios de reclutamiento y evaluación psicométrica de Hacke\'s Jobs Technologies.',
+  alternates: { canonical: '/terminos' },
 };
 
 export default function TerminosPage() {

@@ -2,7 +2,10 @@ import { Metadata } from 'next';
 import { RequisitionWizard } from '@/components/RequisitionWizard';
 
 export const metadata: Metadata = {
-  title: 'Nueva Requisición de Talento | Hacke\'s Jobs Technologies',
+  // El layout de /empresas fija un title sin template: aquí va completo.
+  title: "Envía tu requisición de personal | Hacke's Jobs",
+  alternates: { canonical: '/empresas/requisicion' },
+  openGraph: { url: '/empresas/requisicion' },
   description: 'Inicia el proceso de reclutamiento compartiendo los detalles de tu vacante con nuestro equipo.',
 };
 

@@ -4,7 +4,8 @@ import { Button } from '@/components/Button';
 import { Factory, Cpu, ShieldCheck, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Nosotros · Infraestructura HR-Tech y B2B',
+  title: 'Nosotros · Agencia de reclutamiento con tecnología propia',
+  alternates: { canonical: '/nosotros' },
   description: 'Hacke\'s Jobs Technologies es proveedor de infraestructura tecnológica para Recursos Humanos y ventas B2B, especializado en empresas industriales Tier 1 y Tier 2 del corredor Toluca–Lerma–Metepec–CDMX.',
 };
 

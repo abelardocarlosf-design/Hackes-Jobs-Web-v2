@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/Button';
+import { trackEvent } from '@/components/GoogleAnalytics';
 import { 
   CheckCircle2, 
   ChevronRight, 
@@ -497,6 +498,7 @@ export function RequisitionWizard() {
 
     if (apiResult.success) {
       setIsSuccess(true);
+      trackEvent('generate_lead', { form: 'requisicion' });
       localStorage.removeItem('hj_requisicion_backup');
     } else {
       setError(`Ocurrió un error en la conexión: ${apiResult.message}. Tu borrador se ha guardado localmente para que puedas intentarlo nuevamente.`);

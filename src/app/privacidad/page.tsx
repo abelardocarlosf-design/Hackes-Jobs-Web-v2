@@ -2,7 +2,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Aviso de Privacidad | Hacke\'s Jobs',
+  title: 'Aviso de Privacidad',
+  description: 'Aviso de Privacidad Integral de Hacke\'s Jobs Technologies: qué datos personales tratamos, con qué finalidad y cómo ejercer tus derechos ARCO conforme a la LFPDPPP.',
+  alternates: { canonical: '/privacidad' },
 };
 
 export default function PrivacidadPage() {

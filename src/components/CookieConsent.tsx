@@ -21,6 +21,7 @@ export default function CookieConsent() {
 
   const handleAcceptAll = () => {
     localStorage.setItem('hj_cookie_consent', 'all');
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.('consent', 'update', { analytics_storage: 'granted' });
     setIsVisible(false);
   };
 

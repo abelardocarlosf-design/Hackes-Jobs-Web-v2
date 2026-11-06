@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
+import { SITE_URL } from '@/lib/site';
 import { Button } from '@/components/Button';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -22,18 +23,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
   if (!post) return { title: 'Post no encontrado' };
 
-  const canonicalUrl = `https://hackesjobs.com.mx/blog/${post.slug}`;
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const description = post.seoDescription || post.excerpt;
 
   return {
-    title: `${post.title} | Blog Hacke's Jobs`,
-    description: post.excerpt,
+    title: post.seoTitle || post.title,
+    description,
     keywords: post.tags,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: post.seoTitle || post.title,
+      description,
       url: canonicalUrl,
       images: [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }],
       type: 'article',
@@ -44,8 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
+      title: post.seoTitle || post.title,
+      description,
       images: [post.coverImage],
     },
   };
@@ -65,26 +67,28 @@ export default async function BlogPostPage({ params }: Props) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt,
-    image: post.coverImage.startsWith('http') ? post.coverImage : `https://hackesjobs.com.mx${post.coverImage}`,
+    image: post.coverImage.startsWith('http') ? post.coverImage : `${SITE_URL}${post.coverImage}`,
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      '@type': 'Organization',
+      '@type': 'Person',
       name: post.author,
-      url: 'https://hackesjobs.com.mx',
+      url: 'https://www.linkedin.com/in/abelardo-carlos-flores/',
+      worksFor: { '@id': `${SITE_URL}/#organization` },
     },
     publisher: {
       '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
       name: "Hacke's Jobs Technologies",
-      url: 'https://hackesjobs.com.mx',
+      url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://hackesjobs.com.mx/logo.png',
+        url: `${SITE_URL}/logo.png`,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://hackesjobs.com.mx/blog/${post.slug}`,
+      '@id': `${SITE_URL}/blog/${post.slug}`,
     },
     keywords: post.tags.join(', '),
   };

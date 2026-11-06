@@ -6,7 +6,8 @@ import { Brain, Briefcase, Activity, ShieldCheck, ArrowRight } from 'lucide-reac
 import { testsByLevel } from '@/lib/psicometriasConfig';
 
 export const metadata: Metadata = {
-  title: 'Suite Psicométrica · Catálogo de Tests',
+  title: 'Pruebas psicométricas en línea · Catálogo y precios',
+  alternates: { canonical: '/psicometrias' },
   description: 'Catálogo de evaluaciones psicométricas validadas con scoring automático. Pago por test en MXN ($349, $519, $867) vía Stripe. Reportes PDF entregables.',
 };
 
