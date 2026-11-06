@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, Briefcase, Calendar, Banknote, CheckCircle2, Star } from 'lucide-react';
-import { vacanteById, vacantesActivas, type Vacante } from '@/data/vacantes';
+import { vacanteById, vacantesActivas, estaVigente, venceEl, type Vacante } from '@/data/vacantes';
 import { EmpresaLogo } from '@/components/vacantes/EmpresaLogo';
 import { PostularButton } from '@/components/vacantes/PostularButton';
 
@@ -39,7 +39,7 @@ export function generateMetadata({ params }: RouteParams): Metadata {
       title,
       description,
     },
-    robots: { index: v.activa !== false, follow: true },
+    robots: { index: estaVigente(v), follow: true },
   };
 }
 
@@ -73,12 +73,11 @@ function buildJobPostingSchema(v: Vacante) {
       .trim(),
     identifier: { '@type': 'PropertyValue', name: v.empresa, value: v.id },
     datePosted,
-    validThrough: new Date(new Date(datePosted).getTime() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+    ...(venceEl(v) ? { validThrough: venceEl(v)!.toISOString() } : {}),
     employmentType: MODALITY_TO_EMPLOYMENT[v.modalidad],
     hiringOrganization: {
       '@type': 'Organization',
       name: v.empresa,
-      sameAs: 'https://hackesjobs.com.mx',
     },
     jobLocation: {
       '@type': 'Place',
@@ -95,18 +94,20 @@ function buildJobPostingSchema(v: Vacante) {
   const locType = MODALITY_TO_LOCATION_TYPE[v.modalidad];
   if (locType) (schema as Record<string, unknown>).jobLocationType = locType;
 
-  if (v.salario && /\d/.test(v.salario)) {
-    // Soft attempt to parse "$X,XXX - $Y,YYY MXN/mes" → BaseSalary
-    const nums = v.salario.replace(/[^\d-]/g, '').split('-').map(Number).filter((n) => !Number.isNaN(n));
+  if (v.salario) {
+    // Solo montos con "$" del primer tramo ("$1,900 netos semanales · $9,480 mensuales"
+    // → 1900/semana); la unidad sale del texto de ese tramo.
+    const tramo = v.salario.split('·')[0];
+    const nums = Array.from(tramo.matchAll(/\$\s?([\d,]+)/g), (m) => Number(m[1].replace(/,/g, ''))).filter((n) => n > 0);
     if (nums.length >= 1) {
       schema.baseSalary = {
         '@type': 'MonetaryAmount',
         currency: 'MXN',
         value: {
           '@type': 'QuantitativeValue',
-          unitText: 'MONTH',
-          ...(nums.length === 2
-            ? { minValue: nums[0], maxValue: nums[1] }
+          unitText: /semana/i.test(tramo) ? 'WEEK' : 'MONTH',
+          ...(nums.length >= 2
+            ? { minValue: Math.min(nums[0], nums[1]), maxValue: Math.max(nums[0], nums[1]) }
             : { value: nums[0] }),
         },
       };
@@ -118,7 +119,7 @@ function buildJobPostingSchema(v: Vacante) {
 
 export default function VacanteDetailPage({ params }: RouteParams) {
   const v = vacanteById(params.id);
-  if (!v || v.activa === false) notFound();
+  if (!v || !estaVigente(v)) notFound();
 
   const jsonLd = buildJobPostingSchema(v);
 

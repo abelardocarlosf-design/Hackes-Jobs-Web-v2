@@ -14,7 +14,8 @@ function LinkedinIcon({ size = 28, className }: { size?: number; className?: str
 }
 
 export const metadata: Metadata = {
-  title: 'Contacto · Hablemos de tu operación',
+  title: 'Contacto · Cotiza tu vacante',
+  alternates: { canonical: '/contacto' },
   description: 'Contacta a Hacke\'s Jobs Technologies para agendar un diagnóstico técnico de tus flujos de RRHH y ventas B2B. Atendemos el corredor industrial Toluca–Lerma–Metepec–CDMX.',
 };
 

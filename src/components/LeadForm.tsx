@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from './Button';
+import { trackEvent } from './GoogleAnalytics';
 import { z } from 'zod';
 import { PrivacyCheckbox } from './PrivacyCheckbox';
 
@@ -75,6 +76,7 @@ export function LeadForm() {
 
       if (data.success) {
         setStatus('success');
+        trackEvent('generate_lead', { form: 'solicitar_talento' });
         setFormData({ nombre: '', empresa: '', email: '', telefono: '', vacante: '' });
       } else {
         throw new Error(data.message || 'Error desconocido');

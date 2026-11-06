@@ -205,10 +205,25 @@ export const MODALIDADES: ModalidadVacante[] = ['Presencial', 'Híbrido', 'Remot
 // HELPERS
 // ──────────────────────────────────────────────────────────────────
 
+/** Días que una vacante sigue publicada desde fechaPublicacion (= validThrough del JobPosting). */
+export const DIAS_VIGENCIA = 60;
+
+/** Fecha en que vence la vacante, o null si no tiene fechaPublicacion. */
+export function venceEl(v: Vacante): Date | null {
+  if (!v.fechaPublicacion) return null;
+  return new Date(new Date(v.fechaPublicacion).getTime() + DIAS_VIGENCIA * 24 * 60 * 60 * 1000);
+}
+
+/** Activa y no vencida: una vacante vencida no se lista, no se indexa y da 404. */
+export function estaVigente(v: Vacante): boolean {
+  const vence = venceEl(v);
+  return v.activa !== false && (!vence || vence.getTime() > Date.now());
+}
+
 /** Vacantes activas, ordenadas: destacadas primero, luego por fecha desc. */
 export function vacantesActivas(): Vacante[] {
   return [...vacantes]
-    .filter((v) => v.activa !== false)
+    .filter(estaVigente)
     .sort((a, b) => {
       const destacadaA = a.destacada ? 1 : 0;
       const destacadaB = b.destacada ? 1 : 0;
@@ -219,7 +234,7 @@ export function vacantesActivas(): Vacante[] {
 
 /** Ubicaciones únicas derivadas del catálogo (alimenta el filtro). */
 export function ubicacionesDisponibles(): string[] {
-  return Array.from(new Set(vacantes.filter((v) => v.activa !== false).map((v) => v.ubicacion))).sort();
+  return Array.from(new Set(vacantes.filter(estaVigente).map((v) => v.ubicacion))).sort();
 }
 
 export function vacanteById(id: string): Vacante | undefined {

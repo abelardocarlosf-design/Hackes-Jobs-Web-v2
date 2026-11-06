@@ -8,6 +8,9 @@ export interface BlogPost {
   date: string;
   tags: string[];
   published: boolean;
+  // Opcionales: título y descripción para Google cuando el H1 no sirve como <title>.
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export function generateSlug(title: string): string {
